@@ -8,4 +8,5 @@ For the designer to work you need to link from the WebSite project to the Window
 https://gitter.im/Terricide/ReVision?utm_source=share-link&utm_medium=link&utm_campaign=share-link
 
 
+Note:
 If you are planning on using IIS express instead of local IIS make sure it is IIS Express 8 which supports websockets.
