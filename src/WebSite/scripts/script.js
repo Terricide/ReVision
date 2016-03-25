@@ -3,7 +3,7 @@ var rootForm = true;
 var ws;
 $().ready(function () {
     var path = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
-    ws = new WebSocket("ws://" + window.location.hostname + path + "/echo");
+    ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + path + "/echo");
     ws.onopen = function () {
         var evt = {
             EventType: 'openForm'
