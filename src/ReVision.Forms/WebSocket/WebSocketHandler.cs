@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace System.Windows.Forms
+namespace ReVision.Forms
 {
     public class WebSocketHandler : IDisposable
     {
@@ -67,30 +67,6 @@ namespace System.Windows.Forms
             });
         }
 
-        private class TaskAsyncHelper
-        {
-            private static readonly Task _emptyTask = MakeTask<object>(null);
-            public static Task Empty
-            {
-                get
-                {
-                    return _emptyTask;
-                }
-            }
-
-            private static Task<T> MakeTask<T>(T value)
-            {
-                return FromResult<T>(value);
-            }
-
-            public static Task<T> FromResult<T>(T value)
-            {
-                var tcs = new TaskCompletionSource<T>();
-                tcs.SetResult(value);
-                return tcs.Task;
-            }
-        }
-
         private class SendContext
         {
             public WebSocketHandler Handler;
@@ -121,59 +97,6 @@ namespace System.Windows.Forms
         internal Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType webSocketMessageType, bool endOfMessage, CancellationToken cancellationToken)
         {
             return this.Socket.SendAsync(buffer, webSocketMessageType, endOfMessage, cancellationToken);
-        }
-    }
-
-    public class TaskQueue
-    {
-        public void Enqueue(Task task)
-        {
-            lock (lockObject)
-            {
-                if (Busy)
-                {
-                    _q.Enqueue(task);
-                }
-                else
-                {
-                    Busy = true;
-                    task.Start();
-                    task.ContinueWith((t) =>
-                    {
-                        NextTask();
-                    });
-                }
-            }
-        }
-
-        private static Queue<Task> _q = new Queue<Task>();
-
-        private static bool Busy = false;
-        private static object lockObject = new object();
-
-        public TaskQueue()
-        {
-
-        }
-
-        private void NextTask()
-        {
-            lock (lockObject)
-            {
-                if (_q.Count > 0)
-                {
-                    var task = _q.Dequeue();
-                    task.Start();
-                    task.ContinueWith((t) =>
-                    {
-                        NextTask();
-                    });
-                }
-                else
-                {
-                    Busy = false;
-                }
-            }
         }
     }
 }

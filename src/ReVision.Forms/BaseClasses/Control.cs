@@ -105,7 +105,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        [JsonConverter(typeof(ImageConverter))]
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
         public Image BackgroundImage { get; set; }
         public event EventHandler TextChanged;
         public event EventHandler HandleCreated;
@@ -147,7 +147,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        [JsonConverter(typeof(HasEventConverter))]
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.HasEventConverter))]
         public bool hasClickEvent
         {
             get
