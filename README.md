@@ -16,3 +16,6 @@ https://github.com/Terricide/ReVision/commit/a9b9d8d60e062b76bc093628009f74a0374
 
 Here is an example of adding a brand new MaskedTextBox control
 https://github.com/Terricide/ReVision/commit/efea04fa432e22bd1a0f8072437b4371c6ac71cc
+
+Here is a video of what it took to add the MaskedTextBox control
+https://www.youtube.com/watch?v=PwvnmJ2JEic
