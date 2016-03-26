@@ -112,7 +112,7 @@ namespace System.Windows.Forms
         public int TabIndex { get; set; }
         public string Name { get; set; }
         public bool AutoSize { get; set; }
-        [JsonConverter(typeof(ColorConverter))]
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]
         public Color BackColor { get; set; }
         public Point Location { get; set; }
         private Size size = new Size(300, 300);
@@ -411,7 +411,7 @@ namespace System.Windows.Forms
         public FlatStyle FlatStyle { get; set; }
 
         private Color mForeColor;
-        [JsonConverter(typeof(ColorConverter))]
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]
         public Color ForeColor
         {
             get

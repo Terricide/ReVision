@@ -10,7 +10,7 @@ namespace System.Windows.Forms
 {
     public class BorderColor
     {
-        [JsonConverter(typeof(ColorConverter))]        
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]        
         public Color Color { get; set; }
         public BorderColor(Color col)
         {
