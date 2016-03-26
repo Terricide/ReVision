@@ -601,6 +601,15 @@ TextBox.prototype.Update = function (obj) {
         case "Text":
             this.Element.value = prop.Value;
             break;
+        case "PasswordChar": {
+            if (prop.Value != undefined && prop.Value.length > 0 && prop.Value != '\0') {
+                this.Element.setAttribute("type", "password");
+            }
+            else {
+                this.Element.setAttribute("type", "text");
+            }
+        }
+            break;
     }
 };
 
@@ -622,7 +631,7 @@ TextBox.prototype.Render = function (obj, parent) {
         };
         send(evt);
     };
-    if (obj.PasswordChar != undefined && obj.PasswordChar === "*")
+    if (obj.PasswordChar != undefined && obj.PasswordChar.length > 0 && obj.PasswordChar != '\0')
     {
         this.Element.setAttribute("type", "password");
     }

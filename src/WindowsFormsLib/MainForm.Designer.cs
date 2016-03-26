@@ -33,6 +33,9 @@ namespace WindowsFormsLib
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
+            this.tbPassword = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
@@ -127,6 +130,9 @@ namespace WindowsFormsLib
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button3);
+            this.tabPage1.Controls.Add(this.tbPassword);
+            this.tabPage1.Controls.Add(this.label21);
             this.tabPage1.Controls.Add(this.label20);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.label7);
@@ -145,6 +151,33 @@ namespace WindowsFormsLib
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(549, 291);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(184, 23);
+            this.button3.TabIndex = 18;
+            this.button3.Text = "Toogle password char";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // tbPassword
+            // 
+            this.tbPassword.Location = new System.Drawing.Point(549, 265);
+            this.tbPassword.Name = "tbPassword";
+            this.tbPassword.PasswordChar = '*';
+            this.tbPassword.Size = new System.Drawing.Size(229, 20);
+            this.tbPassword.TabIndex = 17;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(546, 242);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(56, 13);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "Password ";
             // 
             // label20
             // 
@@ -797,6 +830,9 @@ namespace WindowsFormsLib
         private GroupBox groupBox1;
         private Label label3;
         private Label label20;
+        private TextBox tbPassword;
+        private Label label21;
+        private Button button3;
     }
 }
 

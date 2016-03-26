@@ -92,5 +92,10 @@ namespace WindowsFormsLib
                 this.listView1.Items.Add(Path.GetFileName(dir));
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.tbPassword.PasswordChar = this.tbPassword.PasswordChar != '\0' ? default(char) : this.tbPassword.PasswordChar = '*';
+        }
     }
 }

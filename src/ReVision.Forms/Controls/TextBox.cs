@@ -19,7 +19,22 @@ namespace System.Windows.Forms
         [JsonIgnore]
         public KeyEventHandler EnterKeyDown { get; set; }
 
-        public char PasswordChar { get; set; }
+        private char mPasswordChar;
+        public char PasswordChar
+        {
+            get
+            {
+                return mPasswordChar;
+            }
+            set
+            {
+                if( mPasswordChar != value )
+                {
+                    mPasswordChar = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         public bool Multiline { get; set; }
     }
