@@ -12,7 +12,7 @@ namespace WindowsFormsLib
         {
             InitializeComponent();
 
-            foreach(var dir in Directory.GetDirectories(@"c:\"))
+            foreach(var dir in Directory.GetDirectories(AppDomain.CurrentDomain.BaseDirectory))
             {
                 DirectoryInfo di = new DirectoryInfo(dir);
                 this.treeView2.Nodes.Add(di.Name);
@@ -81,13 +81,13 @@ namespace WindowsFormsLib
         private void treeView2_AfterSelect(object sender, TreeViewEventArgs e)
         {
             this.listView1.Items.Clear();
-            foreach (var dir in Directory.GetDirectories(@"c:\" + e.Node.Name))
+            foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, e.Node.Name)))
             {
                 DirectoryInfo di = new DirectoryInfo(dir);
                 var li = this.listView1.Items.Add(di.Name);
                 li.Tag = di;
             }
-            foreach (var dir in Directory.GetFiles(@"c:\" + e.Node.Name))
+            foreach (var dir in Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, e.Node.Name)))
             {
                 this.listView1.Items.Add(Path.GetFileName(dir));
             }
