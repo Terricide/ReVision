@@ -53,77 +53,152 @@
     <Compile Include="WebSocket\Application.cs" />
     <Compile Include="Enumerations\BorderColor.cs" />
     <Compile Include="Enumerations\BorderStyle.cs" />
-    <Compile Include="Controls\Button.cs" />
-    <Compile Include="Controls\CheckedListBox.cs" />
-    <Compile Include="Controls\ContextMenuStrip.cs" />
-    <Compile Include="Controls\DateTimePicker.cs" />
-    <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\Button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CheckedListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ContextMenuStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DateTimePicker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\GroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Helpers\TaskAsyncHelper.cs" />
     <Compile Include="Helpers\TaskQueue.cs" />
-    <Compile Include="Controls\ListBox.cs" />
-    <Compile Include="Controls\ListControl.cs" />
-    <Compile Include="Controls\MonthCalendar.cs" />
+    <Compile Include="Controls\ListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ListControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MonthCalendar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Common\ObservableControlCollection.cs" />
-    <Compile Include="Controls\ProgressBar.cs" />
-    <Compile Include="Controls\SplitContainer.cs" />
-    <Compile Include="Controls\StatusStrip.cs" />
-    <Compile Include="Controls\ToolStripDropDown.cs" />
-    <Compile Include="Controls\ToolStripItem.cs" />
-    <Compile Include="Controls\ToolStripLabel.cs" />
-    <Compile Include="Controls\ToolStripMenuItem.cs" />
-    <Compile Include="Controls\ToolStripStatusLabel.cs" />
+    <Compile Include="Controls\ProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SplitContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\StatusStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\TreeNode.cs" />
-    <Compile Include="Controls\TreeView.cs" />
-    <Compile Include="Controls\CheckBox.cs" />
-    <Compile Include="Controls\ComboBox.cs" />
+    <Compile Include="Controls\TreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Common\Resources\ImageResourceHandle.cs" />
-    <Compile Include="BaseClasses\Component.cs" />
-    <Compile Include="BaseClasses\ContainerControl.cs" />
-    <Compile Include="BaseClasses\Control.cs" />
+    <Compile Include="BaseClasses\Component.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseClasses\ContainerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseClasses\Control.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="Enumerations\DialogResult.cs" />
     <Compile Include="Enumerations\DockStyle.cs" />
     <Compile Include="Enumerations\FlatAppearance.cs" />
     <Compile Include="Enumerations\FlatStyle.cs" />
     <Compile Include="Enumerations\FlowDirection.cs" />
-    <Compile Include="BaseClasses\Form.cs" />
+    <Compile Include="BaseClasses\Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Enumerations\FormBorderStyle.cs" />
     <Compile Include="EventHandlers\FormClosedEventArgs.cs" />
     <Compile Include="Enumerations\FormStartPosition.cs" />
     <Compile Include="Enumerations\ImageLayout.cs" />
     <Compile Include="EventHandlers\KeyEventArgs.cs" />
     <Compile Include="EventHandlers\KeyEventHandler.cs" />
-    <Compile Include="Controls\Label.cs" />
-    <Compile Include="Controls\LinkLabel.cs" />
+    <Compile Include="Controls\Label.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\LinkLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EventHandlers\LinkLabelLinkClickedEventArgs.cs" />
     <Compile Include="EventHandlers\LinkLabelLinkClickedEventHandler.cs" />
-    <Compile Include="Controls\ListView.cs" />
-    <Compile Include="Controls\ListViewItem.cs" />
+    <Compile Include="Controls\ListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ListViewItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enumerations\MouseEventArgs.cs" />
     <Compile Include="JsonConverters\ColorConverter.cs" />
-    <Compile Include="JsonConverters\HasEventConverter.cs" />
     <Compile Include="JsonConverters\ImageConverter.cs" />
-    <Compile Include="Dialogs\MessageBox.cs" />
-    <Compile Include="Controls\FlowLayoutPanel.cs" />
+    <Compile Include="Dialogs\MessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FlowLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enumerations\Padding.cs" />
-    <Compile Include="Controls\TabPage.cs" />
-    <Compile Include="Controls\TabControl.cs" />
-    <Compile Include="Controls\Panel.cs" />
-    <Compile Include="Controls\PictureBox.cs" />
+    <Compile Include="Controls\TabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Panel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enumerations\PictureBoxSizeMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="Controls\RadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enumerations\RichTextBoxScrollBars.cs" />
-    <Compile Include="BaseClasses\ScrollableControl.cs" />
-    <Compile Include="Controls\RichTextBox.cs" />
+    <Compile Include="BaseClasses\ScrollableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Common\SystemInformation.cs" />
-    <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Controls\TextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Timer.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\TreeViewAction.cs" />
     <Compile Include="Enumerations\TreeViewEvent.cs" />
-    <Compile Include="BaseClasses\UserControl.cs" />
+    <Compile Include="BaseClasses\UserControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enumerations\View.cs" />
     <Compile Include="WebSocket\WebSocketHandler.cs" />
     <Compile Include="WebSocket\WSEventArgs.cs" />

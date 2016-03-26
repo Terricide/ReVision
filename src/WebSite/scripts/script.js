@@ -349,6 +349,12 @@ Control.prototype.RenderText = function(div, obj) {
 }
 
 Control.prototype.Render = function (div, obj, parent) {
+    obj.HasEvent = function (name) {
+        if ($.inArray(name, this.AllEvents) > -1) {
+            return true;
+        }
+        return false;
+    };
     var parentWidth = null, parentHeight = null;
     if (parent != undefined && parent != null)
     {
@@ -531,13 +537,15 @@ Control.prototype.Render = function (div, obj, parent) {
 
     Control.prototype.RenderText(div, obj);
 
-    div.addEventListener('click', function (e) {
-        var evt = {
-            ClientId: this.id,
-            EventType: 'click'
-        };
-        send(evt);
-    });
+    if (obj.HasEvent("Click")) {
+        div.addEventListener('click', function (e) {
+            var evt = {
+                ClientId: this.id,
+                EventType: 'click'
+            };
+            send(evt);
+        });
+    }
 
     if (obj.BackgroundImage != undefined) {
         $(div).css("background-image", "url('data:image/png;base64," + obj.BackgroundImage + "')");

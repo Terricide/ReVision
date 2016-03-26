@@ -58,6 +58,33 @@ namespace System.Windows.Forms
         }
         public object Tag { get; set; }
 
+        public string[] AllEvents
+        {
+            get
+            {
+                var type = this.GetType();
+
+                var list = new List<string>();
+                do
+                {
+
+                    foreach (var field in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Public))
+                    {
+                        MulticastDelegate eventDelagate = field.GetValue(this) as MulticastDelegate;
+
+                        if (eventDelagate != null)
+                        {
+                            list.Add(field.Name);
+                        }
+                    }
+                    type = type.BaseType;
+                }
+                while (type != null);
+
+                return list.ToArray();
+            }
+        }
+
         public virtual async Task ProcessMessage(WSEventArgs args)
         {
             

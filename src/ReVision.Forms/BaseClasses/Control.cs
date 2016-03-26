@@ -147,17 +147,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        [JsonConverter(typeof(ReVision.Forms.JsonConverters.HasEventConverter))]
-        public bool hasClickEvent
-        {
-            get
-            {
-                if (this.Click == null)
-                    return false;
-                else
-                    return true;
-            }
-        }
+
         public event EventHandler Click;
         public async void Focus()
         {
