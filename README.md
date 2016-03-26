@@ -10,3 +10,6 @@ https://gitter.im/Terricide/ReVision?utm_source=share-link&utm_medium=link&utm_c
 
 Note:
 If you are planning on using IIS express instead of local IIS make sure it is IIS Express 8 which supports websockets.
+
+Here is an example commit of changing a property so that it can be updated in runtime
+https://github.com/Terricide/ReVision/commit/a9b9d8d60e062b76bc093628009f74a03745602a
