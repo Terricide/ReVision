@@ -145,6 +145,11 @@ function createNewElement(obj, parent) {
                 ctrl = new TextBox();
             }
             break;
+        case "MaskedTextBox":
+            {
+                ctrl = new MaskedTextBox();
+            }
+            break;
         case "RichTextBox":
             {
                 ctrl = new RichTextBox();
@@ -636,6 +641,50 @@ TextBox.prototype.Render = function (obj, parent) {
         this.Element.setAttribute("type", "password");
     }
     Control.prototype.Render(this.Element, obj, parent);
+    return this;
+};
+
+var MaskedTextBox = function () {
+
+}
+
+MaskedTextBox.prototype = Object.create(Control.prototype);
+
+MaskedTextBox.prototype.Update = function (obj) {
+    Control.prototype.Update(this.Element, obj);
+    var prop = obj.Value;
+    switch (prop.Name) {
+        case "Text":
+            this.Element.value = prop.Value;
+            break;
+        case "Mask":
+            {
+                var maskedtextbox = $(this.Element).data("kendoMaskedTextBox");
+                maskedtextbox.destroy();
+
+                this.Mask = $(this.Element).kendoMaskedTextBox({
+                    mask: prop.Value
+                });
+            }
+            break;
+    }
+};
+
+MaskedTextBox.prototype.Render = function (obj, parent) {
+    this.Element = document.createElement('input');
+    this.Element.className = "k-textbox";
+    this.Element.onchange = function () {
+        var evt = {
+            ClientId: this.id,
+            EventType: 'textchanged',
+            Value: this.value
+        };
+        send(evt);
+    };
+    Control.prototype.Render(this.Element, obj, parent);
+    this.Mask = $(this.Element).kendoMaskedTextBox({
+        mask: obj.Mask
+    });
     return this;
 };
 

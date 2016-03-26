@@ -97,5 +97,10 @@ namespace WindowsFormsLib
         {
             this.tbPassword.PasswordChar = this.tbPassword.PasswordChar != '\0' ? default(char) : this.tbPassword.PasswordChar = '*';
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.tbMask.Mask = "000-00-0000";
+        }
     }
 }
