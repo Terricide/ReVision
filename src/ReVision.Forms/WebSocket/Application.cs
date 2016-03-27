@@ -63,10 +63,9 @@ namespace System.Windows.Forms
             //ads.PrivateBinPath = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "bin");
 
             //var domain = AppDomain.CreateDomain(id, null, ads);
-            var frm = Forms.FirstOrDefault();           
             instance.Socket = socket;
-            frm.IsHandleCreated = true;
-            await instance.ShowDialog(frm);
+            RootForm.IsHandleCreated = true;
+            await instance.ShowDialog(RootForm);
         }
 
         void frm_AddFormEvent(object sender, EventArgs e)
