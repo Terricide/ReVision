@@ -1298,6 +1298,15 @@ TabControl.prototype.Render = function (obj, parent) {
     }
 
     $(this.Element).kendoTabStrip({
+        show: function (e) {
+            var selectedIndex = $(e.item).index();
+            var evt = {
+                ClientId: this.element[0].id,
+                EventType: 'selectedIndexChanged',
+                Value: selectedIndex
+            };
+            send(evt);
+        }
     });
     return this;
 };
