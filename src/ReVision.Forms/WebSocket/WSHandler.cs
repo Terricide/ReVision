@@ -53,43 +53,55 @@ namespace ReVision.Forms
 
                 while (true)
                 {
-                    ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-                    WebSocketReceiveResult result = await socket.ReceiveAsync(
-                        buffer, CancellationToken.None);
-                    if (socket.State == WebSocketState.Open)
+                    try
                     {
-                        string userMessage = Encoding.UTF8.GetString(
-                            buffer.Array, 0, result.Count);
-
-                        var command = JsonConvert.DeserializeObject<WSEventArgs>(userMessage);
-
-                        if (command.EventType == "openForm")
+                        ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
+                        WebSocketReceiveResult result = await socket.ReceiveAsync(
+                            buffer, CancellationToken.None);
+                        if (socket.State == WebSocketState.Open)
                         {
+                            string userMessage = Encoding.UTF8.GetString(
+                                buffer.Array, 0, result.Count);
 
-                            if (isNew)
+                            var command = JsonConvert.DeserializeObject<WSEventArgs>(userMessage);
+
+                            if (command.EventType == "openForm")
                             {
-                                var formInfo = WebConfigurationManager.AppSettings["Form"];
-                                var type = Type.GetType(formInfo);
-                                var form = (Form)Activator.CreateInstance(type);
-                                await App.CreateDomain(form, sessionId.Value, socket);
+
+                                if (isNew)
+                                {
+                                    var formInfo = WebConfigurationManager.AppSettings["Form"];
+                                    var type = Type.GetType(formInfo);
+                                    var form = (Form)Activator.CreateInstance(type);
+                                    await App.CreateDomain(form, sessionId.Value, socket);
+                                }
+                                else
+                                {
+                                    await App.UpdateDomain(sessionId.Value, socket);
+                                }
                             }
                             else
                             {
-                                await App.UpdateDomain(sessionId.Value, socket);
+                                await App.ProcessMessage(command);
                             }
                         }
                         else
                         {
-                            await App.ProcessMessage(command);
+                            break;
                         }
                     }
-                    else
+                    catch(Exception ex)
                     {
-                        break;
+                        if( socket.State == WebSocketState.Open )
+                        {
+                            await socket.SendAsync(ex);
+                            continue;
+                        }
+                        throw;
                     }
                 }
             }
-            catch
+            catch 
             {
                 throw;
             }

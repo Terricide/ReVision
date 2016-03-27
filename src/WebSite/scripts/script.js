@@ -23,6 +23,47 @@ $().ready(function () {
         {
             return;
         }
+
+        if (obj.ClassName != undefined && obj.Message != undefined)
+        {
+            var exception = obj;
+            if (obj.InnerException != undefined)
+            {
+                exception = obj.InnerException;
+            }
+            function onShow(e) {
+                if (e.sender.getNotifications().length == 1) {
+                    var element = e.element.parent(),
+                        eWidth = element.width(),
+                        eHeight = element.height(),
+                        wWidth = $(window).width(),
+                        wHeight = $(window).height(),
+                        newTop, newLeft;
+
+                    newLeft = Math.floor(wWidth / 2 - eWidth / 2);
+                    newTop = Math.floor(wHeight / 2 - eHeight / 2);
+
+                    e.element.parent().css({ top: newTop, left: newLeft });
+                }
+            }
+            var notification = $("#notification").kendoNotification({
+                autoHideAfter: 0,
+                stacking: "down",
+                show: onShow,
+                templates: [{
+                    type: "error",
+                    template: $("#errorTemplate").html()
+                }]
+
+            }).data("kendoNotification");
+            notification.show({
+                title: exception.ExceptionMethod,
+                message: exception.Message + ' ' + exception.StackTraceString
+            }, "error");
+            //alert(exception.ExceptionMethod + ' ' + exception.Message + ' ' + exception.StackTraceString);
+            return;
+        }
+
         if (obj.EventType != undefined)
         {
             switch(obj.EventType)

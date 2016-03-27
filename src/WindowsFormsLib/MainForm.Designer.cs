@@ -33,6 +33,8 @@ namespace WindowsFormsLib
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button4 = new System.Windows.Forms.Button();
+            this.tbMask = new System.Windows.Forms.MaskedTextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -91,8 +93,7 @@ namespace WindowsFormsLib
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tbMask = new System.Windows.Forms.MaskedTextBox();
-            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -132,6 +133,7 @@ namespace WindowsFormsLib
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.tbMask);
             this.tabPage1.Controls.Add(this.button3);
@@ -155,6 +157,24 @@ namespace WindowsFormsLib
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(549, 389);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 20;
+            this.button4.Text = "Change mask";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // tbMask
+            // 
+            this.tbMask.Location = new System.Drawing.Point(549, 349);
+            this.tbMask.Mask = "(999) 000-0000";
+            this.tbMask.Name = "tbMask";
+            this.tbMask.Size = new System.Drawing.Size(214, 20);
+            this.tbMask.TabIndex = 19;
             // 
             // button3
             // 
@@ -730,23 +750,15 @@ namespace WindowsFormsLib
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // tbMask
+            // button5
             // 
-            this.tbMask.Location = new System.Drawing.Point(549, 349);
-            this.tbMask.Mask = "(999) 000-0000";
-            this.tbMask.Name = "tbMask";
-            this.tbMask.Size = new System.Drawing.Size(214, 20);
-            this.tbMask.TabIndex = 19;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(549, 389);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 20;
-            this.button4.Text = "Change mask";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button5.Location = new System.Drawing.Point(342, 389);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(177, 23);
+            this.button5.TabIndex = 21;
+            this.button5.Text = "Show an Exception message";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // MainForm
             // 
@@ -857,6 +869,7 @@ namespace WindowsFormsLib
         private Button button3;
         private MaskedTextBox tbMask;
         private Button button4;
+        private Button button5;
     }
 }
 

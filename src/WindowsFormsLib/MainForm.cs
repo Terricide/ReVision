@@ -102,5 +102,10 @@ namespace WindowsFormsLib
         {
             this.tbMask.Mask = "000-00-0000";
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            throw new Exception("An error has occurred");
+        }
     }
 }

@@ -200,6 +200,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\View.cs" />
+    <Compile Include="WebSocket\WebSocketExtend.cs" />
     <Compile Include="WebSocket\WebSocketHandler.cs" />
     <Compile Include="WebSocket\WSEventArgs.cs" />
     <Compile Include="WebSocket\WSHandler.cs" />

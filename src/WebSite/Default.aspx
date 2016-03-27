@@ -28,5 +28,13 @@
     </style>
 </head>
 <body style="margin: 0px; font-family:'Microsoft Sans Serif'; font-size:11px; overflow:hidden">
+    <span id="notification" style="display:none;"></span>
+    <script id="errorTemplate" type="text/x-kendo-template">
+                <div class="wrong-pass">
+                    <img src="../resources/images/error-icon.png" />
+                    <h3>#= title #</h3>
+                    <p>#= message #</p>
+                </div>
+    </script>
 </body>
 </html>
