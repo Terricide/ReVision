@@ -695,6 +695,7 @@ TextBox.prototype.Render = function (obj, parent) {
     {
         this.Element.setAttribute("type", "password");
     }
+    this.Element.value = obj.Text;
     Control.prototype.Render(this.Element, obj, parent);
     return this;
 };
@@ -740,6 +741,7 @@ MaskedTextBox.prototype.Render = function (obj, parent) {
     this.Mask = $(this.Element).kendoMaskedTextBox({
         mask: obj.Mask
     });
+    this.Element.value = obj.Text;
     return this;
 };
 
