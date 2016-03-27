@@ -14,6 +14,7 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Reflection;
 
 namespace System.Windows.Forms
 {
@@ -170,14 +171,30 @@ namespace System.Windows.Forms
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        protected static Dictionary<Type, Dictionary<string, PropertyInfo>> mComponentProperties = new Dictionary<Type,Dictionary<string,PropertyInfo>>(50);
+        protected static string mBitmapTypeFullName = typeof(Bitmap).FullName;
+
         protected virtual async Task RaisePropertyChanged([CallerMemberName]string propName = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
-
-            var prop = this.GetType().GetProperties().Where(n => n.Name == propName).FirstOrDefault();
+            
+            Type thisType = this.GetType();
+            if (!mComponentProperties.ContainsKey(thisType))
+            {
+                //Lazy load the properties for the component's Type and store them for future use
+                PropertyInfo[] properties = thisType.GetProperties();
+                Dictionary<string, PropertyInfo> thisProperties = new Dictionary<string, PropertyInfo>(properties.Length);
+                                
+                foreach (PropertyInfo pi in properties)
+                {
+                    thisProperties.Add(pi.Name, pi);
+                }
+                mComponentProperties.Add(thisType, thisProperties);
+            }
+            var prop = mComponentProperties[thisType][propName];
             var val = prop.GetValue(this);
-            if ( val != null && val.ToString() == typeof(Bitmap).FullName )
+            if (val != null && val.ToString() == mBitmapTypeFullName)
             {
                 using (var ms = new MemoryStream())
                 {
