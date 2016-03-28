@@ -53,7 +53,6 @@ namespace ReVision.Forms
 
                 while (true)
                 {
-                    Exception processException = null;
                     try
                     {
                         ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
@@ -93,20 +92,13 @@ namespace ReVision.Forms
                     }
                     catch(Exception ex)
                     {
-                        //Save exception for processing later (for .NET 4.5)
-                        processException = ex;                        
-                    }
-
-                    if (processException != null)
-                    {
                         if (socket.State == WebSocketState.Open)
                         {
-                            await socket.SendAsync(processException);
+                            await socket.SendAsync(ex);
                             continue;
                         }
-                        throw processException;
-                    }
-                    processException = null;
+                        throw;
+                    }                    
                 }
             }
             catch 
