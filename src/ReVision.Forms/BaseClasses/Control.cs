@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,9 +23,19 @@ namespace System.Windows.Forms
     [ToolboxItemFilter("System.Windows.Forms")]
     public class Control : Component, IDisposable
     {
+        static object InvalidatedEvent = new object();
+
         public Control()
         {
             
+        }
+
+        public int Handle
+        {
+            get
+            {
+                return Convert.ToInt32(this.ClientId);
+            }
         }
 
         void Controls_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -78,6 +90,137 @@ namespace System.Windows.Forms
             this.Disposing = disposing;
         }
 
+        private Image mCanvas;
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
+        public Image Canvas
+        {
+            get
+            {
+                return mCanvas;
+            }
+            set
+            {
+                if( mCanvas != value )
+                {
+                    mCanvas = value;
+                }
+            }
+        }
+
+
+        //public void Invalidate()
+        //{
+        //    if (InvalidRegion != null)
+        //        InvalidRegion.Dispose();
+
+        //    InvalidRegion = new Region(parent.ClientRectangle);
+
+        //    using (Graphics mgraphics = this.CreateGraphics())
+        //    {
+        //        Rectangle mclipRect = new Rectangle(0, 0, this.Width, this.Height);
+        //        OnPaint(new PaintEventArgs(mgraphics, mclipRect));
+        //        RaisePropertyChanged("Canvas");
+        //    }
+        //}
+
+        public void Invalidate()
+        {
+            if (!IsHandleCreated)
+                return;
+
+            Control[] controls = this.Controls.ToArray();
+            for (int i = 0; i < controls.Length; i++)
+                controls[i].Invalidate();
+
+            using (Graphics mgraphics = this.CreateGraphics())
+            {
+                OnPaint(new PaintEventArgs(mgraphics, new Rectangle(0, 0, this.Width, this.Height)));
+                RaisePropertyChanged("Canvas");
+            }
+
+            //Invalidate(ClientRectangle, false);
+        }
+
+        //public void Invalidate(bool invalidateChildren)
+        //{
+        //    Invalidate(ClientRectangle, invalidateChildren);
+        //}
+
+        //public void Invalidate(Rectangle rc)
+        //{
+        //    Invalidate(rc, false);
+        //}
+
+        //public void Invalidate(Rectangle rc, bool invalidateChildren)
+        //{
+        //    // Win32 invalidates control including when Width and Height is equal 0
+        //    // or is not visible, only Paint event must be care about this.
+        //    if (!IsHandleCreated)
+        //        return;
+
+        //    if (rc.IsEmpty)
+        //        rc = ClientRectangle;
+
+        //    if (rc.Width > 0 && rc.Height > 0)
+        //    {
+        //        if (invalidateChildren)
+        //        {
+        //            Control[] controls = this.Controls.ToArray();
+        //            for (int i = 0; i < controls.Length; i++)
+        //                controls[i].Invalidate(invalidateChildren);
+        //        }
+        //        else {
+        //            // If any of our children are transparent, we
+        //            // have to invalidate them anyways
+        //            foreach (Control c in Controls)
+        //                if (c.BackColor.A != 255)
+        //                    c.Invalidate();
+        //        }
+        //    }
+        //    OnInvalidated(new InvalidateEventArgs(rc));
+
+        //    using (Graphics mgraphics = this.CreateGraphics())
+        //    {
+        //        OnPaint(new PaintEventArgs(mgraphics, rc));
+        //        RaisePropertyChanged("Canvas");
+        //    }
+        //}
+
+        //[EditorBrowsable(EditorBrowsableState.Advanced)]
+        //protected virtual void OnInvalidated(InvalidateEventArgs e)
+        //{
+        //    InvalidateEventHandler eh = (InvalidateEventHandler)(Events[InvalidatedEvent]);
+        //    if (eh != null)
+        //        eh(this, e);
+        //}
+
+        //[EditorBrowsable(EditorBrowsableState.Advanced)]
+        //[Browsable(false)]
+        //public event InvalidateEventHandler Invalidated
+        //{
+        //    add { Events.AddHandler(InvalidatedEvent, value); }
+        //    remove { Events.RemoveHandler(InvalidatedEvent, value); }
+        //}
+
+        //public void Invalidate(Region region)
+        //{
+        //    Invalidate(region, false);
+        //}
+
+        //public void Invalidate(Region region, bool invalidateChildren)
+        //{
+        //    using (Graphics g = CreateGraphics())
+        //    {
+        //        RectangleF bounds = region.GetBounds(g);
+        //        Invalidate(new Rectangle((int)bounds.X, (int)bounds.Y, (int)bounds.Width, (int)bounds.Height), invalidateChildren);
+        //    }
+        //}
+
+        protected virtual void OnPaint(PaintEventArgs pe)
+        {
+
+        }
+
         private bool mIsHandledCreated;
         [JsonIgnore]
         public bool IsHandleCreated 
@@ -102,6 +245,10 @@ namespace System.Windows.Forms
                     {
                         HandleCreated(this, EventArgs.Empty);
                     }
+                    if (value)
+                    {
+                        Invalidate();
+                    }
                 }
             }
         }
@@ -112,8 +259,23 @@ namespace System.Windows.Forms
         public int TabIndex { get; set; }
         public string Name { get; set; }
         public bool AutoSize { get; set; }
+        private Color mBackColor;
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]
-        public Color BackColor { get; set; }
+        public virtual Color BackColor
+        {
+            get
+            {
+                return mBackColor;
+            }
+            set
+            {
+                if( mBackColor != value )
+                {
+                    mBackColor = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
         public Point Location { get; set; }
         private Size size = new Size(300, 300);
         public Size Size
@@ -128,7 +290,18 @@ namespace System.Windows.Forms
                 {
                     size = value;
                     RaisePropertyChanged();
+                    if(Resize != null)
+                    {
+                        Resize(this, EventArgs.Empty);
+                    }
                 }
+            }
+        }
+        public Size ClientSize
+        {
+            get
+            {
+                return this.Size;
             }
         }
         private bool mVisible = true;
@@ -145,6 +318,20 @@ namespace System.Windows.Forms
                     this.mVisible = value;
                     RaisePropertyChanged();
                 }
+            }
+        }
+
+        private ControlStyles ControlStyle;
+
+        public void SetStyle(ControlStyles style, bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                ControlStyle |= style;
+            }
+            else
+            {
+                ControlStyle &= style;
             }
         }
 
@@ -223,6 +410,52 @@ namespace System.Windows.Forms
                             UpdateProperty(this, "Text", args.Value);
                         }
                         break;
+                    case "mousemove":
+                        {
+                            if (MouseMove != null)
+                            {
+                                JObject j = (JObject)args.Value;
+                                var e = j.ToObject<MouseEventArgs>();
+                                MouseMove(this, e);
+                            }
+                        }
+                        break;
+                    case "mousedown":
+                        {
+                            if (MouseDown != null)
+                            {
+                                JObject j = (JObject)args.Value;
+                                var e = j.ToObject<MouseEventArgs>();
+                                MouseDown(this, e);
+                            }
+                        }
+                        break;
+                    case "mouseup":
+                        {
+                            if (MouseUp != null)
+                            {
+                                JObject j = (JObject)args.Value;
+                                var e = j.ToObject<MouseEventArgs>();
+                                MouseUp(this, e);
+                            }
+                        }
+                        break;
+                    case "mouseleave":
+                        {
+                            if (MouseLeave != null)
+                            {
+                                MouseLeave(this, EventArgs.Empty);
+                            }
+                        }
+                        break;
+                    case "mouseenter":
+                        {
+                            if (MouseEnter != null)
+                            {
+                                MouseEnter(this, EventArgs.Empty);
+                            }
+                        }
+                        break;
                 }
             }
             else
@@ -268,7 +501,7 @@ namespace System.Windows.Forms
         {
             get
             {
-                return "Control";
+                return this.GetType().Name;
             }
         }
 
@@ -402,7 +635,7 @@ namespace System.Windows.Forms
 
         private Color mForeColor;
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]
-        public Color ForeColor
+        public virtual Color ForeColor
         {
             get
             {
@@ -436,7 +669,7 @@ namespace System.Windows.Forms
         }
 
         private Font mFont;
-        public Font Font
+        public virtual Font Font
         {
             get
             {
@@ -579,18 +812,38 @@ namespace System.Windows.Forms
 
         public Graphics CreateGraphics()
         {
-            Graphics g = Graphics.FromImage(new Bitmap(this.Width, this.Height));
+            this.Canvas = new Bitmap(this.Width, this.Height);
+            Graphics g = Graphics.FromImage(this.Canvas);
             return g;
         }
 
         public Padding Padding = new Padding();
 
-        public event EventHandler<MouseEventArgs> MouseDown;
-        public event EventHandler<MouseEventArgs> MouseMove;
+        public event MouseEventHandler MouseUp;
+        public event MouseEventHandler MouseDown;
+        public event MouseEventHandler MouseMove;
+        public event EventHandler MouseLeave;
+        public event EventHandler MouseEnter;
+        public event EventHandler Resize;
+
+        protected virtual void OnMouseMove(MouseEventArgs e)
+        {
+
+        }
+
+        protected virtual void OnMouseLeave(EventArgs e)
+        {
+
+        }
 
         public void Hide()
         {
             this.Visible = false;
+        }
+
+        public void Refresh()
+        {
+            this.Invalidate();
         }
 
         public event EventHandler AddFormEvent;

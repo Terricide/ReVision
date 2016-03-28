@@ -107,5 +107,10 @@ namespace WindowsFormsLib
         {
             throw new Exception("An error has occurred");
         }
+
+        private void cuteButton1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Hello world");
+        }
     }
 }

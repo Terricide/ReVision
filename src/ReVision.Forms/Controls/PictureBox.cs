@@ -12,7 +12,7 @@ namespace System.Windows.Forms
     public class PictureBox : Control, ISupportInitialize
     {
         private Image mImage;
-        [JsonConverter(typeof(ImageConverter))]
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
         public Image Image
         {
             get

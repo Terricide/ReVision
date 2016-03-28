@@ -46,10 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\ControlStyles.cs" />
+    <Compile Include="BaseClasses\DoubleBuffer.cs" />
     <Compile Include="Controls\MaskedTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\AnchorStyles.cs" />
+    <Compile Include="EventHandlers\InvalidateEventArgs.cs" />
+    <Compile Include="EventHandlers\InvalidateEventHandler.cs" />
+    <Compile Include="EventHandlers\MouseEventHandler.cs" />
+    <Compile Include="EventHandlers\PaintEventArgs.cs" />
     <Compile Include="WebSocket\Application.cs" />
     <Compile Include="Enumerations\BorderColor.cs" />
     <Compile Include="Enumerations\BorderStyle.cs" />

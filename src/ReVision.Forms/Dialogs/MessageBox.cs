@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace System.Windows.Forms
 {
@@ -55,9 +54,9 @@ namespace System.Windows.Forms
             _plHeader.Controls.Add(_lblMessage);
 
             _plFooter.Dock = DockStyle.Bottom;
-            _plFooter.Padding = new Padding(20);
+            _plFooter.Padding = new Padding(10);
             _plFooter.BackColor = Color.FromArgb(37, 37, 38);
-            _plFooter.Height = 80;
+            _plFooter.Height = 20;
             _plFooter.Controls.Add(_flpButtons);
 
             _picIcon.Width = 32;
@@ -125,6 +124,7 @@ namespace System.Windows.Forms
             _msgBox = new MessageBox();
             _msgBox._lblMessage.Text = message;
             _msgBox.Text = title;
+            _msgBox.Size = _msgBox.MessageSize(message);
 
             MessageBox.InitButtons(Buttons.OK);
 
@@ -138,6 +138,7 @@ namespace System.Windows.Forms
             _msgBox = new MessageBox();
             _msgBox.Parent = parent;
             _msgBox._lblMessage.Text = message;
+            _msgBox.Size = _msgBox.MessageSize(message);
 
             MessageBox.InitButtons(Buttons.OK);
 
@@ -152,7 +153,7 @@ namespace System.Windows.Forms
             _msgBox.Parent = parent;
             _msgBox._lblMessage.Text = message;
             _msgBox.Text = title;
-            _msgBox.Size = MessageBox.MessageSize(message);
+            _msgBox.Size = _msgBox.MessageSize(message);
 
             MessageBox.InitButtons(Buttons.OK);
 
@@ -169,7 +170,7 @@ namespace System.Windows.Forms
             _msgBox.Parent = parent;
             _msgBox._lblMessage.Text = message;
             _msgBox.Text = title;
-            _msgBox.Size = MessageBox.MessageSize(message);
+            _msgBox.Size = _msgBox.MessageSize(message);
             _msgBox.FormClosed += (s,ex) =>
                 {
                     formClosed.Invoke(s, ex);
@@ -192,7 +193,7 @@ namespace System.Windows.Forms
 
             MessageBox.InitButtons(buttons);
 
-            _msgBox.Size = MessageBox.MessageSize(message);
+            _msgBox.Size = _msgBox.MessageSize(message);
             _msgBox.ShowDialog();
             
             return _buttonResult;
@@ -208,7 +209,7 @@ namespace System.Windows.Forms
             MessageBox.InitButtons(buttons);
             MessageBox.InitIcon(icon);
 
-            _msgBox.Size = MessageBox.MessageSize(message);
+            _msgBox.Size = _msgBox.MessageSize(message);
             _msgBox.ShowDialog();
             
             return _buttonResult;
@@ -226,7 +227,7 @@ namespace System.Windows.Forms
             MessageBox.InitIcon(icon);
 
             _timer = new Timer();
-            Size formSize = MessageBox.MessageSize(message);
+            Size formSize = _msgBox.MessageSize(message);
 
             switch (style)
             {
@@ -514,9 +515,9 @@ namespace System.Windows.Forms
             _msgBox.Dispose();
         }
 
-        private static Size MessageSize(string message)
+        private Size MessageSize(string message)
         {
-            Graphics g = _msgBox.CreateGraphics();
+            Graphics g = this.CreateGraphics();
             int width=350;
             int height = 230;
 

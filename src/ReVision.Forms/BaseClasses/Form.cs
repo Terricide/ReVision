@@ -46,6 +46,7 @@ namespace System.Windows.Forms
 
         public async Task ShowDialog(Control parent = null)
         {
+            this.IsHandleCreated = true;
             await FireEvent(new WSEventArgs()
             {
                 ClientId = this.ClientId,
@@ -79,7 +80,6 @@ namespace System.Windows.Forms
             //var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(str));
             //await Socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
             Visible = true;
-            this.IsHandleCreated = true;
         }
 
         protected override async Task RaisePropertyChanged(string prop = "")

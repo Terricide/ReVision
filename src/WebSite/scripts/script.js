@@ -303,8 +303,15 @@ function createNewElement(obj, parent) {
             }
             break;
         default:
-            alert('Unknown type' + type);
-            return;
+            if (obj.Canvas != undefined)
+            {
+                ctrl = new CustomControl();
+            }
+            else
+            {
+                alert('Unknown type' + type);
+                return;
+            }
     }
     ctrl.ControlType = type;
     controls[obj.ClientId] = ctrl;
@@ -594,6 +601,41 @@ Control.prototype.Render = function (div, obj, parent) {
         });
     }
 
+    if (obj.HasEvent("MouseMove")) {
+        div.addEventListener('mousemove', function (e) {
+            var args = {
+                X: e.x,
+                Y: e.y
+            };
+            var evt = {
+                ClientId: this.id,
+                EventType: 'mousemove',
+                Value: args
+            };
+            send(evt);
+        });
+    }
+
+    if (obj.HasEvent("MouseEnter")) {
+        div.addEventListener('mouseenter', function (e) {
+            var evt = {
+                ClientId: this.id,
+                EventType: 'mouseenter',
+            };
+            send(evt);
+        });
+    }
+
+    if (obj.HasEvent("MouseLeave")) {
+        div.addEventListener('mouseleave', function (e) {
+            var evt = {
+                ClientId: this.id,
+                EventType: 'mouseleave'
+            };
+            send(evt);
+        });
+    }
+
     if (obj.BackgroundImage != undefined) {
         $(div).css("background-image", "url('data:image/png;base64," + obj.BackgroundImage + "')");
         if( obj.BackgroundImageLayout != undefined)
@@ -619,6 +661,70 @@ Control.prototype.Render = function (div, obj, parent) {
             }
         }        
     }
+};
+
+var CustomControl = function () {
+
+}
+
+CustomControl.prototype = Object.create(Control.prototype);
+
+CustomControl.prototype.Update = function (obj) {
+    Control.prototype.Update(this.Element, obj);
+
+    var prop = obj.Value;
+    switch (prop.Name) {
+        case "Text":
+            this.Text.innerText = prop.Value;
+            break;
+        case "Canvas": {
+            var ctx = this.Canvas.getContext("2d");
+            ctx.clearRect(0, 0, this.Canvas.width, this.Canvas.height);
+            var image = new Image();
+            image.onload = function () {
+                ctx.drawImage(this, 0, 0);
+            };
+            image.src = "data:image/png  ;base64," + prop.Value;
+        }
+            break;
+    }
+};
+
+CustomControl.prototype.Render = function (obj, parent) {
+    this.Element = document.createElement('div');
+    Control.prototype.Render(this.Element, obj, parent);
+    if (obj.Canvas != undefined) {
+        var size = null;
+
+        if (obj.ClientSize != undefined) {
+            size = obj.ClientSize.split(',');
+        }
+
+        this.Canvas = document.createElement('canvas');
+        var ctx = this.Canvas.getContext("2d");
+        this.Canvas.id = "CX_" + obj.ClientId;
+        this.Canvas.width = size[0];
+        this.Canvas.height = size[1];
+        this.Canvas.style.position = "absolute";
+        this.Element.appendChild(this.Canvas);
+        var image = new Image();
+        image.onload = function () {
+            ctx.drawImage(this, 0, 0);
+        };
+        image.src = "data:image/png  ;base64," + obj.Canvas;
+    }
+    //if (obj.Text != undefined) {
+    //    this.Text = document.createElement('div');
+    //    Control.prototype.RenderText(this.Text, obj);
+    //    this.Text.innerText = obj.Text;
+    //    this.Text.style.textAlign = 'center';
+    //    this.Text.style.width = this.Element.style.width;
+    //    this.Text.style.height = '50%';
+    //    this.Text.style.top = '45%';
+    //    this.Text.style.position = 'absolute';
+    //    this.Element.appendChild(this.Text);
+    //}
+    return this;
 };
 
 var Button = function () {
@@ -1111,6 +1217,32 @@ LinkLabel.prototype.Render = function (obj, parent) {
         send(evt);
     });
 
+    return this;
+};
+
+var Panel = function () {
+
+}
+
+Panel.prototype = Object.create(Control.prototype);
+
+Panel.prototype.Update = function (obj) {
+    Control.prototype.Update(this.Element, obj);
+};
+
+Panel.prototype.Render = function (obj, parent) {
+    this.Element = document.createElement('div');
+    Control.prototype.Render(this.Element, obj, parent);
+    if (obj.Text != undefined) {
+        this.Text = document.createElement('div');
+        this.Text.innerText = obj.Text;
+        this.Text.style.textAlign = 'center';
+        this.Text.style.width = this.Element.style.width;
+        this.Text.style.height = '45%';
+        this.Text.style.top = '50%';
+        this.Text.style.position = 'absolute';
+        this.Element.appendChild(this.Text);
+    }
     return this;
 };
 
