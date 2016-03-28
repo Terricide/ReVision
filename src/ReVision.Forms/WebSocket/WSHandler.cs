@@ -33,7 +33,7 @@ namespace ReVision.Forms
             {
                 WebSocket socket = context.WebSocket;
 
-                var sessionId = context.Cookies["SessionId"];
+                var sessionId = context.Cookies["SessionId"]; 
 
                 Application App = null;
                 bool isNew = true;
