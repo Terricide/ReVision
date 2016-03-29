@@ -49,6 +49,11 @@ namespace WindowsFormsLib
         {
             this.MouseLeave += CuteButton_MouseLeave;
             this.MouseEnter += CuteButton_MouseEnter;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.DoubleBuffer, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.Selectable, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
             this.Invalidate();
         }
 

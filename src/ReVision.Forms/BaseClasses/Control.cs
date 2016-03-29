@@ -132,6 +132,11 @@ namespace System.Windows.Forms
             for (int i = 0; i < controls.Length; i++)
                 controls[i].Invalidate();
 
+            if (!this.ControlStyle.HasFlag( ControlStyles.UserPaint ))
+            {
+                return;
+            }
+
             using (Graphics mgraphics = this.CreateGraphics())
             {
                 OnPaint(new PaintEventArgs(mgraphics, new Rectangle(0, 0, this.Width, this.Height)));
@@ -218,7 +223,7 @@ namespace System.Windows.Forms
 
         protected virtual void OnPaint(PaintEventArgs pe)
         {
-
+            
         }
 
         private bool mIsHandledCreated;
