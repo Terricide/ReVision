@@ -1205,12 +1205,27 @@ LinkLabel.prototype.Render = function (obj, parent) {
     if (obj.Text != undefined) {
         this.Label.innerText = obj.Text;
         Control.prototype.RenderText(this.Label, obj);
-        
+        if( obj.Font == null )
+        {
+            this.Label.style.color = 'blue';
+            this.Label.style.textDecoration = 'underline';
+        }
     }
 
     this.Element.appendChild(this.Label);
 
     Control.prototype.Render(this.Element, obj, parent);
+
+    if (obj.HasEvent("LinkClicked")) {
+        $(this.Element).css({ "cursor": "pointer" });
+        this.Element.addEventListener('click', function (e) {
+            var evt = {
+                ClientId: this.id,
+                EventType: 'linkClicked'
+            };
+            send(evt);
+        });
+    }
 
     return this;
 };

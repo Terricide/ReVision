@@ -19,5 +19,27 @@ namespace System.Windows.Forms
                 return "LinkLabel";
             }
         }
+
+        public override Task ProcessMessage(WSEventArgs args)
+        {
+            var id = GetId(args.ClientId);
+
+            if (this.ClientId == id)
+            {
+                switch (args.EventType)
+                {
+                    case "linkClicked":
+                        {
+                            if(LinkClicked != null)
+                            {
+                                LinkClicked(this, new LinkLabelLinkClickedEventArgs());
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return base.ProcessMessage(args);
+        }
     }
 }

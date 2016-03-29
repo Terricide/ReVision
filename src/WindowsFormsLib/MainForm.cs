@@ -112,5 +112,10 @@ namespace WindowsFormsLib
         {
             MessageBox.Show("Hello world");
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("Link clicked");
+        }
     }
 }

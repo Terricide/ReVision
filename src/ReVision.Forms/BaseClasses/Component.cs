@@ -75,7 +75,17 @@ namespace System.Windows.Forms
 
                         if (eventDelagate != null)
                         {
-                            list.Add(field.Name);
+                            string name = string.Empty;
+                            var split = field.Name.Split(new char[] { '<', '>' });
+                            if( split.Length == 1)
+                            {
+                                name = split[0];
+                            }
+                            else
+                            {
+                                name = split[1];
+                            }
+                            list.Add(name);field.Name.Contains("Link");
                         }
                     }
                     type = type.BaseType;

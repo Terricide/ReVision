@@ -33,8 +33,10 @@ namespace WindowsFormsLib
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.glassButton1 = new SpinnyFlashyShinyControls.GlassButton();
             this.cuteButton1 = new WindowsFormsLib.CuteButton();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.glassButton1 = new SpinnyFlashyShinyControls.GlassButton();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.tbMask = new System.Windows.Forms.MaskedTextBox();
@@ -96,8 +98,6 @@ namespace WindowsFormsLib
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -166,19 +166,6 @@ namespace WindowsFormsLib
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // glassButton1
-            // 
-            this.glassButton1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
-            this.glassButton1.FontAntiAlias = true;
-            this.glassButton1.ForeColor = System.Drawing.Color.White;
-            this.glassButton1.Location = new System.Drawing.Point(31, 426);
-            this.glassButton1.Name = "glassButton1";
-            this.glassButton1.RoundedCornerRadius = 6;
-            this.glassButton1.Size = new System.Drawing.Size(222, 38);
-            this.glassButton1.TabIndex = 23;
-            this.glassButton1.Text = "glassButton1";
-            this.glassButton1.UseVisualStyleBackColor = true;
-            // 
             // cuteButton1
             // 
             this.cuteButton1.cuteColor1 = System.Drawing.Color.DarkBlue;
@@ -192,6 +179,35 @@ namespace WindowsFormsLib
             this.cuteButton1.Text = "cuteButton1";
             this.cuteButton1.UseVisualStyleBackColor = true;
             this.cuteButton1.Click += new System.EventHandler(this.cuteButton1_Click);
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(28, 410);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(284, 13);
+            this.label23.TabIndex = 25;
+            this.label23.Text = "Winforms custom control (OnPaint)";
+            // 
+            // label22
+            // 
+            this.label22.Location = new System.Drawing.Point(28, 320);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(265, 23);
+            this.label22.TabIndex = 24;
+            this.label22.Text = "Winforms custom control (OnPaint)";
+            // 
+            // glassButton1
+            // 
+            this.glassButton1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
+            this.glassButton1.FontAntiAlias = true;
+            this.glassButton1.ForeColor = System.Drawing.Color.White;
+            this.glassButton1.Location = new System.Drawing.Point(31, 426);
+            this.glassButton1.Name = "glassButton1";
+            this.glassButton1.RoundedCornerRadius = 6;
+            this.glassButton1.Size = new System.Drawing.Size(222, 38);
+            this.glassButton1.TabIndex = 23;
+            this.glassButton1.Text = "glassButton1";
+            this.glassButton1.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
@@ -334,6 +350,7 @@ namespace WindowsFormsLib
             this.linkLabel1.TabIndex = 5;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "linkLabel1";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // radioButton1
             // 
@@ -794,22 +811,6 @@ namespace WindowsFormsLib
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
-            // 
-            // label22
-            // 
-            this.label22.Location = new System.Drawing.Point(28, 320);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(265, 23);
-            this.label22.TabIndex = 24;
-            this.label22.Text = "Winforms custom control (OnPaint)";
-            // 
-            // label23
-            // 
-            this.label23.Location = new System.Drawing.Point(28, 410);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(284, 13);
-            this.label23.TabIndex = 25;
-            this.label23.Text = "Winforms custom control (OnPaint)";
             // 
             // MainForm
             // 
