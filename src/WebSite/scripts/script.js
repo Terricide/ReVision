@@ -592,6 +592,7 @@ Control.prototype.Render = function (div, obj, parent) {
     Control.prototype.RenderText(div, obj);
 
     if (obj.HasEvent("Click")) {
+        $(div).css({ "cursor": "pointer" });
         div.addEventListener('click', function (e) {
             var evt = {
                 ClientId: this.id,
@@ -1056,6 +1057,7 @@ RadioButton.prototype.Update = function (obj) {
 RadioButton.prototype.Render = function (obj, parent) {
 
     this.Element = document.createElement('div');
+    $(this.Element).css({ "cursor": "pointer" });
     var rb = document.createElement('input');
     rb.id = "RB_" + obj.ClientId;
     rb['type'] = 'radio';
@@ -1202,20 +1204,13 @@ LinkLabel.prototype.Render = function (obj, parent) {
 
     if (obj.Text != undefined) {
         this.Label.innerText = obj.Text;
+        Control.prototype.RenderText(this.Label, obj);
+        
     }
 
     this.Element.appendChild(this.Label);
 
     Control.prototype.Render(this.Element, obj, parent);
-
-    $(this.Label.id).click(function () {
-        var evt = {
-            ClientId: this.id,
-            EventType: 'click',
-            Value: this.value
-        };
-        send(evt);
-    });
 
     return this;
 };
