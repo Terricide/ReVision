@@ -257,6 +257,9 @@ namespace System.Windows.Forms
                 }
             }
         }
+        public event KeyPressEventHandler KeyPress;
+        public event KeyEventHandler KeyDown;
+
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
         public Image BackgroundImage { get; set; }
         public event EventHandler TextChanged;
@@ -458,6 +461,28 @@ namespace System.Windows.Forms
                             if (MouseEnter != null)
                             {
                                 MouseEnter(this, EventArgs.Empty);
+                            }
+                        }
+                        break;
+                    case "keyDown":
+                        {
+                            if (KeyDown != null)
+                            {
+                                JObject j = (JObject)args.Value;
+                                var e = j.ToObject<KeyEventArgs>();
+
+                                KeyDown(this, e);
+                            }
+                        }
+                        break;
+                    case "keyPress":
+                        {
+                            if (KeyPress != null)
+                            {
+                                JObject j = (JObject)args.Value;
+                                var e = j.ToObject<KeyPressEventArgs>();
+
+                                KeyPress(this, e);
                             }
                         }
                         break;

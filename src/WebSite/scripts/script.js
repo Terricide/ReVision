@@ -313,7 +313,9 @@ function createNewElement(obj, parent) {
                 return;
             }
     }
+    ctrl.Name = obj.Name;
     ctrl.ControlType = type;
+    ctrl.ClientId = obj.ClientId;
     controls[obj.ClientId] = ctrl;
     controls[obj.ClientId].children = [];
     div = ctrl.Render(obj, parent);
@@ -330,7 +332,7 @@ function createNewElement(obj, parent) {
     if (type != "TabControl") {
 
         for (var i = 0; i < obj.Controls.length; i++) {
-            var ctrl = obj.Controls[i];
+            var childCtrl = obj.Controls[i];
             var li = div.Element;
             //if (ul != null)
             //{
@@ -338,12 +340,126 @@ function createNewElement(obj, parent) {
             //    ul.appendChild(li);
             //}
 
-            var newElement = createNewElement(ctrl, li);
-            controls[obj.ClientId].children.push(newElement)
+            var newElement = createNewElement(childCtrl, li);
+            controls[obj.ClientId].children.push(newElement);
         }
     }
 
+    if (parent != null) {
+        reAlignControl(parent, ctrl);
+    }
+
     return div;
+}
+
+// This function realigns all the controls for docking
+function reAlignControl(parent, current) {
+    var childControls = parent.children;
+
+    var top = 0;
+    var left = 0;
+    var bottom = 0;
+    var right = 0;
+
+    switch (current.Element.Dock) {
+        //Left
+        case 1:
+            {
+                left = current.Element.clientWidth;
+                for (var i = 0; i < childControls.length; i++) {
+                    var child = childControls[i];
+                    switch (child.Dock) {
+                        case 4:
+                        case 3:
+                        case 5: {
+                            var ctrl = $(child);
+                            var ctrlLeft = ctrl.position().left;
+                            ctrl.css('left', ctrlLeft + left);
+                        }                           
+                        break;
+                    }
+                }
+            }
+            break;
+            //Right
+        case 2:
+            {
+                right = current.Element.clientWidth;
+                for (var i = 0; i < childControls.length; i++) {
+                    var child = childControls[i];
+                    if (child.id == current.Element.id) {
+                        continue;
+                    }
+                    switch (child.Dock) {
+                        case 3:
+                        case 4:
+                        case 5: {
+                            var ctrl = $(child);
+                            var ctrlWidth = ctrl.width();
+                            var ctrlLeft = ctrl.position().left;
+                            var newWidth = ctrlWidth - right - ctrlLeft;
+                            ctrl.css('width', newWidth);
+                        }
+                            break;
+                    }
+                }
+            }
+            break;
+            //Top
+        case 3:
+            {
+                top = $(current.Element).height();
+                for (var i = 0; i < childControls.length; i++) {
+                    var child = childControls[i];
+                    if (child.id == current.Element.id) {
+                        continue;
+                    }
+                    switch (child.Dock) {
+                        case 3: {
+                            var ctrl = $(child);
+                            var ctrlTop = ctrl.position().top;
+                            ctrl.css('top', ctrlTop + top);
+                        }
+                            break;
+                        case 5: {
+                            var ctrl = $(child);
+                            var ctrlTop = ctrl.position().top;
+                            var ctrlHeight = ctrl.height();
+                            ctrl.css('top', ctrlTop + top);
+                            ctrl.css('height', ctrlHeight - top);
+                        }
+                            break;
+                    }
+                }
+            }
+            break;
+            //Bottom
+        case 4:
+            {
+                bottom = $(current.Element).height();
+                for (var i = 0; i < childControls.length; i++) {
+                    var child = childControls[i];
+                    if (child.id == current.Element.id) {
+                        continue;
+                    }
+                    switch (child.Dock) {
+                        case 4: {
+                            var ctrl = $(child);
+                            var ctrlTop = child.offsetTop;
+                            ctrl.css('top', ctrlTop - bottom);
+                        }
+                            break;
+                        case 5: {
+                            var ctrl = $(child);
+                            var ctrlHeight = ctrl.height();
+                            ctrl.css('height', ctrlHeight - bottom);
+                        }
+                            break;
+                    }
+                }
+            }
+            break;
+    }
 }
 
 var Control = function () {
@@ -505,6 +621,7 @@ Control.prototype.Render = function (div, obj, parent) {
 
     if (obj.Dock != undefined)
     {
+        div.Dock = obj.Dock;
         switch(obj.Dock)
         {
             //None
@@ -522,6 +639,7 @@ Control.prototype.Render = function (div, obj, parent) {
                     //div.style.cssFloat = 'left';
                     div.style.width = size[0] + 'px';
                     div.style.height = '100%';
+                    div.setAttribute('r-docking', 'L');
                 }
                 break;
             //Right
@@ -531,6 +649,7 @@ Control.prototype.Render = function (div, obj, parent) {
                     div.style.width = size[0] + 'px';
                     div.style.height = '100%';
                     div.style.right = 0;
+                    div.setAttribute('r-docking', 'R');
                 }
                 break;
             //Top
@@ -539,6 +658,7 @@ Control.prototype.Render = function (div, obj, parent) {
                     //div.style.verticalAlign = 'top';
                     div.style.height = size[1] + 'px';
                     div.style.width = '100%';
+                    div.setAttribute('r-docking', 'T');
                 }
                 break;
             //Bottom
@@ -549,6 +669,7 @@ Control.prototype.Render = function (div, obj, parent) {
                     div.style.width = '100%';
                     
                     $(div).css({ bottom: 0 });
+                    div.setAttribute('r-docking', 'B');
                 }
                 break;
             //Fill
@@ -558,6 +679,7 @@ Control.prototype.Render = function (div, obj, parent) {
                     div.style.height = '100%';
                     div.style.top = '0';
                     div.style.left = '0';
+                    div.setAttribute('r-docking', 'F');
                 }
                 break;
         }
@@ -578,6 +700,7 @@ Control.prototype.Render = function (div, obj, parent) {
     div.style.backgroundColor = obj.BackColor;
 
     div.id = "WU_" + obj.ClientId;
+    div.setAttribute('vControlName', obj.Name);
 
     if (obj.Visible != undefined && obj.Visible == false)
     {
@@ -798,12 +921,46 @@ TextBox.prototype.Render = function (obj, parent) {
         };
         send(evt);
     };
+
     if (obj.PasswordChar != undefined && obj.PasswordChar.length > 0 && obj.PasswordChar != '\0')
     {
         this.Element.setAttribute("type", "password");
     }
     this.Element.value = obj.Text;
     Control.prototype.Render(this.Element, obj, parent);
+
+    if (obj.HasEvent("KeyDown")) {
+        $(this.Element).keydown(function (e) {
+            var evt = {
+                ClientId: this.id,
+                EventType: 'keyDown',
+                Value: {
+                    Shift: e.shiftKey,
+                    Alt: e.altKey,
+                    Control: e.ctrlKey,
+                    KeyValue: e.which
+                }
+            };
+            send(evt);
+        });
+    }
+
+    if (obj.HasEvent("KeyPress")) {
+        $(this.Element).keydown(function (e) {
+            if (e.char == '\n') {
+                e.target.onchange();
+            }
+            var evt = {
+                ClientId: this.id,
+                EventType: 'keyPress',
+                Value: {
+                    KeyChar: e.char
+                }
+            };
+            send(evt);
+        });
+    }
+
     return this;
 };
 

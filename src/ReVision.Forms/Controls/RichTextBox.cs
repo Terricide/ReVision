@@ -22,5 +22,10 @@ namespace System.Windows.Forms
         public bool ReadOnly { get; set; }
 
         public RichTextBoxScrollBars ScrollBars { get; set; }
+
+        public void AppendText(string text)
+        {
+            this.Text += text;
+        }
     }
 }

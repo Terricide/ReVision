@@ -1175,6 +1175,13 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\WindowsFormsLib\ChatWindow.cs">
+      <Link>ChatWindow.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\WindowsFormsLib\ChatWindow.Designer.cs">
+      <Link>ChatWindow.Designer.cs</Link>
+    </Compile>
     <Compile Include="..\WindowsFormsLib\CuteButton.cs">
       <Link>CuteButton.cs</Link>
       <SubType>Component</SubType>
@@ -1213,6 +1220,9 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="TestDockForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ZebraForm.aspx.cs">
       <DependentUpon>ZebraForm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1222,6 +1232,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\WindowsFormsLib\ChatWindow.resx">
+      <Link>ChatWindow.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\WindowsFormsLib\MainForm.resx">
       <Link>MainForm.resx</Link>
     </EmbeddedResource>

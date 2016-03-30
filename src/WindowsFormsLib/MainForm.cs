@@ -117,5 +117,11 @@ namespace WindowsFormsLib
         {
             MessageBox.Show("Link clicked");
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ChatWindow chat = new ChatWindow();
+            chat.ShowDialog();
+        }
     }
 }

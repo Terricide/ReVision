@@ -52,8 +52,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\AnchorStyles.cs" />
+    <Compile Include="Enumerations\Keys.cs" />
     <Compile Include="EventHandlers\InvalidateEventArgs.cs" />
     <Compile Include="EventHandlers\InvalidateEventHandler.cs" />
+    <Compile Include="EventHandlers\KeyPressEventArgs.cs" />
+    <Compile Include="EventHandlers\KeyPressEventHandler.cs" />
     <Compile Include="EventHandlers\MouseEventHandler.cs" />
     <Compile Include="EventHandlers\PaintEventArgs.cs" />
     <Compile Include="WebSocket\Application.cs" />
