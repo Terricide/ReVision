@@ -141,12 +141,15 @@ function dropClasses(o) {
     }
 };
 
-function send(e) {
+function send(e, f) {
     //var str = JSON.stringify(dropClasses(e));
     try
     {
         var str = stringifyRecursion(e);
         ws.send(str);
+        if (f != undefined) {
+            f();
+        }
     }
     catch(e)
     {
@@ -926,6 +929,15 @@ TextBox.prototype.Update = function (obj) {
     }
 };
 
+TextBox.prototype.OnChange = function(f) {
+    var evt = {
+        ClientId: this.id,
+        EventType: 'textchanged',
+        Value: this.value
+    };
+    send(evt,f);
+}
+
 TextBox.prototype.Render = function (obj, parent) {
     if (obj.Multiline)
     {
@@ -936,14 +948,7 @@ TextBox.prototype.Render = function (obj, parent) {
         this.Element = document.createElement('input');
     }
     this.Element.className = "k-textbox";
-    this.Element.onchange = function () {
-        var evt = {
-            ClientId: this.id,
-            EventType: 'textchanged',
-            Value: this.value
-        };
-        send(evt);
-    };
+    this.Element.onchange = TextBox.prototype.OnChange;
 
     if (obj.PasswordChar != undefined && obj.PasswordChar.length > 0 && obj.PasswordChar != '\0')
     {
@@ -971,16 +976,29 @@ TextBox.prototype.Render = function (obj, parent) {
     if (obj.HasEvent("KeyPress")) {
         $(this.Element).keydown(function (e) {
             if (e.keyCode == 13) {
-                e.target.onchange();
+                var id = this.id;
+                e.target.onchange(function ()
+                {
+                    var evt = {
+                        ClientId: id,
+                        EventType: 'keyPress',
+                        Value: {
+                            KeyChar: e.keyCode
+                        }
+                    };
+                    send(evt);
+                });
             }
-            var evt = {
+            else {
+                var evt = {
                 ClientId: this.id,
-                EventType: 'keyPress',
-                Value: {
-                    KeyChar: e.keyCode
-                }
-            };
-            send(evt);
+                    EventType: 'keyPress',
+                    Value: {
+                        KeyChar: e.keyCode
+                    }
+                };
+                send(evt);
+            }
         });
     }
 
