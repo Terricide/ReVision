@@ -979,14 +979,16 @@ TextBox.prototype.Render = function (obj, parent) {
                 var id = this.id;
                 e.target.onchange(function ()
                 {
-                    var evt = {
-                        ClientId: id,
-                        EventType: 'keyPress',
-                        Value: {
-                            KeyChar: e.keyCode
-                        }
-                    };
-                    send(evt);
+                    setTimeout(function () {
+                        var evt = {
+                            ClientId: id,
+                            EventType: 'keyPress',
+                            Value: {
+                                KeyChar: e.keyCode
+                            }
+                        };
+                        send(evt);
+                    }, 250);
                 });
             }
             else {
