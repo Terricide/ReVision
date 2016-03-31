@@ -64,13 +64,13 @@ namespace System.Windows.Forms
             }
             else if( Application.Current != null)
             {
-                if( Application.Current.RootForm != null)
+                if( Application.Current.Value.RootForm != null)
                 {
-                    Application.Current.RootForm.AddForm(this);
+                    Application.Current.Value.RootForm.AddForm(this);
                 }
                 else
                 {
-                    Application.Current.Forms.Add(this);
+                    Application.Current.Value.Forms.Add(this);
                 }
             }
             //var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
@@ -176,7 +176,7 @@ namespace System.Windows.Forms
 
             if (Application.Current != null)
             {
-                Application.Current.Forms.Remove(this);
+                Application.Current.Value.Forms.Remove(this);
             }
         }
 

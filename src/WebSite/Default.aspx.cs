@@ -13,12 +13,7 @@ namespace WebSite
         {
             if( !this.IsPostBack )
             {
-                var sessionId = this.Request.Cookies["SessionId"];
-                if (sessionId == null)
-                {
-                    sessionId = new HttpCookie("SessionId", Guid.NewGuid().ToString());
-                }
-                this.Response.SetCookie(sessionId);
+
             }
         }
     }

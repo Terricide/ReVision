@@ -33,6 +33,7 @@ namespace WindowsFormsLib
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button6 = new System.Windows.Forms.Button();
             this.cuteButton1 = new WindowsFormsLib.CuteButton();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -98,7 +99,6 @@ namespace WindowsFormsLib
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.button6 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -167,6 +167,17 @@ namespace WindowsFormsLib
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.Location = new System.Drawing.Point(717, 92);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(166, 72);
+            this.button6.TabIndex = 26;
+            this.button6.Text = "Open Chat";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // cuteButton1
             // 
@@ -525,8 +536,8 @@ namespace WindowsFormsLib
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.panel4);
             this.tabPage4.Controls.Add(this.panel3);
+            this.tabPage4.Controls.Add(this.panel4);
             this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Controls.Add(this.panel1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -813,17 +824,6 @@ namespace WindowsFormsLib
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
-            // 
-            // button6
-            // 
-            this.button6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Location = new System.Drawing.Point(717, 92);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(166, 72);
-            this.button6.TabIndex = 26;
-            this.button6.Text = "Open Chat";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // MainForm
             // 

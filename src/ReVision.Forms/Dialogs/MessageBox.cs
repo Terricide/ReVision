@@ -218,7 +218,7 @@ namespace System.Windows.Forms
         public static DialogResult Show(Control parent, string message, string title, Buttons buttons, Icon icon, AnimateStyle style)
         {
             _msgBox = new MessageBox();
-            _msgBox.Socket = parent.Socket;
+            //_msgBox.Socket = parent.Socket;
             _msgBox._lblMessage.Text = message;
             _msgBox.Text = title;
             _msgBox.Height = 0;

@@ -43,7 +43,7 @@ namespace System.Windows.Forms
             {
                 if( string.IsNullOrEmpty(mClientId) )
                 {
-                    Current = Application.Current;
+                    Current = Application.Current.Value;
                     mClientId = Current.AddComponent(this).ToString();
                 }
                 return mClientId;
@@ -102,7 +102,17 @@ namespace System.Windows.Forms
         }
 
         [JsonIgnore]
-        public WebSocket Socket;
+        public WebSocket Socket
+        {
+            get
+            {
+                if( Current == null )
+                {
+                    return null;
+                }
+                return Current.Socket;
+            }
+        }
 
         [JsonIgnore]
         public WebSocketState State

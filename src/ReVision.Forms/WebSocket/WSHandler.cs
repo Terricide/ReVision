@@ -17,8 +17,11 @@ namespace ReVision.Forms
     {
         public static Dictionary<string, Application> Apps = new Dictionary<string, Application>();
 
+        private string SessionId { get; set; }
+
         public void ProcessRequest(HttpContext context)
         {
+            this.SessionId = context.Request.Params["id"];
             if (context.IsWebSocketRequest)
             {
                 context.AcceptWebSocketRequest(ProcessWSChat);
@@ -33,23 +36,21 @@ namespace ReVision.Forms
             {
                 WebSocket socket = context.WebSocket;
 
-                var sessionId = context.Cookies["SessionId"]; 
-
                 Application App = null;
                 bool isNew = true;
-                if( !Apps.ContainsKey(sessionId.Value))
+                if( !Apps.ContainsKey(SessionId))
                 {
                     App = new Application();
-                    Apps.Add(sessionId.Value, App);
+                    Apps.Add(SessionId, App);
                 }
                 else
                 {
                     isNew = false;
-                    App = Apps[sessionId.Value]; 
+                    App = Apps[SessionId]; 
                 }
 
-                Application.Current = App;
-                Application.Current.Socket = socket;
+                Application.Current.Value = App;
+                App.Socket = socket;
 
                 while (true)
                 {
@@ -73,11 +74,11 @@ namespace ReVision.Forms
                                     var formInfo = WebConfigurationManager.AppSettings["Form"];
                                     var type = Type.GetType(formInfo);
                                     var form = (Form)Activator.CreateInstance(type);
-                                    await App.CreateDomain(form, sessionId.Value, socket);
+                                    await App.CreateDomain(form, SessionId, socket);
                                 }
                                 else
                                 {
-                                    await App.UpdateDomain(sessionId.Value, socket);
+                                    await App.UpdateDomain(SessionId, socket);
                                 }
                             }
                             else

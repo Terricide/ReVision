@@ -551,18 +551,18 @@ namespace System.Windows.Forms
                 return;
             }
 
-            if (Application.Current != null && Application.Current.Socket != null)
-            {
-                this.Socket = Application.Current.Socket;
-            }
             if (Socket != null)
             {
                 await base.FireEvent(evt);
             }
-            else if (Parent != null)
-            {
-                await Parent.FireEvent(evt);
-            }
+            //else if (Application.Current != null && Application.Current.Value.Socket != null)
+            //{
+            //    this.Socket = Application.Current.Value.Socket;
+            //}
+            //else if (Parent != null)
+            //{
+            //    await Parent.FireEvent(evt);
+            //}
         }
 
         [JsonIgnore]

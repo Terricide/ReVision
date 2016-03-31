@@ -1,6 +1,20 @@
 ﻿var controls = [];
 var rootForm = true;
 var ws;
+
+function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now(); //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
 $().ready(function () {
     var path = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
 
@@ -9,7 +23,14 @@ $().ready(function () {
         path = ":" + window.location.port + path
     }
 
-    ws = new WebSocket("ws://" + window.location.hostname + path + "/echo");
+    var data = sessionStorage.getItem('sessionId');
+    if (data == undefined)
+    {
+        data = generateUUID();
+        sessionStorage.setItem('sessionId', data)
+    }
+
+    ws = new WebSocket("ws://" + window.location.hostname + path + "/echo?id=" + data);
     ws.onopen = function () {
         var evt = {
             EventType: 'openForm'
@@ -1038,6 +1059,7 @@ RichTextBox.prototype.Render = function (obj, parent) {
         send(evt);
     };
     this.Element.readOnly = obj.ReadOnly;
+    this.Element.value = obj.Text;
     Control.prototype.Render(this.Element, obj, parent);
     this.Element.style.overflowY = 'auto';
     return this;
@@ -1865,42 +1887,46 @@ PictureBox.prototype.Update = function (obj) {
     Control.prototype.Update(this.Element, obj);
     var prop = obj.Value;
     switch (prop.Name) {
-        case "Image":
-            $(this.Element).css("background", "url('data:image/png;base64," + prop.Value + "')");
-            $(this.Element).css("background-repeat", "no-repeat");
+        case "Image": {
+            PictureBox.prototype.UpdateImage(prop.Value);
+        }
             break;
     }
 };
 
+PictureBox.prototype.UpdateImage = function (img) {
+    $(this.Element).css("background-image", "url('data:image/png;base64," + img + "')");
+    if (this.Element.SizeMode != undefined) {
+        switch (this.Element.SizeMode) {
+            //none
+            case 0:
+                $(this.Element).css("background-repeat", "no-repeat");
+                break;
+                //AutoSize
+            case 1:
+                break;
+                //CenterImage
+            case 2:
+                $(this.Element).css("background-repeat", "no-repeat");
+                break;
+                //Normal
+            case 3:
+                $(this.Element).css("background-size", "cover");
+                break;
+                //StretchImage
+            case 4:
+                break;
+                //Zoom
+        }
+    }
+}
+
 PictureBox.prototype.Render = function (obj, parent) {
     this.Element = document.createElement('div');
     Control.prototype.Render(this.Element, obj, parent);
-
+    this.Element.SizeMode = obj.SizeMode;
     if (obj.Image != undefined) {
-        $(this.Element).css("background-image", "url('data:image/png;base64," + obj.Image + "')");
-        if (obj.SizeMode != undefined) {
-            switch (obj.SizeMode) {
-                //none
-                case 0:
-                    $(this.Element).css("background-repeat", "no-repeat");
-                    break;
-                    //AutoSize
-                case 1:
-                    break;
-                    //CenterImage
-                case 2:
-                    $(this.Element).css("background-repeat", "no-repeat");
-                    break;
-                    //Normal
-                case 3:
-                    $(this.Element).css("background-size", "cover");
-                    break;
-                    //StretchImage
-                case 4:
-                    break;
-                    //Zoom
-            }
-        }
+        PictureBox.prototype.UpdateImage(obj.Image);
     }
     return this;
 };

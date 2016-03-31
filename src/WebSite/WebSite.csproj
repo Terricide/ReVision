@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WebSite</RootNamespace>
     <AssemblyName>WebSite</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -445,8 +445,9 @@
     <Content Include="..\WindowsFormsApplication1\App.config">
       <Link>App.config</Link>
     </Content>
-    <Content Include="scripts\jquery-2.2.1.js" />
-    <Content Include="scripts\jquery-2.2.1.min.js" />
+    <None Include="scripts\jquery-2.2.2.intellisense.js" />
+    <Content Include="scripts\jquery-2.2.2.js" />
+    <Content Include="scripts\jquery-2.2.2.min.js" />
     <Content Include="scripts\jquery-ui-1.11.4.js" />
     <Content Include="scripts\jquery-ui-1.11.4.min.js" />
     <Content Include="scripts\json-recursive.js" />
@@ -1015,7 +1016,6 @@
     <Content Include="ZebraForm.aspx" />
     <Content Include="scripts\zebra.runtime\zebra.json" />
     <Content Include="css\skin-win8\ui.fancytree.less" />
-    <Content Include="scripts\jquery-2.2.1.min.map" />
     <Content Include="scripts\kendo\2016.1.226\kendo.window.min.js.map" />
     <Content Include="scripts\kendo\2016.1.226\kendo.webcomponents.min.js.map" />
     <Content Include="scripts\kendo\2016.1.226\kendo.virtuallist.min.js.map" />
@@ -1161,6 +1161,7 @@
     <Content Include="Content\kendo\2016.1.226\fonts\DejaVu\DejaVuSans-ExtraLight.ttf" />
     <Content Include="Content\kendo\2016.1.226\fonts\DejaVu\DejaVuSans-BoldOblique.ttf" />
     <Content Include="Content\kendo\2016.1.226\fonts\DejaVu\DejaVuSans-Bold.ttf" />
+    <Content Include="scripts\jquery-2.2.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1277,7 +1278,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
+      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

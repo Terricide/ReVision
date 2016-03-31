@@ -23,6 +23,7 @@ namespace WindowsFormsLib
             {
                 Images.Add(Image.FromFile(img));
             }
+            button1_Click(null, null);
         }
 
         private void button1_Click(object sender, EventArgs e)

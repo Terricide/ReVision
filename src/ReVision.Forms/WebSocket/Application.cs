@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -15,7 +16,7 @@ namespace System.Windows.Forms
         public List<Form> Forms = new List<Form>();
         private ConcurrentDictionary<int, Component> Components = new ConcurrentDictionary<int, Component>();
 
-        public static volatile Application Current;
+        public static AsyncLocal<Application> Current = new AsyncLocal<Application>();
 
         private int mNextId;
         private int NextId
@@ -120,7 +121,7 @@ namespace System.Windows.Forms
 
         private async Task ShowDialog(Form frm)
         {
-            frm.Socket = this.Socket;
+            //frm.Socket = this.Socket;
             frm.AddFormEvent += frm_AddFormEvent;
             await frm.ShowDialog();
         }

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
     <script type="text/javascript" src="./scripts/json-recursive.js"></script>
-    <script type="text/javascript" src="./scripts/jquery-2.2.1.js"></script>
+    <script type="text/javascript" src="./scripts/jquery-2.2.2.js"></script>
     <script type="text/javascript" src="./scripts/jquery-ui-1.11.4.js"></script>
     <script type="text/javascript" src="http://cdn.kendostatic.com/2016.1.226/js/kendo.all.min.js"></script>
     <script type="text/javascript" src="./scripts/kendo/kendo.web.plugins.js"></script>
