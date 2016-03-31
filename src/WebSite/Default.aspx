@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>WebSocket Chat</title>
+    <title>ReVision WebUI</title>
 
     <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet'>
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2016.1.226/styles/kendo.common.min.css" />

@@ -373,8 +373,10 @@ function reAlignControl(parent, current) {
                         case 3:
                         case 5: {
                             var ctrl = $(child);
+                            var ctrlWidth = ctrl.width();
                             var ctrlLeft = ctrl.position().left;
                             ctrl.css('left', ctrlLeft + left);
+                            ctrl.css('width', ctrlWidth - ctrlLeft - left);
                         }                           
                         break;
                     }
@@ -1035,7 +1037,9 @@ RichTextBox.prototype.Render = function (obj, parent) {
         };
         send(evt);
     };
+    this.Element.readOnly = obj.ReadOnly;
     Control.prototype.Render(this.Element, obj, parent);
+    this.Element.style.overflowY = 'auto';
     return this;
 };
 
