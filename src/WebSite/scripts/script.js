@@ -970,14 +970,14 @@ TextBox.prototype.Render = function (obj, parent) {
 
     if (obj.HasEvent("KeyPress")) {
         $(this.Element).keydown(function (e) {
-            if (e.char == '\n') {
+            if (e.keyCode == 13) {
                 e.target.onchange();
             }
             var evt = {
                 ClientId: this.id,
                 EventType: 'keyPress',
                 Value: {
-                    KeyChar: e.char
+                    KeyChar: e.keyCode
                 }
             };
             send(evt);

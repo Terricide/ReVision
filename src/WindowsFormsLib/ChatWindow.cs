@@ -31,7 +31,7 @@ namespace WindowsFormsLib
 
         private void tbMessage_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)10)
+            if (e.KeyChar == (char)13)
             {
                 ChatMessages.AddMessage(this.tbName.Text, this.tbMessage.Text);
                 this.tbMessage.Text = string.Empty;
