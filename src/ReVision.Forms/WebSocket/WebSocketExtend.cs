@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,8 @@ namespace System.Net.WebSockets
         {
             var str = JsonConvert.SerializeObject(msg, Formatting.None, new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
             var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(str));
             await socket.SendAsync(buffer, WebSocketMessageType.Text, true, Threading.CancellationToken.None);

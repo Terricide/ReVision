@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReVision.Forms", "ReVision.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsLib", "WindowsFormsLib\WindowsFormsLib.csproj", "{D6BB3817-6AD0-4428-AB92-66BC90DBC02D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReVision.JSForms", "ReVision.JSForms\ReVision.JSForms.csproj", "{7EB52427-26D6-4942-95AB-76D1F4E46D41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AgentCoverageDebug|Any CPU = AgentCoverageDebug|Any CPU
@@ -42,6 +44,12 @@ Global
 		{D6BB3817-6AD0-4428-AB92-66BC90DBC02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6BB3817-6AD0-4428-AB92-66BC90DBC02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6BB3817-6AD0-4428-AB92-66BC90DBC02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.AgentCoverageDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.AgentCoverageDebug|Any CPU.Build.0 = Debug|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

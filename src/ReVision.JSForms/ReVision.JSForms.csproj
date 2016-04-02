@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7EB52427-26D6-4942-95AB-76D1F4E46D41}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReVision.JSForms</RootNamespace>
+    <AssemblyName>ReVision.JSForms</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\ReVision.Forms\BaseClasses\Component.Common.cs">
+      <Link>BaseClasses\Component.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\ReVision.Forms\BaseClasses\Control.Common.cs">
+      <Link>BaseClasses\Control.Common.cs</Link>
+    </Compile>
+    <Compile Include="App.cs" />
+    <Compile Include="BaseClasses\Component.cs" />
+    <Compile Include="BaseClasses\Control.cs" />
+    <Compile Include="BaseClasses\ControlsCollection.cs" />
+    <Compile Include="BaseClasses\Form.cs" />
+    <Compile Include="BaseClasses\Guid.cs" />
+    <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
+    <Compile Include="BaseClasses\Size.cs" />
+    <Compile Include="BaseClasses\TabControl.cs" />
+    <Compile Include="Events\PropertyChangedEventHandler.cs" />
+    <Compile Include="BaseClasses\Point.cs" />
+    <Compile Include="WebSocket\WSEventArgs.cs" />
+    <Compile Include="Events\CloseEvent.cs" />
+    <Compile Include="Events\MessageEvent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebSocket\Application.cs" />
+    <Compile Include="WebSocket\WebSocket.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bridge, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.1.11.2\lib\net40\Bridge.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bridge.Html5, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.1.11.2\lib\net40\Bridge.Html5.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bridge\output\bridge.js" />
+    <Content Include="Bridge\output\readme.txt" />
+    <Content Include="Bridge\output\reVision.jSForms.js" />
+    <Content Include="Bridge\output\system.collections.specialized.js" />
+    <Content Include="Bridge\output\system.drawing.js" />
+    <Content Include="Bridge\output\system.js" />
+    <Content Include="Bridge\output\system.windows.forms.js" />
+    <Content Include="Bridge\www\demo.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Readme\Bridge.NET\LICENSE" />
+    <None Include="App_Readme\Bridge.NET\README.md" />
+    <None Include="Bridge\bridge.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Bridge.1.11.2\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.11.2\build\Bridge.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Bridge.1.11.2\build\Bridge.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.1.11.2\build\Bridge.targets'))" />
+  </Target>
+</Project>

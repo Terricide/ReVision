@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\Control.Common.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="BaseClasses\ControlStyles.cs" />
     <Compile Include="BaseClasses\DoubleBuffer.cs" />
     <Compile Include="Controls\MaskedTextBox.cs">
@@ -224,6 +227,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\Component.Common.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

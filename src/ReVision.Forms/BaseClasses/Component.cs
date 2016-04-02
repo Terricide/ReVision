@@ -15,13 +15,14 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Reflection;
+using Newtonsoft.Json.Serialization;
 
 namespace System.Windows.Forms
 {
     [DesignerCategory ("Component")]
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDispatch)]
-    public class Component : IComponent, IDisposable, IObservableItem, INotifyPropertyChanged
+    public partial class Component : IComponent, IDisposable, IObservableItem, INotifyPropertyChanged
     {
         private Application Current;
         private EventHandlerList event_handlers;
@@ -36,12 +37,20 @@ namespace System.Windows.Forms
             Dispose(false);
         }
 
-        private string mClientId;
-        public string ClientId 
+        public virtual string ControlName
         {
             get
             {
-                if( string.IsNullOrEmpty(mClientId) )
+                return "Component";
+            }
+        }
+
+        private string mClientId;
+        public string ClientId
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(mClientId))
                 {
                     Current = Application.Current.Value;
                     mClientId = Current.AddComponent(this).ToString();
@@ -50,14 +59,13 @@ namespace System.Windows.Forms
             }
             set
             {
-                if (mClientId != null)
+                if (mClientId != value)
                 {
                     mClientId = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public object Tag { get; set; }
 
         public string[] AllEvents
         {
@@ -154,7 +162,8 @@ namespace System.Windows.Forms
                         }
                         str = JsonConvert.SerializeObject(queuedEvent, Formatting.None, new JsonSerializerSettings
                         {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
                         });
                         if (string.IsNullOrEmpty(str))
                         {
@@ -166,7 +175,8 @@ namespace System.Windows.Forms
 
                     str = JsonConvert.SerializeObject(evt, new JsonSerializerSettings()
                     {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
                     buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(str));
                     await Socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
@@ -189,16 +199,11 @@ namespace System.Windows.Forms
 
         public event ObservableItemPropertyChangedHandler ObservableItemPropertyChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         protected static Dictionary<Type, Dictionary<string, PropertyInfo>> mComponentProperties = new Dictionary<Type,Dictionary<string,PropertyInfo>>(50);
         protected static string mBitmapTypeFullName = typeof(Bitmap).FullName;
 
         protected virtual async Task RaisePropertyChanged([CallerMemberName]string propName = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            
+        {           
             Type thisType = this.GetType();
             if (!mComponentProperties.ContainsKey(thisType))
             {
@@ -223,24 +228,7 @@ namespace System.Windows.Forms
                     val = Convert.ToBase64String(ms.ToArray());
                 }
             }
-            await FireEvent(new WSEventArgs()
-            {
-                ClientId = this.ClientId,
-                EventType = "PropertyChanged",
-                Value = new
-                {
-                    Name = propName,
-                    Value = val
-                }
-            });
-        }
-
-        public virtual string ControlName
-        {
-            get
-            {
-                return "Component";
-            }
+            await RaisePropertyChanged(propName, val);
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Advanced)]
@@ -318,92 +306,5 @@ namespace System.Windows.Forms
                 return mySite.DesignMode;
             }
         }
-    }
-
-    // Summary:
-    //     Intended to be used for objects that need to be observed
-    public interface IObservableItem
-    {
-        // Summary:
-        //     Occurs when [observable item property changed].
-        event ObservableItemPropertyChangedHandler ObservableItemPropertyChanged;
-    }
-
-    // Summary:
-    //     Delegate for the IObservableItem interface
-    public delegate void ObservableItemPropertyChangedHandler(object objSender, ObservableItemPropertyChangedArgs objArgs);
-
-    public class ObservableItemPropertyChangedArgs : EventArgs
-    {
-        private string property;
-        private object subject;
-        // Summary:
-        //     Initializes a new instance of the Gizmox.WebGUI.Common.Interfaces.ObservableItemPropertyChangedArgs
-        //     class.
-        //
-        // Parameters:
-        //   strProperty:
-        //     The STR property.
-        public ObservableItemPropertyChangedArgs(string strProperty)
-        {
-            this.property = strProperty;
-        }
-        //
-        // Summary:
-        //     Initializes a new instance of the Gizmox.WebGUI.Common.Interfaces.ObservableItemPropertyChangedArgs
-        //     class.
-        //
-        // Parameters:
-        //   strProperty:
-        //     The property.
-        //
-        //   objSubject:
-        //     The subject.
-        public ObservableItemPropertyChangedArgs(string strProperty, object objSubject) : this(strProperty)
-        {
-            this.subject = objSubject;
-        }
-
-        // Summary:
-        //     Gets the name of the property that has changed
-        public string Property
-        {
-            get
-            {
-                return property;
-            }
-        }
-        //
-        // Summary:
-        //     Gets the subject.
-        public object Subject
-        {
-            get
-            {
-                return subject;
-            }
-        }
-    }
-
-    public enum AutoScaleMode
-    {
-        // Summary:
-        //     Automatic scaling is disabled.
-        None = 0,
-        //
-        // Summary:
-        //     Controls scale relative to the dimensions of the font the classes are using,
-        //     which is typically the system font.
-        Font = 1,
-        //
-        // Summary:
-        //     Controls scale relative to the display resolution. Common resolutions are
-        //     96 and 120 DPI.
-        Dpi = 2,
-        //
-        // Summary:
-        //     Controls scale according to the classes' parent's scaling mode. If there
-        //     is no parent, automatic scaling is disabled.
-        Inherit = 3,
-    }
+    }    
 }

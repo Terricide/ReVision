@@ -21,21 +21,13 @@ namespace System.Windows.Forms
     [DefaultProperty("Text")]
     [DefaultEvent("Click")]
     [ToolboxItemFilter("System.Windows.Forms")]
-    public class Control : Component, IDisposable
+    public partial class Control : Component, IDisposable
     {
         static object InvalidatedEvent = new object();
 
         public Control()
         {
             
-        }
-
-        public int Handle
-        {
-            get
-            {
-                return Convert.ToInt32(this.ClientId);
-            }
         }
 
         void Controls_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -262,11 +254,8 @@ namespace System.Windows.Forms
 
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
         public Image BackgroundImage { get; set; }
-        public event EventHandler TextChanged;
+
         public event EventHandler HandleCreated;
-        public int TabIndex { get; set; }
-        public string Name { get; set; }
-        public bool AutoSize { get; set; }
         private Color mBackColor;
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ColorConverter))]
         public virtual Color BackColor
@@ -280,50 +269,6 @@ namespace System.Windows.Forms
                 if( mBackColor != value )
                 {
                     mBackColor = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-        public Point Location { get; set; }
-        private Size size = new Size(300, 300);
-        public Size Size
-        {
-            get
-            {
-                return size;
-            }
-            set
-            {
-                if (size != value)
-                {
-                    size = value;
-                    RaisePropertyChanged();
-                    if(Resize != null)
-                    {
-                        Resize(this, EventArgs.Empty);
-                    }
-                }
-            }
-        }
-        public Size ClientSize
-        {
-            get
-            {
-                return this.Size;
-            }
-        }
-        private bool mVisible = true;
-        public bool Visible
-        {
-            get
-            {
-                return mVisible;
-            }
-            set
-            {
-                if (this.mVisible != value)
-                {
-                    this.mVisible = value;
                     RaisePropertyChanged();
                 }
             }
@@ -343,7 +288,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public event EventHandler Click;
         public async void Focus()
         {
             await FireEvent(new WSEventArgs()
@@ -351,39 +295,6 @@ namespace System.Windows.Forms
                 ClientId = this.ClientId,
                 EventType = "focus",
             });
-        }
-        private string mText;
-        public virtual string Text
-        {
-            get
-            {
-                return mText;
-            }
-            set
-            {
-                if (mText != value)
-                {
-                    mText = value;
-                    RaisePropertyChanged();
-                    if (TextChanged != null)
-                    {
-                        TextChanged(this, EventArgs.Empty);
-                    }
-                }
-            }
-        }
-        private ControlsCollection mControls;
-        public ControlsCollection Controls
-        {
-            get
-            {
-                if( mControls == null )
-                {
-                    mControls = new ControlsCollection(this);
-                    mControls.CollectionChanged += Controls_CollectionChanged;
-                }
-                return mControls;
-            }
         }
 
         protected string GetId(string id)
@@ -747,91 +658,11 @@ namespace System.Windows.Forms
 
         }
 
-        public int Right
-        {
-            get
-            {
-                if (this.Parent == null)
-                {
-                    return -1;
-                }
-                return this.Location.X + this.Size.Width;
-            }
-        }
-
-        public int Bottom
-        {
-            get
-            {
-                if (this.Parent == null)
-                {
-                    return -1;
-                }
-                return this.Location.Y + this.Size.Height;
-            }
-        }
-
-        public int Top
-        {
-            get
-            {
-                if (this.Parent == null)
-                {
-                    return -1;
-                }
-                return this.Location.Y;
-            }
-            set
-            {
-                this.Location = new Point(this.Top, value);
-            }
-        }
-
-        public int Left
-        {
-            get
-            {
-                if (this.Parent == null)
-                {
-                    return -1;
-                }
-                return this.Location.X;
-            }
-            set
-            {
-                this.Location = new Point(value, this.Top);
-            }
-        }
-
-        public int Width
-        {
-            get
-            {
-                return this.Size.Width;
-            }
-            set
-            {
-                this.Size = new Size(value, this.Height);
-            }
-        }
-
-        public int Height
-        {
-            get
-            {
-                return this.Size.Height;
-            }
-            set
-            {
-                this.Size = new Size(this.Width, value);
-            }
-        }
-
         public Rectangle ClientRectangle
         {
             get
             {
-                return new Rectangle(this.Location, this.size);
+                return new Rectangle(this.Location, this.mSize);
             }
         }
 
@@ -854,7 +685,6 @@ namespace System.Windows.Forms
         public event MouseEventHandler MouseMove;
         public event EventHandler MouseLeave;
         public event EventHandler MouseEnter;
-        public event EventHandler Resize;
 
         protected virtual void OnMouseMove(MouseEventArgs e)
         {
@@ -887,6 +717,20 @@ namespace System.Windows.Forms
             if( AddFormEvent != null )
             {
                 AddFormEvent(form, EventArgs.Empty);
+            }
+        }
+
+        private ControlsCollection mControls;
+        public ControlsCollection Controls
+        {
+            get
+            {
+                if (mControls == null)
+                {
+                    mControls = new ControlsCollection(this);
+                    mControls.CollectionChanged += Controls_CollectionChanged;
+                }
+                return mControls;
             }
         }
     }
