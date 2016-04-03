@@ -306,5 +306,26 @@ namespace System.Windows.Forms
                 return mySite.DesignMode;
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual async Task RaisePropertyChanged(string propName, object val)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+
+            await FireEvent(new WSEventArgs()
+            {
+                ClientId = this.ClientId,
+                EventType = "PropertyChanged",
+                Value = new
+                {
+                    Name = propName,
+                    Value = val
+                }
+            });
+        }
+
+        public object Tag { get; set; }
     }    
 }

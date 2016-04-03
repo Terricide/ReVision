@@ -13,6 +13,18 @@
     
     Bridge.define('System.Windows.Forms.IObservableItem');
     
+    Bridge.define('System.Windows.Forms.DockStyle', {
+        statics: {
+            none: 0,
+            left: 1,
+            right: 2,
+            top: 3,
+            bottom: 4,
+            fill: 5
+        },
+        $enum: true
+    });
+    
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
         property: null,
         subject: null,
@@ -43,13 +55,13 @@
         mClientId: null,
         config: {
             events: {
-                PropertyChanged: null,
                 Disposed: null,
-                ObservableItemPropertyChanged: null
+                ObservableItemPropertyChanged: null,
+                PropertyChanged: null
             },
             properties: {
-                Tag: null,
-                ControlName: null
+                ControlName: null,
+                Tag: null
             }
         },
         getClientId: function () {
@@ -60,6 +72,39 @@
                 this.mClientId = value;
                 this.raisePropertyChanged("ClientId", value);
             }
+        },
+        dispose: function () {
+            throw new Bridge.NotImplementedException();
+        },
+        fireEvent: function (evt) {
+            var $step = 0,
+                $jumpFromFinally, 
+                $tcs = new Bridge.TaskCompletionSource(), 
+                $returnValue, 
+                $async_e, 
+                $asyncBody = Bridge.fn.bind(this, function () {
+                    try {
+                        for (;;) {
+                            $step = Bridge.Array.min([0], $step);
+                            switch ($step) {
+                                case 0: {
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                                default: {
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                            }
+                        }
+                    } catch($async_e1) {
+                        $async_e = Bridge.Exception.create($async_e1);
+                        $tcs.setException($async_e);
+                    }
+                }, arguments);
+    
+            $asyncBody();
+            return $tcs.task;
         },
         raisePropertyChanged: function (propName, val) {
             var $step = 0,
@@ -106,49 +151,19 @@
     
             $asyncBody();
             return $tcs.task;
-        },
-        dispose: function () {
-            throw new Bridge.NotImplementedException();
-        },
-        fireEvent: function (evt) {
-            var $step = 0,
-                $jumpFromFinally, 
-                $tcs = new Bridge.TaskCompletionSource(), 
-                $returnValue, 
-                $async_e, 
-                $asyncBody = Bridge.fn.bind(this, function () {
-                    try {
-                        for (;;) {
-                            $step = Bridge.Array.min([0], $step);
-                            switch ($step) {
-                                case 0: {
-                                    $tcs.setResult(null);
-                                    return;
-                                }
-                                default: {
-                                    $tcs.setResult(null);
-                                    return;
-                                }
-                            }
-                        }
-                    } catch($async_e1) {
-                        $async_e = Bridge.Exception.create($async_e1);
-                        $tcs.setException($async_e);
-                    }
-                }, arguments);
-    
-            $asyncBody();
-            return $tcs.task;
         }
     });
     
     Bridge.define('System.Windows.Forms.Control', {
         inherits: [System.Windows.Forms.Component],
+        element: null,
+        labelElement: null,
+        mBackColor: null,
+        mDock: 0,
         mText: null,
+        mLocation: null,
         mSize: null,
         mVisible: true,
-        element: null,
-        mBackColor: null,
         config: {
             events: {
                 Resize: null,
@@ -156,18 +171,37 @@
                 TextChanged: null
             },
             properties: {
-                TabIndex: 0,
-                Name: null,
-                AutoSize: false,
-                Location: null,
                 Parent: null,
                 ParentId: null,
                 BackgroundImage: null,
-                Controls: null
+                Controls: null,
+                TabIndex: 0,
+                Name: null,
+                AutoSize: false
             },
             init: function () {
-                this.mSize = new System.Drawing.Size(300, 300);
                 this.element = document.createElement('div');
+                this.labelElement = document.createElement('span');
+                this.mSize = new System.Drawing.Size(300, 300);
+            }
+        },
+        getBackColor: function () {
+            return this.mBackColor;
+        },
+        setBackColor: function (value) {
+            if (this.mBackColor !== value) {
+                this.mBackColor = value;
+                this.element.style.backgroundColor = value;
+                this.raisePropertyChanged("BackColor", value);
+            }
+        },
+        getDock: function () {
+            return this.mDock;
+        },
+        setDock: function (value) {
+            if (this.mDock !== value) {
+                this.mDock = value;
+                this.raisePropertyChanged("Dock", value);
             }
         },
         getText: function () {
@@ -176,6 +210,7 @@
         setText: function (value) {
             if (this.mText !== value) {
                 this.mText = value;
+                this.labelElement.innerHTML = value;
                 this.raisePropertyChanged("Text", value);
                 if (Bridge.hasValue(this.TextChanged)) {
                     this.TextChanged(this, Object.empty);
@@ -185,12 +220,71 @@
         getHandle: function () {
             return Bridge.Convert.toInt32(this.getClientId());
         },
+        getLocation: function () {
+            return this.mLocation;
+        },
+        setLocation: function (value) {
+            if (this.mLocation !== value) {
+                this.mLocation = value;
+                switch (this.getDock()) {
+                    case System.Windows.Forms.DockStyle.none: 
+                        this.element.style.top = value.getX() + "px";
+                        this.element.style.left = value.getY() + "px";
+                        break;
+                    case System.Windows.Forms.DockStyle.left: 
+                        this.element.style.left = "0px";
+                        break;
+                    case System.Windows.Forms.DockStyle.right: 
+                        this.element.style.right = "0px";
+                        break;
+                    case System.Windows.Forms.DockStyle.top: 
+                        this.element.style.top = "0px";
+                        break;
+                    case System.Windows.Forms.DockStyle.bottom: 
+                        this.element.style.bottom = "0px";
+                        break;
+                    case System.Windows.Forms.DockStyle.fill: 
+                        this.element.style.right = "0px";
+                        this.element.style.bottom = "0px";
+                        this.element.style.left = "0px";
+                        this.element.style.top = "0px";
+                        break;
+                }
+                this.raisePropertyChanged("Location", value);
+            }
+        },
         getSize: function () {
             return this.mSize;
         },
         setSize: function (value) {
             if (System.Drawing.Size.op_Inequality(this.mSize, value)) {
                 this.mSize = value;
+                switch (this.getDock()) {
+                    case System.Windows.Forms.DockStyle.none: 
+                        this.element.style.width = value.width + "px";
+                        this.element.style.height = value.height + "px";
+                        break;
+                    case System.Windows.Forms.DockStyle.left: 
+                        this.element.style.width = value.width + "px";
+                        this.element.style.height = "100%";
+                        break;
+                    case System.Windows.Forms.DockStyle.right: 
+                        this.element.style.width = value.width + "px";
+                        this.element.style.height = "100%";
+                        break;
+                    case System.Windows.Forms.DockStyle.top: 
+                        this.element.style.height = value.height + "px";
+                        this.element.style.width = "100%";
+                        break;
+                    case System.Windows.Forms.DockStyle.bottom: 
+                        this.element.style.height = value.height + "px";
+                        this.element.style.width = "100%";
+                        break;
+                    case System.Windows.Forms.DockStyle.fill: 
+                        this.element.style.height = "100%";
+                        this.element.style.width = "100%";
+                        break;
+                }
                 this.raisePropertyChanged("Size", value);
                 if (Bridge.hasValue(this.Resize)) {
                     this.Resize(this, Object.empty);
@@ -249,15 +343,6 @@
             if (this.mVisible !== value) {
                 this.mVisible = value;
                 this.raisePropertyChanged("Visible", value);
-            }
-        },
-        getBackColor: function () {
-            return this.mBackColor;
-        },
-        setBackColor: function (value) {
-            if (this.mBackColor !== value) {
-                this.mBackColor = value;
-                this.raisePropertyChanged("BackColor", value);
             }
         },
         controls_CollectionChanged: function (sender, e) {

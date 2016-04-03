@@ -66,6 +66,8 @@
     <Compile Include="EventHandlers\KeyPressEventHandler.cs" />
     <Compile Include="EventHandlers\MouseEventHandler.cs" />
     <Compile Include="EventHandlers\PaintEventArgs.cs" />
+    <Compile Include="Shared\AutoScaleMode.cs" />
+    <Compile Include="Shared\IObservableItem.cs" />
     <Compile Include="WebSocket\Application.cs" />
     <Compile Include="Enumerations\BorderColor.cs" />
     <Compile Include="Enumerations\BorderStyle.cs" />
@@ -227,9 +229,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\Component.Common.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

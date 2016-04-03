@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReVision.JSForms.Events
+namespace System.Windows.Forms
 {
     public delegate void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs args);
 }

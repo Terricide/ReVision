@@ -33,11 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\ReVision.Forms\BaseClasses\Component.Common.cs">
-      <Link>BaseClasses\Component.Common.cs</Link>
+    <Compile Include="..\ReVision.Forms\Enumerations\DockStyle.cs">
+      <Link>Shared\DockStyle.cs</Link>
     </Compile>
-    <Compile Include="..\ReVision.Forms\BaseClasses\Control.Common.cs">
-      <Link>BaseClasses\Control.Common.cs</Link>
+    <Compile Include="..\ReVision.Forms\Shared\AutoScaleMode.cs">
+      <Link>Shared\AutoScaleMode.cs</Link>
+    </Compile>
+    <Compile Include="..\ReVision.Forms\Shared\IObservableItem.cs">
+      <Link>Shared\IObservableItem.cs</Link>
     </Compile>
     <Compile Include="App.cs" />
     <Compile Include="BaseClasses\Component.cs" />
