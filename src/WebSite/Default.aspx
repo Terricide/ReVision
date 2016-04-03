@@ -22,7 +22,14 @@
     <script type="text/javascript" src="./scripts/fancytree/jquery.fancytree-all.js"></script>
 
 
-    <script type="text/javascript" src="./scripts/script.js"></script>
+    <script src="./bridge/output/bridge.js"></script>
+    <script src="./bridge/output/system.js"></script>
+    <script src="./bridge/output/system.collections.specialized.js"></script>
+    <script src="./bridge/output/system.drawing.js"></script>
+    <script src="./bridge/output/system.windows.forms.js"></script>
+    <script src="./bridge/output/ReVision.JSForms.js"></script>
+
+    <!--<script type="text/javascript" src="./scripts/script.js"></script>-->
     <style>
         .hover { background-color: Highlight; color: HighlightText; }
     </style>

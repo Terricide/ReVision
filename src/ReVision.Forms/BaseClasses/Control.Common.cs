@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -46,8 +47,10 @@ namespace System.Windows.Forms
         public string Name { get; set; }
         public bool AutoSize { get; set; }
 
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.PointConverter))]
         public Point Location { get; set; }
         private Size mSize = new Size(300, 300);
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.SizeConverter))]
         public Size Size
         {
             get

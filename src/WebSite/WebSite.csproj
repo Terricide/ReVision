@@ -78,6 +78,18 @@
     <Content Include="..\WindowsFormsLib\Resources\01-anchor.2x.png">
       <Link>Resources\01-anchor.2x.png</Link>
     </Content>
+    <Content Include="Bridge\output\bridge.js" />
+    <Content Include="Bridge\output\bridge.min.js" />
+    <Content Include="Bridge\output\reVision.jSForms.js" />
+    <Content Include="Bridge\output\reVision.jSForms.min.js" />
+    <Content Include="Bridge\output\system.collections.specialized.js" />
+    <Content Include="Bridge\output\system.collections.specialized.min.js" />
+    <Content Include="Bridge\output\system.drawing.js" />
+    <Content Include="Bridge\output\system.drawing.min.js" />
+    <Content Include="Bridge\output\system.js" />
+    <Content Include="Bridge\output\system.min.js" />
+    <Content Include="Bridge\output\system.windows.forms.js" />
+    <Content Include="Bridge\output\system.windows.forms.min.js" />
     <Content Include="Content\kendo\2016.1.226\Black\editor.png" />
     <Content Include="Content\kendo\2016.1.226\Black\imagebrowser.png" />
     <Content Include="Content\kendo\2016.1.226\Black\indeterminate.gif" />
@@ -1278,7 +1290,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
+      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
