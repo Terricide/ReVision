@@ -20,7 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>1.7</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -1010,9 +1010,11 @@
     <Content Include="scripts\kendo\2016.1.226\messages\kendo.messages.zh-HK.min.js" />
     <Content Include="scripts\kendo\2016.1.226\messages\kendo.messages.zh-TW.min.js" />
     <Content Include="scripts\kendo\kendo.web.plugins.js" />
+    <Content Include="scripts\system.windows.forms.js" />
     <Content Include="scripts\zebra.runtime\zebra.js" />
     <Content Include="scripts\zebra.runtime\zebra.min.js" />
     <Content Include="scripts\zebra.runtime\zebra.png" />
+    <Content Include="WebForm1.aspx" />
     <Content Include="ZebraForm.aspx" />
     <Content Include="scripts\zebra.runtime\zebra.json" />
     <Content Include="css\skin-win8\ui.fancytree.less" />
@@ -1224,6 +1226,13 @@
     <Compile Include="TestDockForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ZebraForm.aspx.cs">
       <DependentUpon>ZebraForm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1253,7 +1262,9 @@
       <Name>ReVision.Forms</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <TypeScriptCompile Include="scripts\test.ts" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1278,7 +1289,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
