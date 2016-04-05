@@ -217,21 +217,24 @@ namespace System.Windows.Forms
 
             if (this.ControlName != "Form" && this.ControlName != "Label")
             {
-                this.Label = new Label();
-                SetText(this.Label.Element);
-                if( this.HasEvent("TextChanged") )
+                if (!string.IsNullOrEmpty(this.Text))
                 {
-                    this.Label.Element.OnChange = (e) =>
+                    this.Label = new Label();
+                    SetText(this.Label.Element);
+                    if (this.HasEvent("TextChanged"))
                     {
-                        this.FireEvent(new WSEventArgs()
+                        this.Label.Element.OnChange = (e) =>
                         {
-                            ClientId = this.ClientId,
-                            EventType = "textchanged",
-                            Value = this.Label.Element.InnerHTML
-                        });
-                    };
+                            this.FireEvent(new WSEventArgs()
+                            {
+                                ClientId = this.ClientId,
+                                EventType = "textchanged",
+                                Value = this.Label.Element.InnerHTML
+                            });
+                        };
+                    }
+                    this.Element.AppendChild(this.Label.Element);
                 }
-                this.Element.AppendChild(this.Label.Element);
             }
 
             if (!string.IsNullOrEmpty(this.BackgroundImage))
@@ -370,6 +373,10 @@ namespace System.Windows.Forms
                         case "LinkLabel":
                             var ll = JSON.Parse<LinkLabel>(JSON.Stringify(ctrl));
                             ctrl1 = ll;
+                            break;
+                        case "ComboBox":
+                            var cb1 = JSON.Parse<ComboBox>(JSON.Stringify(ctrl));
+                            ctrl1 = cb1;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

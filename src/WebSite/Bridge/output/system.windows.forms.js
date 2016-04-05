@@ -25,6 +25,19 @@
     
     Bridge.define('System.Windows.Forms.IObservableItem');
     
+    Bridge.define('System.Windows.Forms.ComboBox.KendoComboBox', {
+        dataTextField: null,
+        dataValueField: null,
+        dataSource: null,
+        filter: null,
+        suggest: false
+    });
+    
+    Bridge.define('System.Windows.Forms.ComboBox.ListItem', {
+        text: null,
+        value: 0
+    });
+    
     Bridge.define('System.Windows.Forms.DockStyle', {
         statics: {
             none: 0,
@@ -427,12 +440,14 @@
             this.setupEventHandlers();
     
             if (this.getControlName() !== "Form" && this.getControlName() !== "Label") {
-                this.label = new System.Windows.Forms.Label();
-                this.setText$1(this.label.element);
-                if (this.hasEvent("TextChanged")) {
-                    this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+                if (!Bridge.String.isNullOrEmpty(this.getText())) {
+                    this.label = new System.Windows.Forms.Label();
+                    this.setText$1(this.label.element);
+                    if (this.hasEvent("TextChanged")) {
+                        this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+                    }
+                    this.element.appendChild(this.label.element);
                 }
-                this.element.appendChild(this.label.element);
             }
     
             if (!Bridge.String.isNullOrEmpty(this.getBackgroundImage())) {
@@ -548,6 +563,10 @@
                         case "LinkLabel": 
                             var ll = Bridge.merge(new System.Windows.Forms.LinkLabel(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = ll;
+                            break;
+                        case "ComboBox": 
+                            var cb1 = Bridge.merge(new System.Windows.Forms.ComboBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = cb1;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -800,6 +819,72 @@
     
     Bridge.define('System.Windows.Forms.ButtonBase', {
         inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.ComboBox', {
+        inherits: [System.Windows.Forms.Control],
+        items: null,
+        cb: null,
+        selectedIndex: 0,
+        render: function () {
+            this.cb = document.createElement('input');
+            this.cb.id = "CB_" + this.getClientId();
+            this.element.appendChild(this.cb);
+    
+            //        for (var i = 0; i < obj.Items.length; i++)
+            //        {
+            //            var item = {
+            //        text: obj.Items[i],
+            //        value: i
+            //            };
+            //        ds.push(item);
+            //    }
+    
+            //this.cb = $(this.ComboBox).kendoComboBox({
+            //        dataTextField: "text",
+            //    dataValueField: "value",
+            //    dataSource: ds,
+            //    filter: "contains",
+            //    suggest: true,
+            //    change: function(e) {
+            //            var cmb = this;
+            //            var evt = {
+            //            ClientId: this.element[0].id,
+            //            EventType: 'selectedIndexChanged',
+            //            Value: cmb.selectedIndex
+            //        };
+            //        send(evt);
+            //    }
+            //});
+    
+            var arr = Bridge.Array.init(this.items.length, null);
+    
+            for (var i = 0; i < this.items.length; i++) {
+                arr[i] = Bridge.merge(new System.Windows.Forms.ComboBox.ListItem(), {
+                    text: this.items[i],
+                    value: i
+                } );
+            }
+    
+            var kb = $(this.cb).kendoComboBox({ dataTextField:"text", dataValueField:"value", filter:"contains", suggest:true, dataSource:arr, change: Bridge.fn.bind(this, $_.System.Windows.Forms.ComboBox.f1), index:this.selectedIndex });
+    
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.ComboBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.ComboBox, {
+        f1: function (e) {
+            var cmd = e;
+            this.selectedIndex = cmd.sender.selectedIndex;
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "selectedIndexChanged",
+                value: cmd.sender.selectedIndex
+            } ));
+        }
     });
     
     Bridge.define('System.Windows.Forms.ControlsCollection', {
