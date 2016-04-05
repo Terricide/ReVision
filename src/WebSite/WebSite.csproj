@@ -1222,6 +1222,13 @@
       <Link>Properties\Resources.Designer.cs</Link>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\WindowsFormsLib\TestDockForm.cs">
+      <Link>TestDockForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\WindowsFormsLib\TestDockForm.Designer.cs">
+      <Link>TestDockForm.Designer.cs</Link>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1232,9 +1239,6 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="TestDockForm.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ZebraForm.aspx.cs">
       <DependentUpon>ZebraForm.aspx</DependentUpon>
@@ -1257,6 +1261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\WindowsFormsLib\Properties\Resources.resx">
       <Link>Properties\Resources.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\WindowsFormsLib\TestDockForm.resx">
+      <Link>TestDockForm.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1290,7 +1297,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
