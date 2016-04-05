@@ -72,8 +72,13 @@
       <HintPath>..\packages\Bridge.1.11.2\lib\net40\Bridge.Html5.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Bridge.jQuery2, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.jQuery.2.8.0\lib\net40\Bridge.jQuery2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
     <Content Include="Bridge\output\bridge.js" />
     <Content Include="Bridge\output\readme.txt" />
     <Content Include="Bridge\output\reVision.jSForms.js" />

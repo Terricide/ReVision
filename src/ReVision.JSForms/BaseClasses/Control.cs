@@ -1,4 +1,5 @@
 ﻿using Bridge.Html5;
+using Bridge.jQuery2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -195,7 +196,7 @@ namespace System.Windows.Forms
                 this.Element.Style.Width = "100%";
             }
 
-            foreach(var ctrl in this.GetControls())
+            foreach (var ctrl in this.GetControls())
             {
                 ctrl.Render();
             }
@@ -250,7 +251,7 @@ namespace System.Windows.Forms
                 //Left
                 case DockStyle.Left:
                     {
-                        left = current.Width;
+                        left = jQuery.Element(current.Element).Width();
                         foreach(var child in childControls)
                         {
                             if (child.ClientId == current.ClientId)
@@ -259,14 +260,22 @@ namespace System.Windows.Forms
                             }
                             switch (child.Dock)
                             {
+                                case DockStyle.Left:
+                                    {
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlWidth = item.Width();
+                                        item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
+                                    }
+                                    break;
                                 case DockStyle.Bottom:
                                 case DockStyle.Top:
                                 case DockStyle.Fill:
                                     {
-                                        var ctrlWidth = GetInt(child.Element.Style.Width);
-                                        var ctrlLeft = GetInt(child.Element.Style.Left);
-                                        child.Element.Style.Left = ctrlLeft + left + "px";
-                                        child.Element.Style.Width = ctrlWidth - ctrlLeft - left + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlWidth = item.Width();
+                                        var ctrlLeft = item.Position().Left;
+                                        item.Css("left", ctrlLeft + left);
+                                        item.Css("width", ctrlWidth - ctrlLeft - left);
                                     }
                                     break;
                             }
@@ -276,7 +285,7 @@ namespace System.Windows.Forms
                 //Right
                 case DockStyle.Right:
                     {
-                        right = current.Width;
+                        right = jQuery.Element(current.Element).Position().Left - jQuery.Element(current.Element).Width();
                         foreach (var child in childControls)
                         {
                             if (child.ClientId == current.ClientId)
@@ -285,14 +294,23 @@ namespace System.Windows.Forms
                             }
                             switch (child.Dock)
                             {
+                                case DockStyle.Right:
+                                    {
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlWidth = item.Width();
+                                        item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
+                                    }
+                                    break;
                                 case DockStyle.Top:
                                 case DockStyle.Bottom:
                                 case DockStyle.Fill:
                                     {
-                                        var ctrlWidth = GetInt(child.Element.Style.Width);
-                                        var ctrlLeft = GetInt(child.Element.Style.Left);
-                                        var newWidth = ctrlWidth - right - ctrlLeft;
-                                        child.Element.Style.Width = newWidth + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlWidth = item.Width();
+                                        //var ctrlLeft = item.Position().Left;
+
+                                        var newWidth = ctrlWidth - (ctrlWidth - right);
+                                        item.Css("width", newWidth);
                                     }
                                     break;
                             }
@@ -302,7 +320,7 @@ namespace System.Windows.Forms
                 //Top
                 case DockStyle.Top:
                     {
-                        top = current.Height;
+                        top = jQuery.Element(current.Element).Height();
                         foreach (var child in childControls)
                         {
                             if (child.ClientId == current.ClientId)
@@ -313,16 +331,19 @@ namespace System.Windows.Forms
                             {
                                 case DockStyle.Top:
                                     {
-                                        var ctrlTop = GetInt(child.Element.Style.Top);
-                                        child.Element.Style.Top = ctrlTop + top + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlTop = item.Position().Top;
+                                        item.Css("top", ctrlTop + top);
                                     }
                                     break;
                                 case DockStyle.Fill:
                                     {
-                                        var ctrlTop = GetInt(child.Element.Style.Top);
-                                        var ctrlHeight = GetInt(child.Element.Style.Height);
-                                        child.Element.Style.Top = ctrlTop + top + "px";
-                                        child.Element.Style.Height = ctrlHeight - top + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlTop = item.Position().Top;
+
+                                        var ctrlHeight = item.Height();
+                                        item.Css("top", ctrlTop + top);
+                                        item.Css("height", ctrlHeight - top);
                                     }
                                     break;
                             }
@@ -332,7 +353,7 @@ namespace System.Windows.Forms
                 //Bottom
                 case DockStyle.Bottom:
                     {
-                        bottom = current.Height;
+                        bottom = jQuery.Element(current.Element).Height();
                         foreach (var child in childControls)
                         {
                             if (child.ClientId == current.ClientId)
@@ -341,16 +362,25 @@ namespace System.Windows.Forms
                             }
                             switch (child.Dock)
                             {
+                                case DockStyle.Left:
+                                    {
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlTop = child.Element.OffsetTop;
+                                        item.Css("top", ctrlTop - bottom);
+                                    }
+                                    break;
                                 case DockStyle.Bottom:
                                     {
-                                        var ctrlTop = GetInt(child.Element.Style.Top);//.offsetTop;
-                                        child.Element.Style.Top = ctrlTop - bottom + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlTop = child.Element.OffsetTop;
+                                        item.Css("top", ctrlTop - bottom);
                                     }
                                     break;
                                 case  DockStyle.Fill:
                                     {
-                                        var ctrlHeight = GetInt(child.Element.Style.Height);
-                                        child.Element.Style.Height = ctrlHeight - bottom + "px";
+                                        var item = jQuery.Element(child.Element);
+                                        var ctrlHeight = item.Height();
+                                        item.Css("height", ctrlHeight - bottom);
                                     }
                                     break;
                             }
@@ -425,8 +455,8 @@ namespace System.Windows.Forms
         public string Name { get; set; }
         public bool AutoSize { get; set; }
 
-        private Point mLocation;
-        public Point Location
+        private Drawing.Point mLocation;
+        public Drawing.Point Location
         {
             get
             {

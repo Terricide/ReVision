@@ -480,7 +480,7 @@
             switch (current.getDock()) {
                 case System.Windows.Forms.DockStyle.left: 
                     {
-                        left = current.getWidth();
+                        left = $(current.element).width();
                         $t = Bridge.getEnumerator(childControls);
                         while ($t.moveNext()) {
                             var child = $t.getCurrent();
@@ -488,14 +488,22 @@
                                 continue;
                             }
                             switch (child.getDock()) {
+                                case System.Windows.Forms.DockStyle.left: 
+                                    {
+                                        var item = $(child.element);
+                                        var ctrlWidth = item.width();
+                                        item.css("left", $(current.element).position().left - ctrlWidth);
+                                    }
+                                    break;
                                 case System.Windows.Forms.DockStyle.bottom: 
                                 case System.Windows.Forms.DockStyle.top: 
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
-                                        var ctrlWidth = this.getInt(child.element.style.width);
-                                        var ctrlLeft = this.getInt(child.element.style.left);
-                                        child.element.style.left = ctrlLeft + left + "px";
-                                        child.element.style.width = ctrlWidth - ctrlLeft - left + "px";
+                                        var item1 = $(child.element);
+                                        var ctrlWidth1 = item1.width();
+                                        var ctrlLeft = item1.position().left;
+                                        item1.css("left", ctrlLeft + left);
+                                        item1.css("width", ctrlWidth1 - ctrlLeft - left);
                                     }
                                     break;
                             }
@@ -504,7 +512,7 @@
                     break;
                 case System.Windows.Forms.DockStyle.right: 
                     {
-                        right = current.getWidth();
+                        right = $(current.element).position().left - $(current.element).width();
                         $t1 = Bridge.getEnumerator(childControls);
                         while ($t1.moveNext()) {
                             var child1 = $t1.getCurrent();
@@ -512,14 +520,23 @@
                                 continue;
                             }
                             switch (child1.getDock()) {
+                                case System.Windows.Forms.DockStyle.right: 
+                                    {
+                                        var item2 = $(child1.element);
+                                        var ctrlWidth2 = item2.width();
+                                        item2.css("left", $(current.element).position().left - ctrlWidth2);
+                                    }
+                                    break;
                                 case System.Windows.Forms.DockStyle.top: 
                                 case System.Windows.Forms.DockStyle.bottom: 
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
-                                        var ctrlWidth1 = this.getInt(child1.element.style.width);
-                                        var ctrlLeft1 = this.getInt(child1.element.style.left);
-                                        var newWidth = ctrlWidth1 - right - ctrlLeft1;
-                                        child1.element.style.width = newWidth + "px";
+                                        var item3 = $(child1.element);
+                                        var ctrlWidth3 = item3.width();
+                                        //var ctrlLeft = item.Position().Left;
+    
+                                        var newWidth = ctrlWidth3 - (ctrlWidth3 - right);
+                                        item3.css("width", newWidth);
                                     }
                                     break;
                             }
@@ -528,7 +545,7 @@
                     break;
                 case System.Windows.Forms.DockStyle.top: 
                     {
-                        top = current.getHeight();
+                        top = $(current.element).height();
                         $t2 = Bridge.getEnumerator(childControls);
                         while ($t2.moveNext()) {
                             var child2 = $t2.getCurrent();
@@ -538,16 +555,19 @@
                             switch (child2.getDock()) {
                                 case System.Windows.Forms.DockStyle.top: 
                                     {
-                                        var ctrlTop = this.getInt(child2.element.style.top);
-                                        child2.element.style.top = ctrlTop + top + "px";
+                                        var item4 = $(child2.element);
+                                        var ctrlTop = item4.position().top;
+                                        item4.css("top", ctrlTop + top);
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
-                                        var ctrlTop1 = this.getInt(child2.element.style.top);
-                                        var ctrlHeight = this.getInt(child2.element.style.height);
-                                        child2.element.style.top = ctrlTop1 + top + "px";
-                                        child2.element.style.height = ctrlHeight - top + "px";
+                                        var item5 = $(child2.element);
+                                        var ctrlTop1 = item5.position().top;
+    
+                                        var ctrlHeight = item5.height();
+                                        item5.css("top", ctrlTop1 + top);
+                                        item5.css("height", ctrlHeight - top);
                                     }
                                     break;
                             }
@@ -556,7 +576,7 @@
                     break;
                 case System.Windows.Forms.DockStyle.bottom: 
                     {
-                        bottom = current.getHeight();
+                        bottom = $(current.element).height();
                         $t3 = Bridge.getEnumerator(childControls);
                         while ($t3.moveNext()) {
                             var child3 = $t3.getCurrent();
@@ -566,14 +586,16 @@
                             switch (child3.getDock()) {
                                 case System.Windows.Forms.DockStyle.bottom: 
                                     {
-                                        var ctrlTop2 = this.getInt(child3.element.style.top); //.offsetTop;
-                                        child3.element.style.top = ctrlTop2 - bottom + "px";
+                                        var item6 = $(child3.element);
+                                        var ctrlTop2 = child3.element.offsetTop;
+                                        item6.css("top", ctrlTop2 - bottom);
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
-                                        var ctrlHeight1 = this.getInt(child3.element.style.height);
-                                        child3.element.style.height = ctrlHeight1 - bottom + "px";
+                                        var item7 = $(child3.element);
+                                        var ctrlHeight1 = item7.height();
+                                        item7.css("height", ctrlHeight1 - bottom);
                                     }
                                     break;
                             }
