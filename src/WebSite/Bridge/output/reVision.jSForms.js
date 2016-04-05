@@ -15,7 +15,11 @@
     });
     
     Bridge.define('ReVision.JSForms.Application', {
+        statics: {
+            current: null
+        },
         ws: null,
+        root: null,
         controls: null,
         config: {
             init: function () {
@@ -23,6 +27,7 @@
             }
         },
         constructor: function () {
+            Bridge.get(ReVision.JSForms.Application).current = this;
             var path = "";
     
             if (Bridge.hasValue(window.location.pathName)) {
@@ -92,6 +97,10 @@
                     form.setClientId(evt.clientId);
                     var parent = form.getParent();
                     if (!Bridge.hasValue(parent)) {
+                        if (!Bridge.hasValue(this.root)) {
+                            this.root = form;
+                        }
+                        window.onresize = Bridge.fn.bind(this, this.onResize);
                         document.body.appendChild(form.element);
                     }
                     this.addOrUpdate(form);
@@ -102,6 +111,11 @@
                     window.alert("Unknown message type:" + evt.eventType);
                     break;
             }
+        },
+        onResize: function (e) {
+            if (e === void 0) { e = null; }
+            this.root.element.innerHTML = "";
+            this.root.showDialog();
         },
         addOrUpdate: function (ctrl) {
             if (!Bridge.String.isNullOrEmpty(ctrl.getParentId()) && this.controls.containsKey(ctrl.getParentId())) {

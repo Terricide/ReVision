@@ -10,12 +10,16 @@ namespace ReVision.JSForms
 {
     public class Application
     {
+        public static Application Current;
         private WebSocket ws;
+
+        private Form Root;
 
         public Dictionary<string, Control> Controls = new Dictionary<string, Control>();
 
         public Application()
         {
+            Application.Current = this;
             var path = string.Empty;
 
             if (Window.Location.PathName != null)
@@ -99,6 +103,11 @@ namespace ReVision.JSForms
                     var parent = form.Parent;
                     if (parent == null)
                     {
+                        if (Root == null)
+                        {
+                            Root = form;
+                        }
+                        Window.OnResize = OnResize;
                         Document.Body.AppendChild(form.Element);
                     }
                     AddOrUpdate(form);
@@ -109,6 +118,12 @@ namespace ReVision.JSForms
                     Window.Alert("Unknown message type:" + evt.EventType);
                     break;
             }
+        }
+
+        private void OnResize(Event e = null)
+        {
+            Root.Element.InnerHTML = string.Empty;
+            Root.ShowDialog();
         }
 
         private void AddOrUpdate(Control ctrl)
@@ -136,7 +151,7 @@ namespace ReVision.JSForms
             this.Send(args);
         }
 
-        private void Send(object o)
+        public void Send(object o)
         {
             var msg = JSON.Stringify(o);
             this.ws.Send(msg);

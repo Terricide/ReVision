@@ -9,6 +9,7 @@ namespace System.Windows.Forms
 {
     public partial class Component : IDisposable, IObservableItem
     {
+        public string[] AllEvents;
         public string ControlName { get; set; }
         public event EventHandler Disposed;
         public event ObservableItemPropertyChangedHandler ObservableItemPropertyChanged;
@@ -35,9 +36,14 @@ namespace System.Windows.Forms
             }
         }
 
-        public virtual async Task FireEvent(WSEventArgs evt)
+        public bool HasEvent(string name)
         {
-            
+            if (this.AllEvents == null)
+            {
+                return false;
+            }
+
+            return this.AllEvents.Contains(name);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,17 +52,6 @@ namespace System.Windows.Forms
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
-
-            await FireEvent(new WSEventArgs()
-            {
-                ClientId = this.ClientId,
-                EventType = "PropertyChanged",
-                Value = new
-                {
-                    Name = propName,
-                    Value = val
-                }
-            });
         }
 
         public object Tag { get; set; }

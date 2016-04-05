@@ -46,11 +46,14 @@
       <Link>Shared\IObservableItem.cs</Link>
     </Compile>
     <Compile Include="App.cs" />
+    <Compile Include="BaseClasses\Button.cs" />
     <Compile Include="BaseClasses\Component.cs" />
     <Compile Include="BaseClasses\Control.cs" />
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="BaseClasses\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
+    <Compile Include="BaseClasses\KendoButton.cs" />
+    <Compile Include="BaseClasses\Label.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Size.cs" />
     <Compile Include="BaseClasses\TabControl.cs" />

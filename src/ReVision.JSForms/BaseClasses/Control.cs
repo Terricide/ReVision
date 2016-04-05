@@ -1,5 +1,6 @@
 ﻿using Bridge.Html5;
 using Bridge.jQuery2;
+using ReVision.JSForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,8 +12,7 @@ namespace System.Windows.Forms
 {
     public class Control : Component
     {
-        public Bridge.Html5.DivElement Element = new Bridge.Html5.DivElement();
-        public Bridge.Html5.SpanElement LabelElement = new SpanElement();
+        public Bridge.Html5.Element Element = new Bridge.Html5.Element();
         public Control Parent { get; set; }
         public string ParentId { get; set; }
 
@@ -72,12 +72,11 @@ namespace System.Windows.Forms
             }
         }
 
-        public void Render()
+        public virtual void Render()
         {
             this.Element.Id = "WU_" + this.ClientId;
 
             this.Element.Style.BackgroundColor = this.BackColor;
-            this.LabelElement.InnerHTML = this.Text;
             this.Element.Style.Visibility = this.Visible ? Visibility.Visible : Visibility.Hidden;
 
             if (this.Parent != null)
@@ -133,15 +132,7 @@ namespace System.Windows.Forms
                     this.Location.X = width - this.Width;
                 }
 
-
-                if (this.Dock != DockStyle.Fill)
-                {
-                    this.Element.Style.Position = Position.Absolute;
-                }
-                else
-                {
-                    this.Element.Style.Position = Position.Relative;
-                }
+                this.Element.Style.Position = Position.Absolute;
             }
             else
             {
@@ -196,6 +187,23 @@ namespace System.Windows.Forms
                 this.Element.Style.Width = "100%";
             }
 
+            if( this.HasEvent("Click") )
+            {
+                this.Element.OnClick = (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "click"
+                    });
+                };
+            }
+
+            Label lbl = new Label();
+            ((SpanElement)lbl.Element).InnerHTML = this.Text;
+
+            this.Element.AppendChild(lbl.Element);
+
             foreach (var ctrl in this.GetControls())
             {
                 ctrl.Render();
@@ -204,6 +212,11 @@ namespace System.Windows.Forms
             if (this.Parent != null) {
                 ReAlignControls(this.Parent, this);
             }
+        }
+
+        public virtual async Task FireEvent(WSEventArgs evt)
+        {
+            Application.Current.Send(evt);
         }
 
         private List<Control> mControls;
@@ -225,6 +238,14 @@ namespace System.Windows.Forms
                             var tc = JSON.Parse<TabControl>(JSON.Stringify(ctrl));
                             ctrl1 = tc;
                             break;
+                        case "Button":
+                            var btn = JSON.Parse<Button>(JSON.Stringify(ctrl));
+                            ctrl1 = btn;
+                            break;
+                        case "Label":
+                            var lbl = JSON.Parse<Label>(JSON.Stringify(ctrl));
+                            ctrl1 = lbl;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;
@@ -235,6 +256,22 @@ namespace System.Windows.Forms
             }
 
             return mControls;
+        }
+
+        protected override async Task RaisePropertyChanged(string propName, object val)
+        {
+            await base.RaisePropertyChanged(propName, val);
+
+            await FireEvent(new WSEventArgs()
+            {
+                ClientId = this.ClientId,
+                EventType = "PropertyChanged",
+                Value = new
+                {
+                    Name = propName,
+                    Value = val
+                }
+            });
         }
 
         private void ReAlignControls(Control parent, Control current)
@@ -256,7 +293,7 @@ namespace System.Windows.Forms
                         {
                             if (child.ClientId == current.ClientId)
                             {
-                                continue;
+                                break;
                             }
                             switch (child.Dock)
                             {
@@ -264,18 +301,18 @@ namespace System.Windows.Forms
                                     {
                                         var item = jQuery.Element(child.Element);
                                         var ctrlWidth = item.Width();
-                                        item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
+                                        item.Css("left", jQuery.Element(current.Element).Position().Left + ctrlWidth);
                                     }
                                     break;
-                                case DockStyle.Bottom:
                                 case DockStyle.Top:
+                                case DockStyle.Bottom:
                                 case DockStyle.Fill:
                                     {
                                         var item = jQuery.Element(child.Element);
                                         var ctrlWidth = item.Width();
                                         var ctrlLeft = item.Position().Left;
                                         item.Css("left", ctrlLeft + left);
-                                        item.Css("width", ctrlWidth - ctrlLeft - left);
+                                        item.Css("width", ctrlWidth - left);
                                     }
                                     break;
                             }
@@ -285,12 +322,12 @@ namespace System.Windows.Forms
                 //Right
                 case DockStyle.Right:
                     {
-                        right = jQuery.Element(current.Element).Position().Left - jQuery.Element(current.Element).Width();
+                        right = jQuery.Element(current.Element).Width();
                         foreach (var child in childControls)
                         {
                             if (child.ClientId == current.ClientId)
                             {
-                                continue;
+                                break;
                             }
                             switch (child.Dock)
                             {
@@ -307,10 +344,8 @@ namespace System.Windows.Forms
                                     {
                                         var item = jQuery.Element(child.Element);
                                         var ctrlWidth = item.Width();
-                                        //var ctrlLeft = item.Position().Left;
 
-                                        var newWidth = ctrlWidth - (ctrlWidth - right);
-                                        item.Css("width", newWidth);
+                                        item.Css("width", ctrlWidth - right);
                                     }
                                     break;
                             }
@@ -325,7 +360,7 @@ namespace System.Windows.Forms
                         {
                             if (child.ClientId == current.ClientId)
                             {
-                                continue;
+                                break;
                             }
                             switch (child.Dock)
                             {
@@ -336,6 +371,8 @@ namespace System.Windows.Forms
                                         item.Css("top", ctrlTop + top);
                                     }
                                     break;
+                                case DockStyle.Left:
+                                case DockStyle.Right:
                                 case DockStyle.Fill:
                                     {
                                         var item = jQuery.Element(child.Element);
@@ -358,15 +395,16 @@ namespace System.Windows.Forms
                         {
                             if (child.ClientId == current.ClientId)
                             {
-                                continue;
+                                break;
                             }
                             switch (child.Dock)
                             {
+                                case DockStyle.Right:
+                                case DockStyle.Fill:
                                 case DockStyle.Left:
                                     {
                                         var item = jQuery.Element(child.Element);
-                                        var ctrlTop = child.Element.OffsetTop;
-                                        item.Css("top", ctrlTop - bottom);
+                                        item.Css("height", item.Height() - bottom);
                                     }
                                     break;
                                 case DockStyle.Bottom:
@@ -374,13 +412,6 @@ namespace System.Windows.Forms
                                         var item = jQuery.Element(child.Element);
                                         var ctrlTop = child.Element.OffsetTop;
                                         item.Css("top", ctrlTop - bottom);
-                                    }
-                                    break;
-                                case  DockStyle.Fill:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlHeight = item.Height();
-                                        item.Css("height", ctrlHeight - bottom);
                                     }
                                     break;
                             }

@@ -80,6 +80,7 @@
     </Content>
     <Content Include="Bridge\output\bridge.js" />
     <Content Include="Bridge\output\bridge.min.js" />
+    <Content Include="Bridge\output\reVision.jSForms.baseClasses.js" />
     <Content Include="Bridge\output\reVision.jSForms.js" />
     <Content Include="Bridge\output\reVision.jSForms.min.js" />
     <Content Include="Bridge\output\system.collections.specialized.js" />
@@ -1222,6 +1223,13 @@
       <Link>Properties\Resources.Designer.cs</Link>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\WindowsFormsLib\TestButtonForm.cs">
+      <Link>TestButtonForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\WindowsFormsLib\TestButtonForm.Designer.cs">
+      <Link>TestButtonForm.Designer.cs</Link>
+    </Compile>
     <Compile Include="..\WindowsFormsLib\TestDockForm.cs">
       <Link>TestDockForm.cs</Link>
       <SubType>Form</SubType>
@@ -1262,6 +1270,9 @@
     <EmbeddedResource Include="..\WindowsFormsLib\Properties\Resources.resx">
       <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\WindowsFormsLib\TestButtonForm.resx">
+      <Link>TestButtonForm.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\WindowsFormsLib\TestDockForm.resx">
       <Link>TestDockForm.resx</Link>
     </EmbeddedResource>
@@ -1297,7 +1308,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
+      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

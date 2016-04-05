@@ -24,6 +24,7 @@
 
     <script src="./bridge/output/bridge.js"></script>
     <script src="./bridge/output/system.js"></script>
+    <script src="./bridge/output/reVision.jSForms.baseClasses.js"></script>
     <script src="./bridge/output/system.collections.specialized.js"></script>
     <script src="./bridge/output/system.drawing.js"></script>
     <script src="./bridge/output/system.windows.forms.js"></script>

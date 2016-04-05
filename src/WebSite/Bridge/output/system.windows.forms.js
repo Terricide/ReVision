@@ -37,6 +37,8 @@
         $enum: true
     });
     
+    Bridge.define('System.Windows.Forms.KendoButton');
+    
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
         property: null,
         subject: null,
@@ -64,6 +66,7 @@
     
     Bridge.define('System.Windows.Forms.Component', {
         inherits: [Bridge.IDisposable,System.Windows.Forms.IObservableItem],
+        allEvents: null,
         mClientId: null,
         config: {
             events: {
@@ -88,7 +91,14 @@
         dispose: function () {
             throw new Bridge.NotImplementedException();
         },
-        fireEvent: function (evt) {
+        hasEvent: function (name) {
+            if (!Bridge.hasValue(this.allEvents)) {
+                return false;
+            }
+    
+            return Bridge.Linq.Enumerable.from(this.allEvents).contains(name);
+        },
+        raisePropertyChanged: function (propName, val) {
             var $step = 0,
                 $jumpFromFinally, 
                 $tcs = new Bridge.TaskCompletionSource(), 
@@ -100,52 +110,9 @@
                             $step = Bridge.Array.min([0], $step);
                             switch ($step) {
                                 case 0: {
-                                    $tcs.setResult(null);
-                                    return;
-                                }
-                                default: {
-                                    $tcs.setResult(null);
-                                    return;
-                                }
-                            }
-                        }
-                    } catch($async_e1) {
-                        $async_e = Bridge.Exception.create($async_e1);
-                        $tcs.setException($async_e);
-                    }
-                }, arguments);
-    
-            $asyncBody();
-            return $tcs.task;
-        },
-        raisePropertyChanged: function (propName, val) {
-            var $step = 0,
-                $task1, 
-                $jumpFromFinally, 
-                $tcs = new Bridge.TaskCompletionSource(), 
-                $returnValue, 
-                $async_e, 
-                $asyncBody = Bridge.fn.bind(this, function () {
-                    try {
-                        for (;;) {
-                            $step = Bridge.Array.min([0,1], $step);
-                            switch ($step) {
-                                case 0: {
                                     if (Bridge.hasValue(this.PropertyChanged)) {
                                         this.PropertyChanged(this, new Bridge.PropertyChangedEventArgs(propName));
                                     }
-                                    
-                                    $task1 = this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                                        clientId: this.getClientId(),
-                                        eventType: "PropertyChanged",
-                                        value: { name: propName, value: val }
-                                    } ));
-                                    $step = 1;
-                                    $task1.continueWith($asyncBody);
-                                    return;
-                                }
-                                case 1: {
-                                    $task1.getAwaitedResult();
                                     $tcs.setResult(null);
                                     return;
                                 }
@@ -169,7 +136,6 @@
     Bridge.define('System.Windows.Forms.Control', {
         inherits: [System.Windows.Forms.Component],
         element: null,
-        labelElement: null,
         mBackColor: null,
         controls: null,
         mAnchor: 3,
@@ -195,7 +161,6 @@
             },
             init: function () {
                 this.element = document.createElement('div');
-                this.labelElement = document.createElement('span');
                 this.mSize = new System.Drawing.Size(300, 300);
             }
         },
@@ -328,7 +293,6 @@
             this.element.id = "WU_" + this.getClientId();
     
             this.element.style.backgroundColor = this.getBackColor();
-            this.labelElement.innerHTML = this.getText();
             this.element.style.visibility = this.getVisible() ? "visible" : "hidden";
     
             if (Bridge.hasValue(this.getParent())) {
@@ -374,13 +338,7 @@
                     this.getLocation().x = width2 - this.getWidth();
                 }
     
-    
-                if (this.getDock() !== System.Windows.Forms.DockStyle.fill) {
-                    this.element.style.position = "absolute";
-                }
-                else  {
-                    this.element.style.position = "relative";
-                }
+                this.element.style.position = "absolute";
             }
             else  {
                 this.element.style.position = "absolute";
@@ -431,6 +389,15 @@
                 this.element.style.width = "100%";
             }
     
+            if (this.hasEvent("Click")) {
+                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+            }
+    
+            var lbl = new System.Windows.Forms.Label();
+            (Bridge.cast(lbl.element, HTMLSpanElement)).innerHTML = this.getText();
+    
+            this.element.appendChild(lbl.element);
+    
             $t = Bridge.getEnumerator(this.getControls());
             while ($t.moveNext()) {
                 var ctrl = $t.getCurrent();
@@ -440,6 +407,37 @@
             if (Bridge.hasValue(this.getParent())) {
                 this.reAlignControls(this.getParent(), this);
             }
+        },
+        fireEvent: function (evt) {
+            var $step = 0,
+                $jumpFromFinally, 
+                $tcs = new Bridge.TaskCompletionSource(), 
+                $returnValue, 
+                $async_e, 
+                $asyncBody = Bridge.fn.bind(this, function () {
+                    try {
+                        for (;;) {
+                            $step = Bridge.Array.min([0], $step);
+                            switch ($step) {
+                                case 0: {
+                                    Bridge.get(ReVision.JSForms.Application).current.send(evt);
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                                default: {
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                            }
+                        }
+                    } catch($async_e1) {
+                        $async_e = Bridge.Exception.create($async_e1);
+                        $tcs.setException($async_e);
+                    }
+                }, arguments);
+    
+            $asyncBody();
+            return $tcs.task;
         },
         getControls: function () {
             var $t;
@@ -457,6 +455,14 @@
                             var tc = Bridge.merge(new System.Windows.Forms.TabControl(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = tc;
                             break;
+                        case "Button": 
+                            var btn = Bridge.merge(new System.Windows.Forms.Button(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = btn;
+                            break;
+                        case "Label": 
+                            var lbl = Bridge.merge(new System.Windows.Forms.Label(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = lbl;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -467,6 +473,57 @@
             }
     
             return this.mControls;
+        },
+        raisePropertyChanged: function (propName, val) {
+            var $step = 0,
+                $task1, 
+                $task2, 
+                $jumpFromFinally, 
+                $tcs = new Bridge.TaskCompletionSource(), 
+                $returnValue, 
+                $async_e, 
+                $asyncBody = Bridge.fn.bind(this, function () {
+                    try {
+                        for (;;) {
+                            $step = Bridge.Array.min([0,1,2], $step);
+                            switch ($step) {
+                                case 0: {
+                                    $task1 = System.Windows.Forms.Component.prototype.raisePropertyChanged.call(this, propName, val);
+                                    $step = 1;
+                                    $task1.continueWith($asyncBody);
+                                    return;
+                                }
+                                case 1: {
+                                    $task1.getAwaitedResult();
+                                    
+                                    $task2 = this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                                        clientId: this.getClientId(),
+                                        eventType: "PropertyChanged",
+                                        value: { name: propName, value: val }
+                                    } ));
+                                    $step = 2;
+                                    $task2.continueWith($asyncBody);
+                                    return;
+                                }
+                                case 2: {
+                                    $task2.getAwaitedResult();
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                                default: {
+                                    $tcs.setResult(null);
+                                    return;
+                                }
+                            }
+                        }
+                    } catch($async_e1) {
+                        $async_e = Bridge.Exception.create($async_e1);
+                        $tcs.setException($async_e);
+                    }
+                }, arguments);
+    
+            $asyncBody();
+            return $tcs.task;
         },
         reAlignControls: function (parent, current) {
             var $t, $t1, $t2, $t3;
@@ -485,25 +542,25 @@
                         while ($t.moveNext()) {
                             var child = $t.getCurrent();
                             if (child.getClientId() === current.getClientId()) {
-                                continue;
+                                break;
                             }
                             switch (child.getDock()) {
                                 case System.Windows.Forms.DockStyle.left: 
                                     {
                                         var item = $(child.element);
                                         var ctrlWidth = item.width();
-                                        item.css("left", $(current.element).position().left - ctrlWidth);
+                                        item.css("left", $(current.element).position().left + ctrlWidth);
                                     }
                                     break;
-                                case System.Windows.Forms.DockStyle.bottom: 
                                 case System.Windows.Forms.DockStyle.top: 
+                                case System.Windows.Forms.DockStyle.bottom: 
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
                                         var item1 = $(child.element);
                                         var ctrlWidth1 = item1.width();
                                         var ctrlLeft = item1.position().left;
                                         item1.css("left", ctrlLeft + left);
-                                        item1.css("width", ctrlWidth1 - ctrlLeft - left);
+                                        item1.css("width", ctrlWidth1 - left);
                                     }
                                     break;
                             }
@@ -512,12 +569,12 @@
                     break;
                 case System.Windows.Forms.DockStyle.right: 
                     {
-                        right = $(current.element).position().left - $(current.element).width();
+                        right = $(current.element).width();
                         $t1 = Bridge.getEnumerator(childControls);
                         while ($t1.moveNext()) {
                             var child1 = $t1.getCurrent();
                             if (child1.getClientId() === current.getClientId()) {
-                                continue;
+                                break;
                             }
                             switch (child1.getDock()) {
                                 case System.Windows.Forms.DockStyle.right: 
@@ -533,10 +590,8 @@
                                     {
                                         var item3 = $(child1.element);
                                         var ctrlWidth3 = item3.width();
-                                        //var ctrlLeft = item.Position().Left;
     
-                                        var newWidth = ctrlWidth3 - (ctrlWidth3 - right);
-                                        item3.css("width", newWidth);
+                                        item3.css("width", ctrlWidth3 - right);
                                     }
                                     break;
                             }
@@ -550,7 +605,7 @@
                         while ($t2.moveNext()) {
                             var child2 = $t2.getCurrent();
                             if (child2.getClientId() === current.getClientId()) {
-                                continue;
+                                break;
                             }
                             switch (child2.getDock()) {
                                 case System.Windows.Forms.DockStyle.top: 
@@ -560,6 +615,8 @@
                                         item4.css("top", ctrlTop + top);
                                     }
                                     break;
+                                case System.Windows.Forms.DockStyle.left: 
+                                case System.Windows.Forms.DockStyle.right: 
                                 case System.Windows.Forms.DockStyle.fill: 
                                     {
                                         var item5 = $(child2.element);
@@ -581,21 +638,22 @@
                         while ($t3.moveNext()) {
                             var child3 = $t3.getCurrent();
                             if (child3.getClientId() === current.getClientId()) {
-                                continue;
+                                break;
                             }
                             switch (child3.getDock()) {
-                                case System.Windows.Forms.DockStyle.bottom: 
+                                case System.Windows.Forms.DockStyle.right: 
+                                case System.Windows.Forms.DockStyle.fill: 
+                                case System.Windows.Forms.DockStyle.left: 
                                     {
                                         var item6 = $(child3.element);
-                                        var ctrlTop2 = child3.element.offsetTop;
-                                        item6.css("top", ctrlTop2 - bottom);
+                                        item6.css("height", item6.height() - bottom);
                                     }
                                     break;
-                                case System.Windows.Forms.DockStyle.fill: 
+                                case System.Windows.Forms.DockStyle.bottom: 
                                     {
                                         var item7 = $(child3.element);
-                                        var ctrlHeight1 = item7.height();
-                                        item7.css("height", ctrlHeight1 - bottom);
+                                        var ctrlTop2 = child3.element.offsetTop;
+                                        item7.css("top", ctrlTop2 - bottom);
                                     }
                                     break;
                             }
@@ -610,6 +668,33 @@
                 px = px.substr(0, px.length - 2);
             }
             return Bridge.Int.parseInt(px, -2147483648, 2147483647);
+        }
+    });
+    
+    var $_ = {};
+    
+    Bridge.ns("System.Windows.Forms.Control", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.Control, {
+        f1: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "click"
+            } ));
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.Button', {
+        inherits: [System.Windows.Forms.Control],
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('button');
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            $(this.element).kendoButton();
         }
     });
     
@@ -659,6 +744,15 @@
         inherits: [System.Windows.Forms.Control],
         showDialog: function () {
             this.render();
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.Label', {
+        inherits: [System.Windows.Forms.Control],
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('span');
         }
     });
     
