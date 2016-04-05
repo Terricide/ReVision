@@ -21,5 +21,10 @@ namespace WindowsFormsLib
         {
             int i = 0;
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            int i = 0;
+        }
     }
 }

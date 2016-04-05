@@ -57,12 +57,13 @@
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="BaseClasses\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
-    <Compile Include="BaseClasses\KendoButton.cs" />
     <Compile Include="BaseClasses\Label.cs" />
+    <Compile Include="BaseClasses\LinkLabel.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="BaseClasses\RadioButton.cs" />
     <Compile Include="BaseClasses\Size.cs" />
     <Compile Include="BaseClasses\TabControl.cs" />
+    <Compile Include="BaseClasses\TabPage.cs" />
     <Compile Include="Events\PropertyChangedEventHandler.cs" />
     <Compile Include="BaseClasses\Point.cs" />
     <Compile Include="WebSocket\WSEventArgs.cs" />

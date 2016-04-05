@@ -13,6 +13,7 @@ namespace System.Windows.Forms
     public class Control : Component
     {
         public Bridge.Html5.Element Element = new Bridge.Html5.Element();
+        public Label Label;
         public string ForeColor;
         public string Font;
         public ImageLayout BackgroundImageLayout;
@@ -216,21 +217,21 @@ namespace System.Windows.Forms
 
             if (this.ControlName != "Form" && this.ControlName != "Label")
             {
-                Label lbl = new Label();
-                SetText(lbl.Element);
+                this.Label = new Label();
+                SetText(this.Label.Element);
                 if( this.HasEvent("TextChanged") )
                 {
-                    lbl.Element.OnChange = (e) =>
+                    this.Label.Element.OnChange = (e) =>
                     {
                         this.FireEvent(new WSEventArgs()
                         {
                             ClientId = this.ClientId,
                             EventType = "textchanged",
-                            Value = lbl.Element.InnerHTML
+                            Value = this.Label.Element.InnerHTML
                         });
                     };
                 }
-                this.Element.AppendChild(lbl.Element);
+                this.Element.AppendChild(this.Label.Element);
             }
 
             if (!string.IsNullOrEmpty(this.BackgroundImage))
@@ -361,6 +362,14 @@ namespace System.Windows.Forms
                         case "CheckBox":
                             var cb = JSON.Parse<CheckBox>(JSON.Stringify(ctrl));
                             ctrl1 = cb;
+                            break;
+                        case "TabPage":
+                            var tp = JSON.Parse<TabPage>(JSON.Stringify(ctrl));
+                            ctrl1 = tp;
+                            break;
+                        case "LinkLabel":
+                            var ll = JSON.Parse<LinkLabel>(JSON.Stringify(ctrl));
+                            ctrl1 = ll;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

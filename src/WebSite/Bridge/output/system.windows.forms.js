@@ -50,6 +50,8 @@
     
     Bridge.define('System.Windows.Forms.KendoButton');
     
+    Bridge.define('System.Windows.Forms.KendoTabStrip');
+    
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
         property: null,
         subject: null,
@@ -147,6 +149,7 @@
     Bridge.define('System.Windows.Forms.Control', {
         inherits: [System.Windows.Forms.Component],
         element: null,
+        label: null,
         foreColor: null,
         font: null,
         backgroundImageLayout: 0,
@@ -424,18 +427,12 @@
             this.setupEventHandlers();
     
             if (this.getControlName() !== "Form" && this.getControlName() !== "Label") {
-                var lbl = new System.Windows.Forms.Label();
-                this.setText$1(lbl.element);
+                this.label = new System.Windows.Forms.Label();
+                this.setText$1(this.label.element);
                 if (this.hasEvent("TextChanged")) {
-                    lbl.element.onchange = Bridge.fn.bind(this, function (e) {
-                        this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                            clientId: this.getClientId(),
-                            eventType: "textchanged",
-                            value: lbl.element.innerHTML
-                        } ));
-                    });
+                    this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
                 }
-                this.element.appendChild(lbl.element);
+                this.element.appendChild(this.label.element);
             }
     
             if (!Bridge.String.isNullOrEmpty(this.getBackgroundImage())) {
@@ -459,26 +456,26 @@
         },
         setupEventHandlers: function () {
             if (this.hasEvent("Click")) {
-                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2);
             }
     
             if (this.hasEvent("MouseMove")) {
-                this.element.onmousemove = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2);
+                this.element.onmousemove = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3);
             }
             ;
     
             if (this.hasEvent("MouseEnter")) {
-                this.element.onmouseenter = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3);
+                this.element.onmouseenter = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
             }
             ;
     
             if (this.hasEvent("MouseLeave")) {
-                this.element.onmouseleave = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
+                this.element.onmouseleave = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f5);
             }
             ;
     
             if (this.hasEvent("TextChanged")) {
-                this.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
+                this.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f5);
             }
         },
         fireEvent: function (evt) {
@@ -543,6 +540,14 @@
                         case "CheckBox": 
                             var cb = Bridge.merge(new System.Windows.Forms.CheckBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = cb;
+                            break;
+                        case "TabPage": 
+                            var tp = Bridge.merge(new System.Windows.Forms.TabPage(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = tp;
+                            break;
+                        case "LinkLabel": 
+                            var ll = Bridge.merge(new System.Windows.Forms.LinkLabel(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = ll;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -760,24 +765,31 @@
         f1: function (e) {
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
-                eventType: "click"
+                eventType: "textchanged",
+                value: this.label.element.innerHTML
             } ));
         },
         f2: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "click"
+            } ));
+        },
+        f3: function (e) {
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
                 eventType: "mousemove",
                 value: e
             } ));
         },
-        f3: function (e) {
+        f4: function (e) {
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
                 eventType: "mouseenter",
                 value: e
             } ));
         },
-        f4: function (e) {
+        f5: function (e) {
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
                 eventType: "mouseleave",
@@ -852,8 +864,95 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.LinkLabel', {
+        inherits: [System.Windows.Forms.Control],
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            $(this.element).css("cursor", "pointer");
+    
+            if (Bridge.String.isNullOrEmpty(this.font)) {
+                this.label.element.style.color = "blue";
+                this.label.element.style.textDecoration = "underline";
+            }
+    
+            if (this.hasEvent("LinkClicked")) {
+                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.LinkLabel.f1);
+            }
+            ;
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.LinkLabel", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.LinkLabel, {
+        f1: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "linkClicked"
+            } ));
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.TabControl', {
-        inherits: [System.Windows.Forms.Control]
+        inherits: [System.Windows.Forms.Control],
+        selectedIndex: 0,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('ul');
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            //int i = 0;
+            //foreach(var ctrl in this.GetControls())
+            //{
+            //    var li = new Bridge.Html5.LIElement();
+            //    if (i == this.SelectedIndex)
+            //    {
+            //        li.ClassName = "k-state-active";
+            //    }
+            //    i++;
+            //    ul.AppendChild(li);
+            //}
+            //this.Element.AppendChild(ul);
+            //        for (var i = 0; i < obj.Controls.length; i++)
+            //        {
+            //            var div = document.createElement('div');
+            //            var size = obj.Controls[i].Size.split(',');
+            //            div.style.height = size[1] + 'px';
+            //            var newElement = createNewElement(obj.Controls[i], div);
+            //            controls[obj.ClientId].children.push(newElement);
+            //            this.Element.appendChild(div);
+            //        }
+    
+            //$(this.Element).kendoTabStrip({
+            //            show: function(e) {
+            //                var selectedIndex = $(e.item).index();
+            //                var evt = {
+            //            ClientId: this.element[0].id,
+            //            EventType: 'selectedIndexChanged',
+            //            Value: selectedIndex
+            //               };
+            //            send(evt);
+            //        }
+            //    });
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.TabPage', {
+        inherits: [System.Windows.Forms.Control],
+        config: {
+            properties: {
+                IsSelected: false
+            }
+        },
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('li');
+        }
     });
     
     Bridge.define('System.Windows.Forms.Button', {
