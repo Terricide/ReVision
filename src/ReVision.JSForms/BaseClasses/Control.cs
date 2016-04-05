@@ -378,6 +378,10 @@ namespace System.Windows.Forms
                             var cb1 = JSON.Parse<ComboBox>(JSON.Stringify(ctrl));
                             ctrl1 = cb1;
                             break;
+                        case "DateTimePicker":
+                            var dtp = JSON.Parse<DateTimePicker>(JSON.Stringify(ctrl));
+                            ctrl1 = dtp;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;

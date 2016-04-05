@@ -38,6 +38,8 @@
         value: 0
     });
     
+    Bridge.define('System.Windows.Forms.DateTimePicker.KendoDatePicker');
+    
     Bridge.define('System.Windows.Forms.DockStyle', {
         statics: {
             none: 0,
@@ -568,6 +570,10 @@
                             var cb1 = Bridge.merge(new System.Windows.Forms.ComboBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = cb1;
                             break;
+                        case "DateTimePicker": 
+                            var dtp = Bridge.merge(new System.Windows.Forms.DateTimePicker(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = dtp;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -926,6 +932,43 @@
                     }
                 }
             }
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.DateTimePicker', {
+        inherits: [System.Windows.Forms.Control],
+        config: {
+            init: function () {
+                this.value = new Date(-864e13);
+            }
+        },
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.value = new Date();
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            var dtp = document.createElement('input');
+            dtp.value = this.value;
+            dtp.readOnly = true;
+            this.element.appendChild(dtp);
+    
+            $(dtp).kendoDatePicker({ change: Bridge.fn.bind(this, $_.System.Windows.Forms.DateTimePicker.f1), value: this.value });
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.DateTimePicker", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.DateTimePicker, {
+        f1: function (e) {
+            this.value = e.sender.value();
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "valueChanged",
+                value: this.value
+            } ));
         }
     });
     

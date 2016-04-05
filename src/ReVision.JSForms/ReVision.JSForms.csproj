@@ -56,6 +56,7 @@
     <Compile Include="BaseClasses\Control.cs" />
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="Controls\ComboBox.cs" />
+    <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Dialogs\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
     <Compile Include="Controls\Label.cs" />
