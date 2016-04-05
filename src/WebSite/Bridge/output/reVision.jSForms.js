@@ -101,6 +101,7 @@
                             this.root = form;
                         }
                         window.onresize = Bridge.fn.bind(this, this.onResize);
+                        document.title = form.getText();
                         document.body.appendChild(form.element);
                     }
                     this.addOrUpdate(form);

@@ -199,10 +199,12 @@ namespace System.Windows.Forms
                 };
             }
 
-            Label lbl = new Label();
-            ((SpanElement)lbl.Element).InnerHTML = this.Text;
-
-            this.Element.AppendChild(lbl.Element);
+            if( this.ControlName != "Form")
+            {
+                Label lbl = new Label();
+                ((SpanElement)lbl.Element).InnerHTML = this.Text;
+                this.Element.AppendChild(lbl.Element);
+            }
 
             foreach (var ctrl in this.GetControls())
             {

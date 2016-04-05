@@ -393,10 +393,11 @@
                 this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
             }
     
-            var lbl = new System.Windows.Forms.Label();
-            (Bridge.cast(lbl.element, HTMLSpanElement)).innerHTML = this.getText();
-    
-            this.element.appendChild(lbl.element);
+            if (this.getControlName() !== "Form") {
+                var lbl = new System.Windows.Forms.Label();
+                (Bridge.cast(lbl.element, HTMLSpanElement)).innerHTML = this.getText();
+                this.element.appendChild(lbl.element);
+            }
     
             $t = Bridge.getEnumerator(this.getControls());
             while ($t.moveNext()) {

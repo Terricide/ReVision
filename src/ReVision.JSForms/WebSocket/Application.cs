@@ -108,6 +108,7 @@ namespace ReVision.JSForms
                             Root = form;
                         }
                         Window.OnResize = OnResize;
+                        Document.Title = form.Text;
                         Document.Body.AppendChild(form.Element);
                     }
                     AddOrUpdate(form);
