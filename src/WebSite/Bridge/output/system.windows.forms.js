@@ -37,6 +37,17 @@
         $enum: true
     });
     
+    Bridge.define('System.Windows.Forms.ImageLayout', {
+        statics: {
+            none: 0,
+            center: 1,
+            stretch: 2,
+            tile: 3,
+            zoom: 4
+        },
+        $enum: true
+    });
+    
     Bridge.define('System.Windows.Forms.KendoButton');
     
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
@@ -136,6 +147,9 @@
     Bridge.define('System.Windows.Forms.Control', {
         inherits: [System.Windows.Forms.Component],
         element: null,
+        foreColor: null,
+        font: null,
+        backgroundImageLayout: 0,
         mBackColor: null,
         controls: null,
         mAnchor: 3,
@@ -288,6 +302,24 @@
                 }
             }
         },
+        setText$1: function (elm) {
+            if (!Bridge.String.isNullOrEmpty(this.foreColor)) {
+                elm.style.color = this.foreColor;
+            }
+    
+            if (!Bridge.String.isNullOrEmpty(this.font)) {
+                var split = this.font.split(String.fromCharCode(44));
+    
+                elm.style.fontFamily = split[0];
+    
+                var size = Bridge.String.replaceAll(split[1], "pt", "");
+                var fs = Bridge.Int.parseInt(size, -2147483648, 2147483647);
+                fs = fs + 5;
+                elm.style.fontSize = fs + "px";
+            }
+    
+            elm.innerHTML = this.getText();
+        },
         render: function () {
             var $t;
             this.element.id = "WU_" + this.getClientId();
@@ -303,10 +335,10 @@
                 if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.left)) {
                     leftSet = true;
                 }
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.bottom)) {
+                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.top)) {
                     topSet = true;
                 }
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.top)) {
+                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.bottom)) {
                     bottomSet = true;
                 }
     
@@ -348,8 +380,8 @@
                 case System.Windows.Forms.DockStyle.none: 
                     this.element.style.width = this.getWidth() + "px";
                     this.element.style.height = this.getHeight() + "px";
-                    this.element.style.top = this.getLocation().x + "px";
-                    this.element.style.left = this.getLocation().y + "px";
+                    this.element.style.top = this.getLocation().y + "px";
+                    this.element.style.left = this.getLocation().x + "px";
                     break;
                 case System.Windows.Forms.DockStyle.left: 
                     this.element.style.left = "0px";
@@ -389,14 +421,30 @@
                 this.element.style.width = "100%";
             }
     
-            if (this.hasEvent("Click")) {
-                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+            this.setupEventHandlers();
+    
+            if (this.getControlName() !== "Form" && this.getControlName() !== "Label") {
+                var lbl = new System.Windows.Forms.Label();
+                this.setText$1(lbl.element);
+                if (this.hasEvent("TextChanged")) {
+                    lbl.element.onchange = Bridge.fn.bind(this, function (e) {
+                        this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                            clientId: this.getClientId(),
+                            eventType: "textchanged",
+                            value: lbl.element.innerHTML
+                        } ));
+                    });
+                }
+                this.element.appendChild(lbl.element);
             }
     
-            if (this.getControlName() !== "Form") {
-                var lbl = new System.Windows.Forms.Label();
-                (Bridge.cast(lbl.element, HTMLSpanElement)).innerHTML = this.getText();
-                this.element.appendChild(lbl.element);
+            if (!Bridge.String.isNullOrEmpty(this.getBackgroundImage())) {
+                $(this.element).css("background-image", "url('data:image/png;base64," + this.getBackgroundImage() + "')");
+                switch (this.backgroundImageLayout) {
+                    case System.Windows.Forms.ImageLayout.stretch: 
+                        $(this.element).css("background-size", "cover");
+                        break;
+                }
             }
     
             $t = Bridge.getEnumerator(this.getControls());
@@ -407,6 +455,30 @@
     
             if (Bridge.hasValue(this.getParent())) {
                 this.reAlignControls(this.getParent(), this);
+            }
+        },
+        setupEventHandlers: function () {
+            if (this.hasEvent("Click")) {
+                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
+            }
+    
+            if (this.hasEvent("MouseMove")) {
+                this.element.onmousemove = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2);
+            }
+            ;
+    
+            if (this.hasEvent("MouseEnter")) {
+                this.element.onmouseenter = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3);
+            }
+            ;
+    
+            if (this.hasEvent("MouseLeave")) {
+                this.element.onmouseleave = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
+            }
+            ;
+    
+            if (this.hasEvent("TextChanged")) {
+                this.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
             }
         },
         fireEvent: function (evt) {
@@ -463,6 +535,14 @@
                         case "Label": 
                             var lbl = Bridge.merge(new System.Windows.Forms.Label(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = lbl;
+                            break;
+                        case "RadioButton": 
+                            var rb = Bridge.merge(new System.Windows.Forms.RadioButton(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = rb;
+                            break;
+                        case "CheckBox": 
+                            var cb = Bridge.merge(new System.Windows.Forms.CheckBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = cb;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -682,21 +762,32 @@
                 clientId: this.getClientId(),
                 eventType: "click"
             } ));
+        },
+        f2: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mousemove",
+                value: e
+            } ));
+        },
+        f3: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mouseenter",
+                value: e
+            } ));
+        },
+        f4: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mouseleave",
+                value: e
+            } ));
         }
     });
     
-    Bridge.define('System.Windows.Forms.Button', {
-        inherits: [System.Windows.Forms.Control],
-        constructor: function () {
-            System.Windows.Forms.Control.prototype.$constructor.call(this);
-    
-            this.element = document.createElement('button');
-        },
-        render: function () {
-            System.Windows.Forms.Control.prototype.render.call(this);
-    
-            $(this.element).kendoButton();
-        }
+    Bridge.define('System.Windows.Forms.ButtonBase', {
+        inherits: [System.Windows.Forms.Control]
     });
     
     Bridge.define('System.Windows.Forms.ControlsCollection', {
@@ -754,11 +845,95 @@
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.element = document.createElement('span');
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+            this.setText$1(this.element);
         }
     });
     
     Bridge.define('System.Windows.Forms.TabControl', {
         inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.Button', {
+        inherits: [System.Windows.Forms.ButtonBase],
+        constructor: function () {
+            System.Windows.Forms.ButtonBase.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('button');
+        },
+        render: function () {
+            System.Windows.Forms.ButtonBase.prototype.render.call(this);
+    
+            $(this.element).kendoButton();
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.CheckBox', {
+        inherits: [System.Windows.Forms.ButtonBase],
+        config: {
+            properties: {
+                Checked: false
+            }
+        },
+        render: function () {
+            var elm = $(this.element);
+    
+            elm.css("cursor", "pointer");
+    
+            var rb = document.createElement('input');
+            rb.id = "RB_" + this.getClientId();
+            rb.type = "checkbox";
+            rb.name = this.getParent().getClientId() + "rb_group";
+            rb.checked = this.getChecked();
+    
+            rb.onchange = Bridge.fn.bind(this, function (e) {
+                this.setChecked(rb.checked);
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "checkChanged",
+                    value: rb.checked
+                } ));
+            });
+    
+            this.element.appendChild(rb);
+    
+            System.Windows.Forms.ButtonBase.prototype.render.call(this);
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.RadioButton', {
+        inherits: [System.Windows.Forms.ButtonBase],
+        config: {
+            properties: {
+                Checked: false
+            }
+        },
+        render: function () {
+            var elm = $(this.element);
+    
+            elm.css("cursor", "pointer");
+    
+            var rb = document.createElement('input');
+            rb.id = "RB_" + this.getClientId();
+            rb.type = "radio";
+            rb.name = this.getParent().getClientId() + "rb_group";
+            rb.checked = this.getChecked();
+    
+            rb.onchange = Bridge.fn.bind(this, function (e) {
+                this.setChecked(rb.checked);
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "checkChanged",
+                    value: rb.checked
+                } ));
+            });
+    
+            this.element.appendChild(rb);
+    
+            System.Windows.Forms.ButtonBase.prototype.render.call(this);
+        }
     });
     
     Bridge.init();

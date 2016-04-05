@@ -13,6 +13,9 @@ namespace System.Windows.Forms
     public class Control : Component
     {
         public Bridge.Html5.Element Element = new Bridge.Html5.Element();
+        public string ForeColor;
+        public string Font;
+        public ImageLayout BackgroundImageLayout;
         public Control Parent { get; set; }
         public string ParentId { get; set; }
 
@@ -72,6 +75,28 @@ namespace System.Windows.Forms
             }
         }
 
+        protected void SetText(Element elm)
+        {
+            if (!string.IsNullOrEmpty(this.ForeColor))
+            {
+                elm.Style.Color = this.ForeColor;
+            }
+
+            if (!string.IsNullOrEmpty(this.Font))
+            {
+                var split = this.Font.Split(',');
+
+                elm.Style.FontFamily = split[0];
+
+                var size = split[1].Replace("pt", "");
+                var fs = Int32.Parse(size);
+                fs = fs + 5;
+                elm.Style.FontSize = fs + "px";
+            }
+
+            elm.InnerHTML = this.Text;
+        }
+
         public virtual void Render()
         {
             this.Element.Id = "WU_" + this.ClientId;
@@ -90,11 +115,11 @@ namespace System.Windows.Forms
                 {
                     leftSet = true;
                 }
-                if (this.Anchor.HasFlag(AnchorStyles.Bottom))
+                if (this.Anchor.HasFlag(AnchorStyles.Top))
                 {
                     topSet = true;
                 }
-                if (this.Anchor.HasFlag(AnchorStyles.Top))
+                if (this.Anchor.HasFlag(AnchorStyles.Bottom))
                 {
                     bottomSet = true;
                 }
@@ -144,8 +169,8 @@ namespace System.Windows.Forms
                 case DockStyle.None:
                     this.Element.Style.Width = this.Width + "px";
                     this.Element.Style.Height = this.Height + "px";
-                    this.Element.Style.Top = this.Location.X + "px";
-                    this.Element.Style.Left = this.Location.Y + "px";
+                    this.Element.Style.Top = this.Location.Y + "px";
+                    this.Element.Style.Left = this.Location.X + "px";
                     break;
                 case DockStyle.Left:
                     this.Element.Style.Left = "0px";
@@ -187,7 +212,52 @@ namespace System.Windows.Forms
                 this.Element.Style.Width = "100%";
             }
 
-            if( this.HasEvent("Click") )
+            SetupEventHandlers();
+
+            if (this.ControlName != "Form" && this.ControlName != "Label")
+            {
+                Label lbl = new Label();
+                SetText(lbl.Element);
+                if( this.HasEvent("TextChanged") )
+                {
+                    lbl.Element.OnChange = (e) =>
+                    {
+                        this.FireEvent(new WSEventArgs()
+                        {
+                            ClientId = this.ClientId,
+                            EventType = "textchanged",
+                            Value = lbl.Element.InnerHTML
+                        });
+                    };
+                }
+                this.Element.AppendChild(lbl.Element);
+            }
+
+            if (!string.IsNullOrEmpty(this.BackgroundImage))
+            {
+                jQuery.Element(this.Element).Css("background-image", "url('data:image/png;base64," + this.BackgroundImage + "')");
+                switch (this.BackgroundImageLayout)
+                {
+                    case ImageLayout.Stretch:
+                        jQuery.Element(this.Element).Css("background-size", "cover");
+                        break;
+                }
+            }
+
+            foreach (var ctrl in this.GetControls())
+            {
+                ctrl.Render();
+            }
+
+            if (this.Parent != null)
+            {
+                ReAlignControls(this.Parent, this);
+            }
+        }
+
+        private void SetupEventHandlers()
+        {
+            if (this.HasEvent("Click"))
             {
                 this.Element.OnClick = (e) =>
                 {
@@ -199,20 +269,56 @@ namespace System.Windows.Forms
                 };
             }
 
-            if( this.ControlName != "Form")
+            if (this.HasEvent("MouseMove"))
             {
-                Label lbl = new Label();
-                ((SpanElement)lbl.Element).InnerHTML = this.Text;
-                this.Element.AppendChild(lbl.Element);
-            }
+                this.Element.OnMouseMove = (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mousemove",
+                        Value = e
+                    });
+                };
+            };
 
-            foreach (var ctrl in this.GetControls())
+            if (this.HasEvent("MouseEnter"))
             {
-                ctrl.Render();
-            }
+                this.Element.OnMouseEnter = (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseenter",
+                        Value = e
+                    });
+                };
+            };
 
-            if (this.Parent != null) {
-                ReAlignControls(this.Parent, this);
+            if (this.HasEvent("MouseLeave"))
+            {
+                this.Element.OnMouseLeave = (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseleave",
+                        Value = e
+                    });
+                };
+            };
+
+            if (this.HasEvent("TextChanged"))
+            {
+                this.Element.OnChange = (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseleave",
+                        Value = e
+                    });
+                };
             }
         }
 
@@ -247,6 +353,14 @@ namespace System.Windows.Forms
                         case "Label":
                             var lbl = JSON.Parse<Label>(JSON.Stringify(ctrl));
                             ctrl1 = lbl;
+                            break;
+                        case "RadioButton":
+                            var rb = JSON.Parse<RadioButton>(JSON.Stringify(ctrl));
+                            ctrl1 = rb;
+                            break;
+                        case "CheckBox":
+                            var cb = JSON.Parse<CheckBox>(JSON.Stringify(ctrl));
+                            ctrl1 = cb;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

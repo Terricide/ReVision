@@ -39,6 +39,9 @@
     <Compile Include="..\ReVision.Forms\Enumerations\DockStyle.cs">
       <Link>Shared\DockStyle.cs</Link>
     </Compile>
+    <Compile Include="..\ReVision.Forms\Enumerations\ImageLayout.cs">
+      <Link>BaseClasses\ImageLayout.cs</Link>
+    </Compile>
     <Compile Include="..\ReVision.Forms\Shared\AutoScaleMode.cs">
       <Link>Shared\AutoScaleMode.cs</Link>
     </Compile>
@@ -47,6 +50,8 @@
     </Compile>
     <Compile Include="App.cs" />
     <Compile Include="BaseClasses\Button.cs" />
+    <Compile Include="BaseClasses\ButtonBase.cs" />
+    <Compile Include="BaseClasses\CheckBox.cs" />
     <Compile Include="BaseClasses\Component.cs" />
     <Compile Include="BaseClasses\Control.cs" />
     <Compile Include="BaseClasses\ControlsCollection.cs" />
@@ -55,6 +60,7 @@
     <Compile Include="BaseClasses\KendoButton.cs" />
     <Compile Include="BaseClasses\Label.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
+    <Compile Include="BaseClasses\RadioButton.cs" />
     <Compile Include="BaseClasses\Size.cs" />
     <Compile Include="BaseClasses\TabControl.cs" />
     <Compile Include="Events\PropertyChangedEventHandler.cs" />
