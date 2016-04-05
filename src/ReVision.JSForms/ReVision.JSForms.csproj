@@ -34,38 +34,38 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\ReVision.Forms\Enumerations\AnchorStyles.cs">
-      <Link>Shared\AnchorStyles.cs</Link>
+      <Link>Enumerations\AnchorStyles.cs</Link>
     </Compile>
     <Compile Include="..\ReVision.Forms\Enumerations\DockStyle.cs">
-      <Link>Shared\DockStyle.cs</Link>
+      <Link>Enumerations\DockStyle.cs</Link>
     </Compile>
     <Compile Include="..\ReVision.Forms\Enumerations\ImageLayout.cs">
-      <Link>BaseClasses\ImageLayout.cs</Link>
+      <Link>Enumerations\ImageLayout.cs</Link>
     </Compile>
     <Compile Include="..\ReVision.Forms\Shared\AutoScaleMode.cs">
-      <Link>Shared\AutoScaleMode.cs</Link>
+      <Link>Enumerations\AutoScaleMode.cs</Link>
     </Compile>
     <Compile Include="..\ReVision.Forms\Shared\IObservableItem.cs">
       <Link>Shared\IObservableItem.cs</Link>
     </Compile>
     <Compile Include="App.cs" />
-    <Compile Include="BaseClasses\Button.cs" />
+    <Compile Include="Controls\Button.cs" />
     <Compile Include="BaseClasses\ButtonBase.cs" />
-    <Compile Include="BaseClasses\CheckBox.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="BaseClasses\Component.cs" />
     <Compile Include="BaseClasses\Control.cs" />
     <Compile Include="BaseClasses\ControlsCollection.cs" />
-    <Compile Include="BaseClasses\Form.cs" />
+    <Compile Include="Dialogs\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
-    <Compile Include="BaseClasses\Label.cs" />
-    <Compile Include="BaseClasses\LinkLabel.cs" />
+    <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\LinkLabel.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
-    <Compile Include="BaseClasses\RadioButton.cs" />
-    <Compile Include="BaseClasses\Size.cs" />
-    <Compile Include="BaseClasses\TabControl.cs" />
-    <Compile Include="BaseClasses\TabPage.cs" />
+    <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="System.Drawing\Size.cs" />
+    <Compile Include="Controls\TabControl.cs" />
+    <Compile Include="Controls\TabPage.cs" />
     <Compile Include="Events\PropertyChangedEventHandler.cs" />
-    <Compile Include="BaseClasses\Point.cs" />
+    <Compile Include="System.Drawing\Point.cs" />
     <Compile Include="WebSocket\WSEventArgs.cs" />
     <Compile Include="Events\CloseEvent.cs" />
     <Compile Include="Events\MessageEvent.cs" />
@@ -104,6 +104,7 @@
     <None Include="Bridge\bridge.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Bridge.1.11.2\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.11.2\build\Bridge.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
