@@ -952,7 +952,6 @@
     
             var dtp = document.createElement('input');
             dtp.value = this.value;
-            dtp.readOnly = true;
             this.element.appendChild(dtp);
     
             $(dtp).kendoDatePicker({ change: Bridge.fn.bind(this, $_.System.Windows.Forms.DateTimePicker.f1), value: this.value });

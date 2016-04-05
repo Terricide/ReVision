@@ -15,6 +15,8 @@ namespace WindowsFormsLib
         public TestButtonForm()
         {
             InitializeComponent();
+
+            this.dateTimePicker1.Value = DateTime.Now;
         }
 
         private void button1_Click(object sender, EventArgs e)
