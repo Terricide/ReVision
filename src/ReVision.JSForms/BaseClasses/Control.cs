@@ -19,6 +19,19 @@ namespace System.Windows.Forms
         public ImageLayout BackgroundImageLayout;
         public Control Parent { get; set; }
         public string ParentId { get; set; }
+        private Padding mPadding;
+        public Padding Padding
+        {
+            get
+            {
+                return mPadding;
+            }
+            set
+            {
+                mPadding = JSON.Parse<Padding>(JSON.Stringify(value));
+            }
+        }
+        protected bool RenderLabel = true;
 
         public string BackgroundImage { get; set; }
 
@@ -98,7 +111,7 @@ namespace System.Windows.Forms
             elm.InnerHTML = this.Text;
         }
 
-        public virtual void Render()
+        protected void SetAttributes()
         {
             this.Element.Id = "WU_" + this.ClientId;
 
@@ -203,6 +216,11 @@ namespace System.Windows.Forms
                     break;
             }
 
+            this.Element.Style.PaddingTop = this.Padding.Top + "px";
+            this.Element.Style.PaddingLeft = this.Padding.Left + "px";
+            this.Element.Style.PaddingRight = this.Padding.Right + "px";
+            this.Element.Style.PaddingBottom = this.Padding.Bottom + "px";
+
             if (Parent != null)
             {
                 this.Parent.Element.AppendChild(this.Element);
@@ -215,7 +233,7 @@ namespace System.Windows.Forms
 
             SetupEventHandlers();
 
-            if (this.ControlName != "Form" && this.ControlName != "Label")
+            if (this.RenderLabel)
             {
                 if (!string.IsNullOrEmpty(this.Text))
                 {
@@ -247,6 +265,11 @@ namespace System.Windows.Forms
                         break;
                 }
             }
+        }
+
+        public virtual void Render()
+        {
+            SetAttributes();
 
             foreach (var ctrl in this.GetControls())
             {
@@ -381,6 +404,18 @@ namespace System.Windows.Forms
                         case "DateTimePicker":
                             var dtp = JSON.Parse<DateTimePicker>(JSON.Stringify(ctrl));
                             ctrl1 = dtp;
+                            break;
+                        case "GroupBox":
+                            var gb = JSON.Parse<GroupBox>(JSON.Stringify(ctrl));
+                            ctrl1 = gb;
+                            break;
+                        case "Panel":
+                            var pn = JSON.Parse<Panel>(JSON.Stringify(ctrl));
+                            ctrl1 = pn;
+                            break;
+                        case "TextBox":
+                            var tb = JSON.Parse<TextBox>(JSON.Stringify(ctrl));
+                            ctrl1 = tb;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

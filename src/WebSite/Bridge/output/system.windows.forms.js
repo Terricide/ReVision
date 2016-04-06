@@ -86,6 +86,26 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.Padding', {
+        config: {
+            properties: {
+                Left: 0,
+                Top: 0,
+                Right: 0,
+                Bottom: 0
+            }
+        },
+        constructor$1: function (pad) {
+            this.setLeft(pad);
+            this.setRight(pad);
+            this.setBottom(pad);
+            this.setTop(pad);
+        },
+        constructor: function () {
+    
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.WSEventArgs', {
         clientId: null,
         eventType: null,
@@ -168,6 +188,8 @@
         foreColor: null,
         font: null,
         backgroundImageLayout: 0,
+        mPadding: null,
+        renderLabel: true,
         mBackColor: null,
         controls: null,
         mAnchor: 3,
@@ -195,6 +217,12 @@
                 this.element = document.createElement('div');
                 this.mSize = new System.Drawing.Size(300, 300);
             }
+        },
+        getPadding: function () {
+            return this.mPadding;
+        },
+        setPadding: function (value) {
+            this.mPadding = Bridge.merge(new System.Windows.Forms.Padding(), JSON.parse(JSON.stringify(value)));
         },
         getBackColor: function () {
             return this.mBackColor;
@@ -338,8 +366,7 @@
     
             elm.innerHTML = this.getText();
         },
-        render: function () {
-            var $t;
+        setAttributes: function () {
             this.element.id = "WU_" + this.getClientId();
     
             this.element.style.backgroundColor = this.getBackColor();
@@ -431,6 +458,11 @@
                     break;
             }
     
+            this.element.style.paddingTop = this.getPadding().getTop() + "px";
+            this.element.style.paddingLeft = this.getPadding().getLeft() + "px";
+            this.element.style.paddingRight = this.getPadding().getRight() + "px";
+            this.element.style.paddingBottom = this.getPadding().getBottom() + "px";
+    
             if (Bridge.hasValue(this.getParent())) {
                 this.getParent().element.appendChild(this.element);
             }
@@ -441,7 +473,7 @@
     
             this.setupEventHandlers();
     
-            if (this.getControlName() !== "Form" && this.getControlName() !== "Label") {
+            if (this.renderLabel) {
                 if (!Bridge.String.isNullOrEmpty(this.getText())) {
                     this.label = new System.Windows.Forms.Label();
                     this.setText$1(this.label.element);
@@ -460,6 +492,10 @@
                         break;
                 }
             }
+        },
+        render: function () {
+            var $t;
+            this.setAttributes();
     
             $t = Bridge.getEnumerator(this.getControls());
             while ($t.moveNext()) {
@@ -573,6 +609,18 @@
                         case "DateTimePicker": 
                             var dtp = Bridge.merge(new System.Windows.Forms.DateTimePicker(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = dtp;
+                            break;
+                        case "GroupBox": 
+                            var gb = Bridge.merge(new System.Windows.Forms.GroupBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = gb;
+                            break;
+                        case "Panel": 
+                            var pn = Bridge.merge(new System.Windows.Forms.Panel(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = pn;
+                            break;
+                        case "TextBox": 
+                            var tb = Bridge.merge(new System.Windows.Forms.TextBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = tb;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -973,9 +1021,18 @@
     
     Bridge.define('System.Windows.Forms.Form', {
         inherits: [System.Windows.Forms.Control],
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.renderLabel = false;
+        },
         showDialog: function () {
             this.render();
         }
+    });
+    
+    Bridge.define('System.Windows.Forms.Panel', {
+        inherits: [System.Windows.Forms.Control]
     });
     
     Bridge.define('System.Windows.Forms.Label', {
@@ -983,6 +1040,7 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
+            this.renderLabel = false;
             this.element = document.createElement('span');
         },
         render: function () {
@@ -1027,10 +1085,36 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            this.element = document.createElement('ul');
+            this.renderLabel = false;
+            this.element = document.createElement('div');
         },
         render: function () {
-            System.Windows.Forms.Control.prototype.render.call(this);
+            var $t, $t1;
+            this.setAttributes();
+            this.element.style.borderStyle = "none";
+            var ul = document.createElement('ul');
+            this.element.appendChild(ul);
+            var index = 0;
+            $t = Bridge.getEnumerator(this.getControls());
+            while ($t.moveNext()) {
+                var child = $t.getCurrent();
+                var tp = Bridge.as(child, System.Windows.Forms.TabPage);
+                if (Bridge.hasValue(tp)) {
+                    if (this.selectedIndex === index) {
+                        tp.setIsSelected(true);
+                    }
+                    tp.renderTabs(ul);
+                    index++;
+                }
+            }
+    
+            $t1 = Bridge.getEnumerator(this.getControls());
+            while ($t1.moveNext()) {
+                var child1 = $t1.getCurrent();
+                child1.render();
+            }
+    
+            $(this.element).kendoTabStrip();
     
             //int i = 0;
             //foreach(var ctrl in this.GetControls())
@@ -1078,7 +1162,116 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            this.element = document.createElement('li');
+    
+        },
+        render: function () {
+            var $t;
+            this.element.style.width = (this.getParent().getWidth() - 27) + "px";
+            this.element.style.height = (this.getParent().getHeight() - 35) + "px";
+            this.element.style.position = "relative";
+            this.getParent().element.appendChild(this.element);
+    
+            $t = Bridge.getEnumerator(this.getControls());
+            while ($t.moveNext()) {
+                var ctrl = $t.getCurrent();
+                ctrl.render();
+            }
+        },
+        renderTabs: function (parent) {
+            var li = document.createElement('li');
+            li.id = "LI_" + this.getClientId();
+            li.innerHTML = this.getText();
+            if (this.getIsSelected()) {
+                li.className = "k-state-active";
+            }
+            parent.appendChild(li);
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.TextBox', {
+        inherits: [System.Windows.Forms.Control],
+        multiline: false,
+        passwordChar: null,
+        hiddenField: null,
+        textArea: null,
+        inputElement: null,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.renderLabel = false;
+        },
+        generateStars: function (n) {
+            var stars = "";
+            var passwordChar = this.passwordChar;
+            for (var i = 0; i < n; i++) {
+                stars += passwordChar;
+            }
+            return stars;
+        },
+        render: function () {
+    
+            if (this.multiline) {
+                this.textArea = document.createElement('textarea');
+                this.textArea.value = this.getText();
+                this.element = this.textArea;
+            }
+            else  {
+                this.inputElement = document.createElement('input');
+                //if (this.PasswordChar != '\0')
+                //{
+                //    input.Type = InputType.Password;
+                //}
+                this.inputElement.value = this.getText();
+                this.element = this.inputElement;
+            }
+            this.element.className = "k-textbox";
+    
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            this.element.style.borderStyle = "solid";
+            this.element.style.borderWidth = "thin";
+            this.element.style.borderColor = "gray";
+    
+            this.hiddenField = document.createElement('textarea');
+            this.hiddenField.id = "HI_" + this.getClientId();
+            this.hiddenField.style.display = "none";
+    
+            this.element.appendChild(this.hiddenField);
+    
+            if (this.passwordChar.length > 0 && this.passwordChar.charCodeAt(0) !== 0) {
+                this.element.onkeydown = Bridge.fn.combine(this.element.onkeydown, Bridge.fn.bind(this, $_.System.Windows.Forms.TextBox.f1));
+            }
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.TextBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.TextBox, {
+        f1: function (e) {
+            window.setTimeout(Bridge.fn.bind(this, function () {
+                var e2 = e;
+                var text = this.hiddenField.value;
+                var stars = this.hiddenField.value.length;
+    
+                var unicode = e2.keyCode ? e2.keyCode : e2.charCode;
+    
+                if ((unicode >= 65 && unicode <= 90) || (unicode >= 97 && unicode <= 122) || (unicode >= 48 && unicode <= 57)) {
+                    text = text + String.fromCharCode(unicode);
+                    stars += 1;
+                }
+                else  {
+                    stars -= 1;
+                }
+    
+                this.hiddenField.value = text;
+    
+                if (Bridge.hasValue(this.textArea)) {
+                    this.textArea.value = this.generateStars(stars);
+                }
+                else  {
+                    this.inputElement.value = this.generateStars(stars);
+                }
+            }), 500);
         }
     });
     
@@ -1126,6 +1319,46 @@
             this.element.appendChild(rb);
     
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.GroupBox', {
+        inherits: [System.Windows.Forms.Panel],
+        constructor: function () {
+            System.Windows.Forms.Panel.prototype.$constructor.call(this);
+    
+            this.renderLabel = false;
+        },
+        render: function () {
+            System.Windows.Forms.Panel.prototype.render.call(this);
+            this.element.style.borderStyle = "solid";
+            this.element.style.borderWidth = "thin";
+            this.element.style.borderColor = "gray";
+    
+            this.label = new System.Windows.Forms.Label();
+            this.label.element.style.top = "-6px";
+            this.label.element.style.left = "10px";
+            this.label.element.style.paddingLeft = "2px";
+            this.label.element.style.paddingRight = "2px";
+            this.label.element.style.backgroundColor = "white";
+            this.label.element.style.position = "relative";
+            this.setText$1(this.label.element);
+            if (this.hasEvent("TextChanged")) {
+                this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.GroupBox.f1);
+            }
+            this.element.appendChild(this.label.element);
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.GroupBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.GroupBox, {
+        f1: function (e) {
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "textchanged",
+                value: this.label.element.innerHTML
+            } ));
         }
     });
     

@@ -11,6 +11,7 @@ namespace System.Windows.Forms
     {
         public Label()
         {
+            this.RenderLabel = false;
             this.Element = new Bridge.Html5.SpanElement();
         }
 

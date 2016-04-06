@@ -14,12 +14,37 @@ namespace System.Windows.Forms
 
         public TabControl()
         {
-            this.Element = new Bridge.Html5.UListElement();
+            this.RenderLabel = false;
+            this.Element = new Bridge.Html5.DivElement();
         }
 
         public override void Render()
         {
-            base.Render();
+            this.SetAttributes();
+            this.Element.Style.BorderStyle = BorderStyle.None;
+            var ul = new Bridge.Html5.UListElement();
+            this.Element.AppendChild(ul);
+            int index = 0;
+            foreach (var child in this.GetControls())
+            {
+                TabPage tp = child as TabPage;
+                if( tp != null )
+                {
+                    if( this.SelectedIndex == index )
+                    {
+                        tp.IsSelected = true;
+                    }
+                    tp.RenderTabs(ul);
+                    index++;
+                }
+            }
+
+            foreach (var child in this.GetControls())
+            {
+                child.Render();
+            }
+
+            KendoTabStrip.Element(this.Element);
 
             //int i = 0;
             //foreach(var ctrl in this.GetControls())

@@ -42,6 +42,9 @@
     <Compile Include="..\ReVision.Forms\Enumerations\ImageLayout.cs">
       <Link>Enumerations\ImageLayout.cs</Link>
     </Compile>
+    <Compile Include="..\ReVision.Forms\Enumerations\Padding.cs">
+      <Link>Enumerations\Padding.cs</Link>
+    </Compile>
     <Compile Include="..\ReVision.Forms\Shared\AutoScaleMode.cs">
       <Link>Enumerations\AutoScaleMode.cs</Link>
     </Compile>
@@ -57,6 +60,9 @@
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
+    <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\Panel.cs" />
+    <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Dialogs\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
     <Compile Include="Controls\Label.cs" />

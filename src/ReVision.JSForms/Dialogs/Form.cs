@@ -8,6 +8,10 @@ namespace System.Windows.Forms
 {
     public class Form : Control
     {
+        public Form()
+        {
+            this.RenderLabel = false;
+        }
         public void ShowDialog()
         {
             this.Render();
