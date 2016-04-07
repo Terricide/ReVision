@@ -11,14 +11,18 @@ namespace System.Windows.Forms
     public class RadioButton : ButtonBase
     {
         public bool Checked { get; set; }
-
+        private Bridge.Html5.InputElement rb;
         public override void Render()
         {
             var elm = jQuery.Element(this.Element);
 
             elm.Css("cursor", "pointer");
 
-            var rb = new Bridge.Html5.InputElement();
+            if(rb == null)
+            {
+                rb = new Bridge.Html5.InputElement();
+                this.Element.AppendChild(rb);
+            }
             rb.Id = "RB_" + this.ClientId;
             rb.Type = InputType.Radio;
             rb.Name = this.Parent.ClientId + "rb_group";
@@ -34,8 +38,6 @@ namespace System.Windows.Forms
                     Value = rb.Checked
                 });
             };
-
-            this.Element.AppendChild(rb);
 
             base.Render();
         }

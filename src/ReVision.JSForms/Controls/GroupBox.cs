@@ -21,7 +21,11 @@ namespace System.Windows.Forms
             this.Element.Style.BorderWidth = Bridge.Html5.BorderWidth.Thin;
             this.Element.Style.BorderColor = "gray";
 
-            this.Label = new Label();
+            if( this.Label == null )
+            {
+                this.Label = new Label();
+                this.Element.AppendChild(this.Label.Element);
+            }
             this.Label.Element.Style.Top = "-6px";
             this.Label.Element.Style.Left = "10px";
             this.Label.Element.Style.PaddingLeft = "2px";
@@ -41,7 +45,6 @@ namespace System.Windows.Forms
                     });
                 };
             }
-            this.Element.AppendChild(this.Label.Element);
         }
     }
 }

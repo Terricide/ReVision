@@ -1,4 +1,5 @@
 ﻿using Bridge.Html5;
+using Bridge.jQuery2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -123,7 +124,8 @@ namespace ReVision.JSForms
 
         private void OnResize(Event e = null)
         {
-            Root.Element.InnerHTML = string.Empty;
+            Controls.Clear();
+            Root.Element.InnerHTML = "";
             Root.ShowDialog();
         }
 

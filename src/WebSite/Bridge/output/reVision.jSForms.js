@@ -115,6 +115,7 @@
         },
         onResize: function (e) {
             if (e === void 0) { e = null; }
+            this.controls.clear();
             this.root.element.innerHTML = "";
             this.root.showDialog();
         },

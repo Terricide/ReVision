@@ -18,9 +18,12 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            this.cb = new Bridge.Html5.InputElement();
-            this.cb.Id = "CB_" + this.ClientId;
-            this.Element.AppendChild(this.cb);
+            if (this.cb == null)
+            {
+                this.cb = new Bridge.Html5.InputElement();
+                this.cb.Id = "CB_" + this.ClientId;
+                this.Element.AppendChild(this.cb);
+            }
 
             //        for (var i = 0; i < obj.Items.length; i++)
             //        {

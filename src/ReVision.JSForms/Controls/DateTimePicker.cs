@@ -11,6 +11,7 @@ namespace System.Windows.Forms
     public class DateTimePicker : Control
     {
         public DateTime Value;
+        private Bridge.Html5.InputElement dtp;
 
         public DateTimePicker()
         {
@@ -21,9 +22,12 @@ namespace System.Windows.Forms
         {
             base.Render();
 
-            var dtp = new Bridge.Html5.InputElement();
+            if( dtp == null )
+            {
+                dtp = new Bridge.Html5.InputElement();
+                this.Element.AppendChild(dtp);
+            }
             dtp.Value = (dynamic)this.Value;
-            this.Element.AppendChild(dtp);
 
             KendoDatePicker.Element(dtp, (e) =>
             {

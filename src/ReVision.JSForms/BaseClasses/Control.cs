@@ -223,7 +223,10 @@ namespace System.Windows.Forms
 
             if (Parent != null)
             {
-                this.Parent.Element.AppendChild(this.Element);
+                if( jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0 )
+                {
+                    this.Parent.Element.AppendChild(this.Element);
+                }
             }
             else
             {
@@ -237,7 +240,10 @@ namespace System.Windows.Forms
             {
                 if (!string.IsNullOrEmpty(this.Text))
                 {
-                    this.Label = new Label();
+                    if( this.Label == null )
+                    {
+                        this.Label = new Label();
+                    }
                     SetText(this.Label.Element);
                     if (this.HasEvent("TextChanged"))
                     {
