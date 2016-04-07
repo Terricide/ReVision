@@ -1476,6 +1476,9 @@
             this.rb.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.CheckBox.f1);
     
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
+    
+            this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.CheckBox.f2);
+    
         }
     });
     
@@ -1489,6 +1492,15 @@
                 eventType: "checkChanged",
                 value: this.rb.checked
             } ));
+        },
+        f2: function (e) {
+            this.rb.checked = !this.rb.checked;
+            if (this.hasEvent("Click")) {
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "click"
+                } ));
+            }
         }
     });
     
@@ -1572,6 +1584,8 @@
             this.rb.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.RadioButton.f1);
     
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
+    
+            this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.RadioButton.f2);
         }
     });
     
@@ -1585,6 +1599,18 @@
                 eventType: "checkChanged",
                 value: this.rb.checked
             } ));
+        },
+        f2: function (e) {
+            if (!this.rb.checked) {
+                this.rb.checked = true;
+            }
+    
+            if (this.hasEvent("Click")) {
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "click"
+                } ));
+            }
         }
     });
     

@@ -40,6 +40,20 @@ namespace System.Windows.Forms
             };
 
             base.Render();
+
+            this.Element.OnClick = (e) =>
+            {
+                rb.Checked = !rb.Checked;
+                if (this.HasEvent("Click"))
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "click"
+                    });
+                }
+            };
+
         }
     }
 }
