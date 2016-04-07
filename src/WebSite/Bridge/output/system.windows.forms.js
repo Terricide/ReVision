@@ -1207,87 +1207,41 @@
     Bridge.define('System.Windows.Forms.TextBox', {
         inherits: [System.Windows.Forms.Control],
         multiline: false,
-        passwordChar: null,
-        hiddenField: null,
         textArea: null,
         inputElement: null,
+        config: {
+            init: function () {
+                this.passwordChar = new Bridge.Int();
+            }
+        },
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
         },
-        generateStars: function (n) {
-            var stars = "";
-            var passwordChar = this.passwordChar;
-            for (var i = 0; i < n; i++) {
-                stars += passwordChar;
-            }
-            return stars;
-        },
         render: function () {
-    
             if (this.multiline) {
-                this.textArea = document.createElement('textarea');
-                this.textArea.value = this.getText();
-                this.element = this.textArea;
+                if (!Bridge.hasValue(this.textArea)) {
+                    this.textArea = document.createElement('textarea');
+                    this.element = this.textArea;
+                }
+                if (!Bridge.String.isNullOrEmpty(this.getText())) {
+                    this.textArea.value = this.getText();
+                }
             }
             else  {
-                this.inputElement = document.createElement('input');
-                //if (this.PasswordChar != '\0')
-                //{
-                //    input.Type = InputType.Password;
-                //}
+                if (!Bridge.hasValue(this.inputElement)) {
+                    this.inputElement = document.createElement('input');
+                    this.element = this.inputElement;
+                }
+                if (this.passwordChar !== 0) {
+                    this.inputElement.type = "password";
+                }
                 this.inputElement.value = this.getText();
-                this.element = this.inputElement;
             }
             this.element.className = "k-textbox";
     
             System.Windows.Forms.Control.prototype.render.call(this);
-    
-            this.element.style.borderStyle = "solid";
-            this.element.style.borderWidth = "thin";
-            this.element.style.borderColor = "gray";
-    
-            this.hiddenField = document.createElement('textarea');
-            this.hiddenField.id = "HI_" + this.getClientId();
-            this.hiddenField.style.display = "none";
-    
-            this.element.appendChild(this.hiddenField);
-    
-            if (this.passwordChar.length > 0 && this.passwordChar.charCodeAt(0) !== 0) {
-                this.element.onkeydown = Bridge.fn.combine(this.element.onkeydown, Bridge.fn.bind(this, $_.System.Windows.Forms.TextBox.f1));
-            }
-        }
-    });
-    
-    Bridge.ns("System.Windows.Forms.TextBox", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.TextBox, {
-        f1: function (e) {
-            window.setTimeout(Bridge.fn.bind(this, function () {
-                var e2 = e;
-                var text = this.hiddenField.value;
-                var stars = this.hiddenField.value.length;
-    
-                var unicode = e2.keyCode ? e2.keyCode : e2.charCode;
-    
-                if ((unicode >= 65 && unicode <= 90) || (unicode >= 97 && unicode <= 122) || (unicode >= 48 && unicode <= 57)) {
-                    text = text + String.fromCharCode(unicode);
-                    stars += 1;
-                }
-                else  {
-                    stars -= 1;
-                }
-    
-                this.hiddenField.value = text;
-    
-                if (Bridge.hasValue(this.textArea)) {
-                    this.textArea.value = this.generateStars(stars);
-                }
-                else  {
-                    this.inputElement.value = this.generateStars(stars);
-                }
-            }), 500);
         }
     });
     
