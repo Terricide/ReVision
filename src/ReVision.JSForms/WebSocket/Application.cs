@@ -53,10 +53,10 @@ namespace ReVision.JSForms
             }
 
             ws = new WebSocket(path + "?id=" + data);
-            ws.OnOpen += OnSocketOpen;
-            ws.OnMessage += OnMessage;
-            ws.OnClose += OnClose;
-            ws.OnError += OnError;
+            ws.OnOpen = OnSocketOpen;
+            ws.OnMessage = OnMessage;
+            ws.OnClose = OnClose;
+            ws.OnError = OnError;
         }
 
         private void OnError(Event arg)

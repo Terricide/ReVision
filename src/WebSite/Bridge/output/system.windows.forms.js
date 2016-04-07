@@ -331,13 +331,13 @@
             if (!Bridge.hasValue(this.getParent())) {
                 return -1;
             }
-            return this.getLocation().x + this.getSize().width;
+            return ((this.getLocation().x + this.getSize().width) | 0);
         },
         getBottom: function () {
             if (!Bridge.hasValue(this.getParent())) {
                 return -1;
             }
-            return this.getLocation().y + this.getSize().height;
+            return ((this.getLocation().y + this.getSize().height) | 0);
         },
         getTop: function () {
             if (!Bridge.hasValue(this.getParent())) {
@@ -400,7 +400,7 @@
     
                 var size = Bridge.String.replaceAll(split[1], "pt", "");
                 var fs = Bridge.Int.parseInt(size, -2147483648, 2147483647);
-                fs = fs + 5;
+                fs = (fs + 5) | 0;
                 elm.style.fontSize = fs + "px";
             }
     
@@ -429,30 +429,30 @@
     
                 if (topSet && !rightSet && !leftSet && !bottomSet) {
                     var width = this.getParent().getWidth();
-                    this.getLocation().x = Bridge.Int.div(width, 2) - (Bridge.Int.div(this.getWidth(), 2));
+                    this.getLocation().x = (((Bridge.Int.div(width, 2)) | 0) - (((Bridge.Int.div(this.getWidth(), 2)) | 0))) | 0;
                 }
     
                 if (bottomSet && topSet && !rightSet && !leftSet) {
                     var height = this.getParent().getHeight();
-                    this.getLocation().y = Bridge.Int.div(height, 2) - (Bridge.Int.div(this.getHeight(), 2));
+                    this.getLocation().y = (((Bridge.Int.div(height, 2)) | 0) - (((Bridge.Int.div(this.getHeight(), 2)) | 0))) | 0;
                 }
     
                 if (bottomSet && leftSet && !topSet && !rightSet) {
                     var height1 = this.getParent().getHeight();
-                    this.getLocation().y = height1 - this.getHeight();
+                    this.getLocation().y = (height1 - this.getHeight()) | 0;
                 }
     
                 if (bottomSet && rightSet && !topSet && !leftSet) {
                     var width1 = this.getParent().getWidth();
-                    this.getLocation().x = width1 - this.getWidth();
+                    this.getLocation().x = (width1 - this.getWidth()) | 0;
     
                     var height2 = this.getParent().getHeight();
-                    this.getLocation().y = height2 - this.getHeight();
+                    this.getLocation().y = (height2 - this.getHeight()) | 0;
                 }
     
                 if (topSet && rightSet && !leftSet && !bottomSet) {
                     var width2 = this.getParent().getWidth();
-                    this.getLocation().x = width2 - this.getWidth();
+                    this.getLocation().x = (width2 - this.getWidth()) | 0;
                 }
     
                 this.element.style.position = "absolute";
@@ -587,7 +587,7 @@
                             $step = Bridge.Array.min([0], $step);
                             switch ($step) {
                                 case 0: {
-                                    Bridge.get(ReVision.JSForms.Application).current.send(evt);
+                                    ReVision.JSForms.Application.current.send(evt);
                                     $tcs.setResult(null);
                                     return;
                                 }
@@ -756,7 +756,7 @@
                                     {
                                         var item = $(child.element);
                                         var ctrlWidth = item.width();
-                                        item.css("left", $(current.element).position().left + ctrlWidth);
+                                        item.css("left", (($(current.element).position().left + ctrlWidth) | 0));
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.top: 
@@ -766,8 +766,8 @@
                                         var item1 = $(child.element);
                                         var ctrlWidth1 = item1.width();
                                         var ctrlLeft = item1.position().left;
-                                        item1.css("left", ctrlLeft + left);
-                                        item1.css("width", ctrlWidth1 - left);
+                                        item1.css("left", ((ctrlLeft + left) | 0));
+                                        item1.css("width", ((ctrlWidth1 - left) | 0));
                                     }
                                     break;
                             }
@@ -788,7 +788,7 @@
                                     {
                                         var item2 = $(child1.element);
                                         var ctrlWidth2 = item2.width();
-                                        item2.css("left", $(current.element).position().left - ctrlWidth2);
+                                        item2.css("left", (($(current.element).position().left - ctrlWidth2) | 0));
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.top: 
@@ -798,7 +798,7 @@
                                         var item3 = $(child1.element);
                                         var ctrlWidth3 = item3.width();
     
-                                        item3.css("width", ctrlWidth3 - right);
+                                        item3.css("width", ((ctrlWidth3 - right) | 0));
                                     }
                                     break;
                             }
@@ -819,7 +819,7 @@
                                     {
                                         var item4 = $(child2.element);
                                         var ctrlTop = item4.position().top;
-                                        item4.css("top", ctrlTop + top);
+                                        item4.css("top", ((ctrlTop + top) | 0));
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.left: 
@@ -830,8 +830,8 @@
                                         var ctrlTop1 = item5.position().top;
     
                                         var ctrlHeight = item5.height();
-                                        item5.css("top", ctrlTop1 + top);
-                                        item5.css("height", ctrlHeight - top);
+                                        item5.css("top", ((ctrlTop1 + top) | 0));
+                                        item5.css("height", ((ctrlHeight - top) | 0));
                                     }
                                     break;
                             }
@@ -853,14 +853,14 @@
                                 case System.Windows.Forms.DockStyle.left: 
                                     {
                                         var item6 = $(child3.element);
-                                        item6.css("height", item6.height() - bottom);
+                                        item6.css("height", ((item6.height() - bottom) | 0));
                                     }
                                     break;
                                 case System.Windows.Forms.DockStyle.bottom: 
                                     {
                                         var item7 = $(child3.element);
                                         var ctrlTop2 = child3.element.offsetTop;
-                                        item7.css("top", ctrlTop2 - bottom);
+                                        item7.css("top", ((ctrlTop2 - bottom) | 0));
                                     }
                                     break;
                             }
@@ -872,7 +872,7 @@
         },
         getInt: function (px) {
             if (Bridge.String.endsWith(px, "px")) {
-                px = px.substr(0, px.length - 2);
+                px = px.substr(0, ((px.length - 2) | 0));
             }
             return Bridge.Int.parseInt(px, -2147483648, 2147483647);
         }
@@ -943,15 +943,17 @@
     
         },
         constructor$1: function (width) {
+            if (width === void 0) { width = 60; }
+    
             System.Windows.Forms.ColumnHeader.prototype.constructor$2.call(this, null, width);
     
-            if (width === void 0) { width = 60; }
     
         },
         constructor$2: function (columnName, width) {
+            if (width === void 0) { width = 60; }
+    
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            if (width === void 0) { width = 60; }
             this.setColumnName(columnName);
             this.setSize(new System.Drawing.Size(width, 0));
         },
@@ -1015,7 +1017,7 @@
     
             var arr = Bridge.Array.init(this.items.length, null);
     
-            for (var i = 0; i < this.items.length; i++) {
+            for (var i = 0; i < this.items.length; i = (i + 1) | 0) {
                 arr[i] = Bridge.merge(new System.Windows.Forms.ComboBox.ListItem(), {
                     text: this.items[i],
                     value: i
@@ -1062,7 +1064,7 @@
         getItem$1: function (ctrlName) {
             return Bridge.Linq.Enumerable.from(this).where(function (n) {
                 return n.getName() === ctrlName;
-            }).firstOrDefault(null, Bridge.getDefaultValue(System.Windows.Forms.Control));
+            }).firstOrDefault(null, null);
         },
         controlsCollection_CollectionChanged1: function (sender, e) {
             var $t, $t1;
@@ -1329,7 +1331,7 @@
                         tp.setIsSelected(true);
                     }
                     tp.renderTabs(ul);
-                    index++;
+                    index = (index + 1) | 0;
                 }
             }
     
@@ -1393,8 +1395,8 @@
         },
         render: function () {
             var $t;
-            this.element.style.width = (this.getParent().getWidth() - 27) + "px";
-            this.element.style.height = (this.getParent().getHeight() - 35) + "px";
+            this.element.style.width = (((this.getParent().getWidth() - 27) | 0)) + "px";
+            this.element.style.height = (((this.getParent().getHeight() - 35) | 0)) + "px";
             this.element.style.position = "relative";
             if (!this.isLoaded) {
                 this.getParent().element.appendChild(this.element);

@@ -27,11 +27,11 @@
             }
         },
         constructor: function () {
-            Bridge.get(ReVision.JSForms.Application).current = this;
+            ReVision.JSForms.Application.current = this;
             var path = "";
     
-            if (Bridge.hasValue(window.location.pathName)) {
-                path = window.location.pathName.substr(0, Bridge.String.indexOf(window.location.pathName, String.fromCharCode(47), 1));
+            if (Bridge.hasValue(window.location.pathname)) {
+                path = window.location.pathname.substr(0, Bridge.String.indexOf(window.location.pathname, String.fromCharCode(47), 1));
                 if (window.location.port.length > 1) {
                     path = ":" + window.location.port + path;
                 }
@@ -45,19 +45,19 @@
             if (Bridge.hasValue(window.sessionStorage)) {
                 data = Bridge.as(window.sessionStorage.getItem("sessionId"), String);
                 if (!Bridge.hasValue(data)) {
-                    data = Bridge.get(System.Guid).newGuid();
+                    data = System.Guid.newGuid();
                     window.sessionStorage.setItem("sessionId", data);
                 }
             }
             else  {
-                data = Bridge.get(System.Guid).newGuid();
+                data = System.Guid.newGuid();
             }
     
             this.ws = new WebSocket(path + "?id=" + data);
-            this.ws.onopen = Bridge.fn.combine(this.ws.onopen, Bridge.fn.bind(this, this.onSocketOpen));
-            this.ws.onmessage = Bridge.fn.combine(this.ws.onmessage, Bridge.fn.bind(this, this.onMessage));
-            this.ws.onclose = Bridge.fn.combine(this.ws.onclose, Bridge.fn.bind(this, this.onClose));
-            this.ws.onerror = Bridge.fn.combine(this.ws.onerror, Bridge.fn.bind(this, this.onError));
+            this.ws.onopen = Bridge.fn.bind(this, this.onSocketOpen);
+            this.ws.onmessage = Bridge.fn.bind(this, this.onMessage);
+            this.ws.onclose = Bridge.fn.bind(this, this.onClose);
+            this.ws.onerror = Bridge.fn.bind(this, this.onError);
         },
         onError: function (arg) {
             window.alert("Error");
