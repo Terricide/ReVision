@@ -10,7 +10,7 @@ namespace System.Windows.Forms
     public partial class Component : IDisposable, IObservableItem
     {
         public string[] AllEvents;
-        public string ControlName { get; set; }
+        public virtual string ControlName { get; set; }
         public event EventHandler Disposed;
         public event ObservableItemPropertyChangedHandler ObservableItemPropertyChanged;
 

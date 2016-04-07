@@ -157,56 +157,5 @@ namespace System.Windows.Forms
         public bool UseCompatibleStateImageBehavior { get; set; }
     }
 
-    public class ColumnHeader : Control
-    {
-        public ColumnHeader()
-        {
-
-        }
-        public ColumnHeader(int width = 60) : this(null, width)
-        {
-
-        }
-        public ColumnHeader(string columnName, int width = 60)
-        {
-            this.ColumnName = columnName;
-            this.Width = width;
-        }
-        private string mColumnName = "Column Header";
-        public string ColumnName 
-        { 
-            get
-            {
-                return mColumnName;
-            }
-            set
-            {
-                if( mColumnName != value )
-                {
-                    mColumnName = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
-        public override string Text
-        {
-            get
-            {
-                return ColumnName;
-            }
-            set
-            {
-                ColumnName = value;
-            }
-        }
-
-        public override string ControlName
-        {
-            get
-            {
-                return "ListViewColumn";
-            }
-        }
-    }
+    
 }

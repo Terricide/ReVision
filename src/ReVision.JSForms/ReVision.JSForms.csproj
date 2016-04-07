@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\ReVision.Forms\Controls\ToolStripItem.cs">
+      <Link>Shared\ToolStripItem.cs</Link>
+    </Compile>
     <Compile Include="..\ReVision.Forms\Enumerations\AnchorStyles.cs">
       <Link>Enumerations\AnchorStyles.cs</Link>
     </Compile>
@@ -45,6 +48,9 @@
     <Compile Include="..\ReVision.Forms\Enumerations\Padding.cs">
       <Link>Enumerations\Padding.cs</Link>
     </Compile>
+    <Compile Include="..\ReVision.Forms\Enumerations\PictureBoxSizeMode.cs">
+      <Link>Enumerations\PictureBoxSizeMode.cs</Link>
+    </Compile>
     <Compile Include="..\ReVision.Forms\Shared\AutoScaleMode.cs">
       <Link>Enumerations\AutoScaleMode.cs</Link>
     </Compile>
@@ -52,6 +58,8 @@
       <Link>Shared\IObservableItem.cs</Link>
     </Compile>
     <Compile Include="App.cs" />
+    <Compile Include="BaseClasses\ListControl.cs" />
+    <Compile Include="BaseClasses\ScrollableControl.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="BaseClasses\ButtonBase.cs" />
     <Compile Include="Controls\CheckBox.cs" />
@@ -61,15 +69,32 @@
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\ListBox.cs" />
+    <Compile Include="Controls\ListView.cs" />
+    <Compile Include="Controls\ListViewItem.cs" />
     <Compile Include="Controls\MaskedTextBox.cs" />
+    <Compile Include="Controls\MonthCalendar.cs" />
     <Compile Include="Controls\Panel.cs" />
+    <Compile Include="Controls\PictureBox.cs" />
+    <Compile Include="Controls\ProgressBar.cs" />
+    <Compile Include="Controls\RichTextBox.cs" />
+    <Compile Include="Controls\SplitContainer.cs" />
+    <Compile Include="Controls\StatusStrip.cs" />
     <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Controls\ToolStrip.cs" />
+    <Compile Include="Controls\ToolStripDropDown.cs" />
+    <Compile Include="Controls\TreeView.cs" />
     <Compile Include="Dialogs\Form.cs" />
     <Compile Include="BaseClasses\Guid.cs" />
     <Compile Include="Controls\Label.cs" />
     <Compile Include="Controls\LinkLabel.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="Shared\ColumnHeader.cs" />
+    <Compile Include="Shared\ToolStripLabel.cs" />
+    <Compile Include="Shared\ToolStripMenuItem.cs" />
+    <Compile Include="Shared\ToolStripStatusLabel.cs" />
+    <Compile Include="Shared\TreeNode.cs" />
     <Compile Include="System.Drawing\Size.cs" />
     <Compile Include="Controls\TabControl.cs" />
     <Compile Include="Controls\TabPage.cs" />

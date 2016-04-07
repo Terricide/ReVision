@@ -84,7 +84,7 @@ namespace System.Windows.Forms
 
     public class KendoTabStrip
     {
-        [Template("$({0}).kendoTabStrip()")]
+        [Template("$({0}).kendoTabStrip({animation:{open:{effects: 'none'}}})")]
         public static KendoTabStrip Element(Element elm)
         {
             return null;

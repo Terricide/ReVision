@@ -69,6 +69,8 @@
     
     Bridge.define('System.Windows.Forms.KendoTabStrip');
     
+    Bridge.define('System.Windows.Forms.ListViewItem');
+    
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
         property: null,
         subject: null,
@@ -105,6 +107,42 @@
         },
         constructor: function () {
     
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.PictureBoxSizeMode', {
+        statics: {
+            autoSize: 0,
+            centerImage: 1,
+            normal: 2,
+            stretchImage: 3,
+            zoom: 4
+        },
+        $enum: true
+    });
+    
+    Bridge.define('System.Windows.Forms.TreeNode', {
+        nodes: null,
+        config: {
+            properties: {
+                Name: null,
+                Text: null
+            },
+            init: function () {
+                this.nodes = new Bridge.List$1(System.Windows.Forms.TreeNode)();
+            }
+        },
+        constructor: function () {
+    
+        },
+        constructor$1: function (name) {
+            this.setName(name);
+            this.setText(name);
+        },
+        constructor$2: function (name, nodes) {
+            System.Windows.Forms.TreeNode.prototype.constructor$1.call(this, name);
+    
+            this.nodes.addRange(nodes);
         }
     });
     
@@ -881,8 +919,60 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.ToolStripItem', {
+        inherits: [System.Windows.Forms.Component],
+        config: {
+            properties: {
+                Name: null,
+                Size: null,
+                Text: null
+            }
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.ButtonBase', {
         inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.ColumnHeader', {
+        inherits: [System.Windows.Forms.Control],
+        mColumnName: "Column Header",
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+    
+        },
+        constructor$1: function (width) {
+            System.Windows.Forms.ColumnHeader.prototype.constructor$2.call(this, null, width);
+    
+            if (width === void 0) { width = 60; }
+    
+        },
+        constructor$2: function (columnName, width) {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            if (width === void 0) { width = 60; }
+            this.setColumnName(columnName);
+            this.setSize(new System.Drawing.Size(width, 0));
+        },
+        getColumnName: function () {
+            return this.mColumnName;
+        },
+        setColumnName: function (value) {
+            if (this.mColumnName !== value) {
+                this.mColumnName = value;
+                this.raisePropertyChanged("ColumnName", value);
+            }
+        },
+        getText: function () {
+            return this.getColumnName();
+        },
+        setText: function (value) {
+            this.setColumnName(value);
+        },
+        getControlName: function () {
+            return "ListViewColumn";
+        }
     });
     
     Bridge.define('System.Windows.Forms.ComboBox', {
@@ -1094,6 +1184,16 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.ListControl', {
+        inherits: [System.Windows.Forms.Control],
+        items: null
+    });
+    
+    Bridge.define('System.Windows.Forms.ListView', {
+        inherits: [System.Windows.Forms.Control],
+        columns: null
+    });
+    
     Bridge.define('System.Windows.Forms.TextBox', {
         inherits: [System.Windows.Forms.Control],
         multiline: false,
@@ -1131,6 +1231,79 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.MonthCalendar', {
+        inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.PictureBox', {
+        inherits: [System.Windows.Forms.Control],
+        sizeMode: 0,
+        image: null,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.renderLabel = false;
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            this.updateImage();
+        },
+        updateImage: function () {
+            if (Bridge.String.isNullOrEmpty(this.image)) {
+                return;
+            }
+    
+            var element = $(this.element);
+            element.css("background-image", "url('data:image/png;base64," + this.image + "')");
+            switch (this.sizeMode) {
+                case System.Windows.Forms.PictureBoxSizeMode.normal: 
+                    element.css("background-repeat", "no-repeat");
+                    break;
+                case System.Windows.Forms.PictureBoxSizeMode.autoSize: 
+                    break;
+                case System.Windows.Forms.PictureBoxSizeMode.centerImage: 
+                    element.css("background-repeat", "no-repeat");
+                    break;
+                case System.Windows.Forms.PictureBoxSizeMode.stretchImage: 
+                    element.css("background-size", "cover");
+                    break;
+                case System.Windows.Forms.PictureBoxSizeMode.zoom: 
+                    break;
+            }
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.ProgressBar', {
+        inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.RichTextBox', {
+        inherits: [System.Windows.Forms.Control],
+        readOnly: false,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = document.createElement('textarea');
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            var area = Bridge.cast(this.element, HTMLTextAreaElement);
+            area.readOnly = this.readOnly;
+            area.value = this.getText();
+            area.style.overflowY = "auto";
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.ScrollableControl', {
+        inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.SplitContainer', {
+        inherits: [System.Windows.Forms.Control]
+    });
+    
     Bridge.define('System.Windows.Forms.TabControl', {
         inherits: [System.Windows.Forms.Control],
         selectedIndex: 0,
@@ -1166,7 +1339,7 @@
                 child1.render();
             }
     
-            $(this.element).kendoTabStrip();
+            $(this.element).kendoTabStrip({animation:{open:{effects: 'none'}}});
     
             //int i = 0;
             //foreach(var ctrl in this.GetControls())
@@ -1244,7 +1417,22 @@
             if (this.getIsSelected()) {
                 this.li.className = "k-state-active";
             }
+            else  {
+                this.li.className = "";
+            }
         }
+    });
+    
+    Bridge.define('System.Windows.Forms.ToolStripLabel', {
+        inherits: [System.Windows.Forms.ToolStripItem]
+    });
+    
+    Bridge.define('System.Windows.Forms.ToolStripMenuItem', {
+        inherits: [System.Windows.Forms.ToolStripItem]
+    });
+    
+    Bridge.define('System.Windows.Forms.TreeView', {
+        inherits: [System.Windows.Forms.Control]
     });
     
     Bridge.define('System.Windows.Forms.Button', {
@@ -1344,6 +1532,10 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.ListBox', {
+        inherits: [System.Windows.Forms.ListControl]
+    });
+    
     Bridge.define('System.Windows.Forms.MaskedTextBox', {
         inherits: [System.Windows.Forms.TextBox],
         mask: null,
@@ -1392,6 +1584,25 @@
                 value: this.rb.checked
             } ));
         }
+    });
+    
+    Bridge.define('System.Windows.Forms.ToolStrip', {
+        inherits: [System.Windows.Forms.ScrollableControl]
+    });
+    
+    Bridge.define('System.Windows.Forms.ToolStripStatusLabel', {
+        inherits: [System.Windows.Forms.ToolStripLabel],
+        getControlName: function () {
+            return "ToolStripStatusLabel";
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.StatusStrip', {
+        inherits: [System.Windows.Forms.ToolStrip]
+    });
+    
+    Bridge.define('System.Windows.Forms.ToolStripDropDown', {
+        inherits: [System.Windows.Forms.ToolStrip]
     });
     
     Bridge.init();

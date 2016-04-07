@@ -47,6 +47,10 @@ namespace System.Windows.Forms
             {
                 li.ClassName = "k-state-active";
             }
+            else
+            {
+                li.ClassName = "";
+            }
         }
     }
 }
