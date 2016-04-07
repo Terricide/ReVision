@@ -30,6 +30,7 @@ namespace ReVision.JSForms
                 {
                     path = ":" + Window.Location.Port + path;
                 }
+                path = "ws://" + Window.Location.HostName + path + "/echo";
             }
             else
             {

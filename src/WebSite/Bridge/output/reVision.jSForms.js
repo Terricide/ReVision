@@ -35,6 +35,7 @@
                 if (window.location.port.length > 1) {
                     path = ":" + window.location.port + path;
                 }
+                path = "ws://" + window.location.hostname + path + "/echo";
             }
             else  {
                 path = "ws://localhost:56357/echo";
