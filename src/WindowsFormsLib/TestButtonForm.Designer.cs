@@ -43,6 +43,7 @@ namespace WindowsFormsLib
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -178,11 +179,20 @@ namespace WindowsFormsLib
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // maskedTextBox1
+            // 
+            this.maskedTextBox1.Location = new System.Drawing.Point(25, 334);
+            this.maskedTextBox1.Mask = "000-00-0000";
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.maskedTextBox1.TabIndex = 11;
+            // 
             // TestButtonForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 446);
+            this.Controls.Add(this.maskedTextBox1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
@@ -217,5 +227,6 @@ namespace WindowsFormsLib
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
+        private MaskedTextBox maskedTextBox1;
     }
 }

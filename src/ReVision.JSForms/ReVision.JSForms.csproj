@@ -61,6 +61,7 @@
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\MaskedTextBox.cs" />
     <Compile Include="Controls\Panel.cs" />
     <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Dialogs\Form.cs" />

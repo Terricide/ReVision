@@ -423,6 +423,10 @@ namespace System.Windows.Forms
                             var tb = JSON.Parse<TextBox>(JSON.Stringify(ctrl));
                             ctrl1 = tb;
                             break;
+                        case "MaskedTextBox":
+                            var mtb = JSON.Parse<MaskedTextBox>(JSON.Stringify(ctrl));
+                            ctrl1 = mtb;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;

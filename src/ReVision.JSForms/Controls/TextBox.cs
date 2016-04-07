@@ -11,7 +11,7 @@ namespace System.Windows.Forms
     public class TextBox : Control
     {
         public bool Multiline;
-        public char PasswordChar;
+        public string PasswordChar;
         private TextAreaElement textArea;
         private InputElement inputElement;
 
@@ -41,7 +41,7 @@ namespace System.Windows.Forms
                     inputElement = new InputElement();
                     this.Element = inputElement;
                 }
-                if (this.PasswordChar != '\0')
+                if (this.PasswordChar != null && this.PasswordChar.Length > 0 && this.PasswordChar[0] != '\0')
                 {
                     inputElement.Type = InputType.Password;
                 }

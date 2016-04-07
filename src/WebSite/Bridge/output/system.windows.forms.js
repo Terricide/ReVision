@@ -65,6 +65,8 @@
     
     Bridge.define('System.Windows.Forms.KendoButton');
     
+    Bridge.define('System.Windows.Forms.KendoMaskedTextBox');
+    
     Bridge.define('System.Windows.Forms.KendoTabStrip');
     
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
@@ -626,6 +628,10 @@
                             var tb = Bridge.merge(new System.Windows.Forms.TextBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = tb;
                             break;
+                        case "MaskedTextBox": 
+                            var mtb = Bridge.merge(new System.Windows.Forms.MaskedTextBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = mtb;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -1088,6 +1094,43 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.TextBox', {
+        inherits: [System.Windows.Forms.Control],
+        multiline: false,
+        passwordChar: null,
+        textArea: null,
+        inputElement: null,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.renderLabel = false;
+        },
+        render: function () {
+            if (this.multiline) {
+                if (!Bridge.hasValue(this.textArea)) {
+                    this.textArea = document.createElement('textarea');
+                    this.element = this.textArea;
+                }
+                if (!Bridge.String.isNullOrEmpty(this.getText())) {
+                    this.textArea.value = this.getText();
+                }
+            }
+            else  {
+                if (!Bridge.hasValue(this.inputElement)) {
+                    this.inputElement = document.createElement('input');
+                    this.element = this.inputElement;
+                }
+                if (Bridge.hasValue(this.passwordChar) && this.passwordChar.length > 0 && this.passwordChar.charCodeAt(0) !== 0) {
+                    this.inputElement.type = "password";
+                }
+                this.inputElement.value = this.getText();
+            }
+            this.element.className = "k-textbox";
+    
+            System.Windows.Forms.Control.prototype.render.call(this);
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.TabControl', {
         inherits: [System.Windows.Forms.Control],
         selectedIndex: 0,
@@ -1204,47 +1247,6 @@
         }
     });
     
-    Bridge.define('System.Windows.Forms.TextBox', {
-        inherits: [System.Windows.Forms.Control],
-        multiline: false,
-        textArea: null,
-        inputElement: null,
-        config: {
-            init: function () {
-                this.passwordChar = new Bridge.Int();
-            }
-        },
-        constructor: function () {
-            System.Windows.Forms.Control.prototype.$constructor.call(this);
-    
-            this.renderLabel = false;
-        },
-        render: function () {
-            if (this.multiline) {
-                if (!Bridge.hasValue(this.textArea)) {
-                    this.textArea = document.createElement('textarea');
-                    this.element = this.textArea;
-                }
-                if (!Bridge.String.isNullOrEmpty(this.getText())) {
-                    this.textArea.value = this.getText();
-                }
-            }
-            else  {
-                if (!Bridge.hasValue(this.inputElement)) {
-                    this.inputElement = document.createElement('input');
-                    this.element = this.inputElement;
-                }
-                if (this.passwordChar !== 0) {
-                    this.inputElement.type = "password";
-                }
-                this.inputElement.value = this.getText();
-            }
-            this.element.className = "k-textbox";
-    
-            System.Windows.Forms.Control.prototype.render.call(this);
-        }
-    });
-    
     Bridge.define('System.Windows.Forms.Button', {
         inherits: [System.Windows.Forms.ButtonBase],
         constructor: function () {
@@ -1339,6 +1341,15 @@
                 eventType: "textchanged",
                 value: this.label.element.innerHTML
             } ));
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.MaskedTextBox', {
+        inherits: [System.Windows.Forms.TextBox],
+        mask: null,
+        render: function () {
+            System.Windows.Forms.TextBox.prototype.render.call(this);
+            $(this.element).kendoMaskedTextBox({mask:this.mask});
         }
     });
     
