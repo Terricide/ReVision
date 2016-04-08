@@ -52,6 +52,8 @@
         $enum: true
     });
     
+    Bridge.define('System.Windows.Forms.Fancytree');
+    
     Bridge.define('System.Windows.Forms.ImageLayout', {
         statics: {
             none: 0,
@@ -66,6 +68,8 @@
     Bridge.define('System.Windows.Forms.KendoButton');
     
     Bridge.define('System.Windows.Forms.KendoMaskedTextBox');
+    
+    Bridge.define('System.Windows.Forms.KendoSplitter');
     
     Bridge.define('System.Windows.Forms.KendoTabStrip');
     
@@ -122,27 +126,11 @@
     });
     
     Bridge.define('System.Windows.Forms.TreeNode', {
+        name: null,
+        text: null,
         nodes: null,
-        config: {
-            properties: {
-                Name: null,
-                Text: null
-            },
-            init: function () {
-                this.nodes = new Bridge.List$1(System.Windows.Forms.TreeNode)();
-            }
-        },
         constructor: function () {
-    
-        },
-        constructor$1: function (name) {
-            this.setName(name);
-            this.setText(name);
-        },
-        constructor$2: function (name, nodes) {
-            System.Windows.Forms.TreeNode.prototype.constructor$1.call(this, name);
-    
-            this.nodes.addRange(nodes);
+            this.nodes = Bridge.Array.init(0, null);
         }
     });
     
@@ -398,7 +386,7 @@
     
                 elm.style.fontFamily = split[0];
     
-                var size = Bridge.String.replaceAll(split[1], "pt", "");
+                var size = Bridge.String.replaceAll(split[1], "pt", "").trim();
                 var fs = Bridge.Int.parseInt(size, -2147483648, 2147483647);
                 fs = (fs + 5) | 0;
                 elm.style.fontSize = fs + "px";
@@ -669,6 +657,14 @@
                         case "MaskedTextBox": 
                             var mtb = Bridge.merge(new System.Windows.Forms.MaskedTextBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = mtb;
+                            break;
+                        case "SplitContainer": 
+                            var sc = Bridge.merge(new System.Windows.Forms.SplitContainer(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = sc;
+                            break;
+                        case "TreeView": 
+                            var tv = Bridge.merge(new System.Windows.Forms.TreeView(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = tv;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -1303,7 +1299,32 @@
     });
     
     Bridge.define('System.Windows.Forms.SplitContainer', {
-        inherits: [System.Windows.Forms.Control]
+        inherits: [System.Windows.Forms.Control],
+        splitterDistance: 0,
+        mPanel1: null,
+        mPanel2: null,
+        getPanel1: function () {
+            return this.mPanel1;
+        },
+        setPanel1: function (value) {
+            this.mPanel1 = Bridge.merge(new System.Windows.Forms.Panel(), JSON.parse(JSON.stringify(value)));
+            this.mPanel1.setParent(this);
+        },
+        getPanel2: function () {
+            return this.mPanel2;
+        },
+        setPanel2: function (value) {
+            this.mPanel2 = Bridge.merge(new System.Windows.Forms.Panel(), JSON.parse(JSON.stringify(value)));
+            this.mPanel2.setParent(this);
+        },
+        render: function () {
+            this.getPanel1().render();
+            this.getPanel2().render();
+    
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            $(this.element).kendoSplitter({panes: [{ size: this.splitterDistance },]});
+        }
     });
     
     Bridge.define('System.Windows.Forms.TabControl', {
@@ -1434,7 +1455,62 @@
     });
     
     Bridge.define('System.Windows.Forms.TreeView', {
-        inherits: [System.Windows.Forms.Control]
+        inherits: [System.Windows.Forms.Control],
+        mNodes: null,
+        treeElement: null,
+        fancyTree: null,
+        getNodes: function () {
+            return this.mNodes;
+        },
+        setNodes: function (value) {
+            this.mNodes = Bridge.merge(new Array(), JSON.parse(JSON.stringify(value)));
+        },
+        render: function () {
+            this.element.style.overflow = "auto";
+            this.treeElement = document.createElement('div');
+            this.treeElement.id = "TR_" + this.getClientId();
+    
+            this.renderNode(this.treeElement, null);
+    
+    
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            this.element.appendChild(this.treeElement);
+            this.element.style.borderStyle = "solid";
+            this.element.style.borderWidth = "thin";
+            this.element.style.borderColor = "gray";
+            this.fancyTree = $(this.treeElement).fancytree();
+        },
+        renderNode: function (parent, parentNode) {
+            var ul = document.createElement('ul');
+    
+            var nodes = Bridge.Array.init(0, null);
+    
+            if (!Bridge.hasValue(parentNode)) {
+                nodes = this.getNodes();
+                ul.style.display = "none";
+            }
+            else  {
+                nodes = parentNode.nodes;
+            }
+    
+            if (nodes.length === 0) {
+                return;
+            }
+    
+            for (var i = 0; i < nodes.length; i = (i + 1) | 0) {
+                var node = nodes[i];
+                var li = document.createElement('li');
+    
+                li.innerHTML = node.text;
+                li.id = node.name;
+                ul.appendChild(li);
+    
+                this.renderNode(li, node);
+            }
+    
+            parent.appendChild(ul);
+        }
     });
     
     Bridge.define('System.Windows.Forms.Button', {

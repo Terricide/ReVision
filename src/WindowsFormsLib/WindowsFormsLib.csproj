@@ -59,6 +59,12 @@
     <Compile Include="CuteButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlassButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -96,6 +102,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ChatWindow.resx">
       <DependentUpon>ChatWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

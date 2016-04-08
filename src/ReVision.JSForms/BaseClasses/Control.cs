@@ -102,7 +102,7 @@ namespace System.Windows.Forms
 
                 elm.Style.FontFamily = split[0];
 
-                var size = split[1].Replace("pt", "");
+                var size = split[1].Replace("pt", "").Trim();
                 var fs = Int32.Parse(size);
                 fs = fs + 5;
                 elm.Style.FontSize = fs + "px";
@@ -223,7 +223,7 @@ namespace System.Windows.Forms
 
             if (Parent != null)
             {
-                if( jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0 )
+                if (jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0)
                 {
                     this.Parent.Element.AppendChild(this.Element);
                 }
@@ -426,6 +426,14 @@ namespace System.Windows.Forms
                         case "MaskedTextBox":
                             var mtb = JSON.Parse<MaskedTextBox>(JSON.Stringify(ctrl));
                             ctrl1 = mtb;
+                            break;
+                        case "SplitContainer":
+                            var sc = JSON.Parse<SplitContainer>(JSON.Stringify(ctrl));
+                            ctrl1 = sc;
+                            break;
+                        case "TreeView":
+                            var tv = JSON.Parse<TreeView>(JSON.Stringify(ctrl));
+                            ctrl1 = tv;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
