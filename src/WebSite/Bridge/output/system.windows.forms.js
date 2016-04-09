@@ -109,6 +109,12 @@
             this.setBottom(pad);
             this.setTop(pad);
         },
+        constructor$2: function (left, right, top, bottom) {
+            this.setLeft(left);
+            this.setRight(right);
+            this.setBottom(bottom);
+            this.setTop(top);
+        },
         constructor: function () {
     
         }

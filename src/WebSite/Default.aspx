@@ -6,20 +6,23 @@
     <title>ReVision WebUI</title>
 
     <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet'>
+    
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2016.1.226/styles/kendo.common.min.css" />
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2016.1.226/styles/kendo.metro.min.css" />
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2016.1.226/styles/kendo.dataviz.min.css" />
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2016.1.226/styles/kendo.dataviz.default.min.css" />
     <link rel="stylesheet" href="css/skin-win8/ui.fancytree.css" />
     <link rel="stylesheet" href="css/kendo.web.plugins.css" /> 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="http://demo.qooxdoo.org/5.0.1/framework/indigo-5.0.1.css" />
+    
     <script type="text/javascript" src="./scripts/json-recursive.js"></script>
     <script type="text/javascript" src="./scripts/jquery-2.2.2.js"></script>
     <script type="text/javascript" src="./scripts/jquery-ui-1.11.4.js"></script>
     <script type="text/javascript" src="http://cdn.kendostatic.com/2016.1.226/js/kendo.all.min.js"></script>
     <script type="text/javascript" src="./scripts/kendo/kendo.web.plugins.js"></script>
     <script type="text/javascript" src="./scripts/fancytree/jquery.fancytree-all.js"></script>
+    <script type="text/javascript" src="http://demo.qooxdoo.org/5.0.1/framework/q-5.0.1.js"></script>
 
 
     <script src="./bridge/output/bridge.js"></script>

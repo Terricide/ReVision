@@ -679,6 +679,7 @@ namespace System.Windows.Forms
         }
 
         public Padding Padding = new Padding();
+        public Padding Margin = new Padding();
 
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseDown;
