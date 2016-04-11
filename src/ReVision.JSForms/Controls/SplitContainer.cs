@@ -39,13 +39,13 @@ namespace System.Windows.Forms
         }
 
         public override void Render()
-        {
+        { 
             this.Panel1.Render();
             this.Panel2.Render();
 
             base.Render();
 
-            KendoSplitter.Element(this.Element, this.SplitterDistance);
+            //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }
     }
 

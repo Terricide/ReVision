@@ -454,10 +454,33 @@
     <Content Include="packages.config" />
     <Content Include="Resources\Images\CMS-Login-logo.png" />
     <Content Include="Resources\Images\VPR-CMS-Login-Background.jpg" />
+    <Content Include="ReVision.Web\generate.py" />
+    <Content Include="ReVision.Web\Gruntfile.js" />
+    <Content Include="ReVision.Web\readme.txt" />
+    <Content Include="ReVision.Web\source\class\revision\web\Application.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\test\DemoTest.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\theme\Appearance.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\theme\Color.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\theme\Decoration.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\theme\Font.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\theme\Theme.js" />
+    <Content Include="ReVision.Web\source\class\revision\web\__init__.js" />
+    <Content Include="ReVision.Web\source\index.html" />
+    <Content Include="ReVision.Web\source\resource\revision\web\test.png" />
+    <Content Include="ReVision.Web\source\script\revision.web.38c4a3d0a696.js" />
+    <Content Include="ReVision.Web\source\script\revision.web.54e2816fd898.js" />
+    <Content Include="ReVision.Web\source\script\revision.web.5f4e488ea21a.js" />
+    <Content Include="ReVision.Web\source\script\revision.web.870138203df5.js" />
+    <Content Include="ReVision.Web\source\script\revision.web.c5534a1b0e3c.js" />
+    <Content Include="ReVision.Web\source\script\revision.web.js" />
+    <Content Include="ReVision.Web\source\translation\readme.txt" />
     <Content Include="scripts\fancytree\jquery.fancytree-all.js" />
     <Content Include="..\WindowsFormsApplication1\App.config">
       <Link>App.config</Link>
     </Content>
+    <Content Include="ReVision.Web\config.json" />
+    <Content Include="ReVision.Web\Manifest.json" />
+    <Content Include="ReVision.Web\package.json" />
     <None Include="scripts\jquery-2.2.2.intellisense.js" />
     <Content Include="scripts\jquery-2.2.2.js" />
     <Content Include="scripts\jquery-2.2.2.min.js" />
@@ -1318,7 +1341,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
+      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

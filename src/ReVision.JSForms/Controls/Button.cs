@@ -1,5 +1,6 @@
 ﻿using Bridge;
 using Bridge.Html5;
+using ReVision.JSForms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,25 @@ namespace System.Windows.Forms
     {
         public Button()
         {
-            this.Element = new Bridge.Html5.ButtonElement();
+            this.Element = new qx.ui.form.Button();
         }
 
         public override void Render()
         {
             base.Render();
 
-            KendoButton.Element(this.Element);
+            ((qx.ui.form.Button)this.Element).Label = this.Text;
+            this.Element.AddListener("execute", (e) =>
+            {
+                OnClick();
+            });
+
+            //this.Parent.Element.Add(this.Element, new qx.html.Options()
+            //{
+            //    Left = this.Location.X,
+            //    Top = this.Location.Y
+            //});
+            //KendoButton.Element(this.Element);
         }
     }
 

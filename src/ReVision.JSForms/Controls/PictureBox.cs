@@ -30,24 +30,24 @@ namespace System.Windows.Forms
                 return;
             }
 
-            var element = jQuery.Element(this.Element);
-            element.Css("background-image", "url('data:image/png;base64," + this.Image + "')");
-            switch (this.SizeMode)
-            {
-                case PictureBoxSizeMode.Normal:
-                    element.Css("background-repeat", "no-repeat");
-                    break;
-                case PictureBoxSizeMode.AutoSize:
-                    break;
-                case PictureBoxSizeMode.CenterImage:
-                    element.Css("background-repeat", "no-repeat");
-                    break;
-                case PictureBoxSizeMode.StretchImage:
-                    element.Css("background-size", "cover");
-                    break;
-                case PictureBoxSizeMode.Zoom:
-                    break;
-            }
+            //var element = jQuery.Element(this.Element);
+            //element.Css("background-image", "url('data:image/png;base64," + this.Image + "')");
+            //switch (this.SizeMode)
+            //{
+            //    case PictureBoxSizeMode.Normal:
+            //        element.Css("background-repeat", "no-repeat");
+            //        break;
+            //    case PictureBoxSizeMode.AutoSize:
+            //        break;
+            //    case PictureBoxSizeMode.CenterImage:
+            //        element.Css("background-repeat", "no-repeat");
+            //        break;
+            //    case PictureBoxSizeMode.StretchImage:
+            //        element.Css("background-size", "cover");
+            //        break;
+            //    case PictureBoxSizeMode.Zoom:
+            //        break;
+            //}
         }
     }
 }

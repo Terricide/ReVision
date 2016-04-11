@@ -13,25 +13,25 @@ namespace System.Windows.Forms
         {
             base.Render();
 
-            jQuery.Element(this.Element).Css("cursor", "pointer");
+            //jQuery.Element(this.Element).Css("cursor", "pointer");
 
-            if (string.IsNullOrEmpty(this.Font))
-            {
-                this.Label.Element.Style.Color = "blue";
-                this.Label.Element.Style.TextDecoration = Bridge.Html5.TextDecoration.Underline;
-            }
+            //if (string.IsNullOrEmpty(this.Font))
+            //{
+            //    this.Label.Element.Style.Color = "blue";
+            //    this.Label.Element.Style.TextDecoration = Bridge.Html5.TextDecoration.Underline;
+            //}
 
-            if (this.HasEvent("LinkClicked"))
-            {
-                this.Element.OnClick = (e) =>
-                {
-                    FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "linkClicked"
-                    });
-                };
-            };
+            //if (this.HasEvent("LinkClicked"))
+            //{
+            //    this.Element.OnClick = (e) =>
+            //    {
+            //        FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "linkClicked"
+            //        });
+            //    };
+            //};
         }
     }
 }

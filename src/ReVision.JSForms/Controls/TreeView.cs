@@ -29,20 +29,20 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            this.Element.Style.Overflow = Bridge.Html5.Overflow.Auto;
-            this.TreeElement = new DivElement();
-            this.TreeElement.Id = "TR_" + this.ClientId;
+            //this.Element.Style.Overflow = Bridge.Html5.Overflow.Auto;
+            //this.TreeElement = new DivElement();
+            //this.TreeElement.Id = "TR_" + this.ClientId;
 
             RenderNode(this.TreeElement, null);
 
 
             base.Render();
 
-            this.Element.AppendChild(this.TreeElement);
-            this.Element.Style.BorderStyle = BorderStyle.Solid;
-            this.Element.Style.BorderWidth = BorderWidth.Thin;
-            this.Element.Style.BorderColor = "gray";
-            this.FancyTree = Fancytree.Element(this.TreeElement);
+            //this.Element.AppendChild(this.TreeElement);
+            //this.Element.Style.BorderStyle = BorderStyle.Solid;
+            //this.Element.Style.BorderWidth = BorderWidth.Thin;
+            //this.Element.Style.BorderColor = "gray";
+            //this.FancyTree = Fancytree.Element(this.TreeElement);
         }
 
         private void RenderNode(Element parent, TreeNode parentNode)

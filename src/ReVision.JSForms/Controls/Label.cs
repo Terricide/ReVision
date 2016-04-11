@@ -12,13 +12,16 @@ namespace System.Windows.Forms
         public Label()
         {
             this.RenderLabel = false;
-            this.Element = new Bridge.Html5.SpanElement();
+            this.Element = new qx.ui.basic.Label();
         }
 
         public override void Render()
         {
             base.Render();
-            SetText(this.Element);
+            var lbl = (qx.ui.basic.Label)this.Element;
+            lbl.Value = this.Text;
+            lbl.Width = this.Width;
+            //SetText(this.Element);
         }
     }
 }

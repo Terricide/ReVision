@@ -15,7 +15,7 @@ namespace System.Windows.Forms
         public override void Render()
         {
             base.Render();
-            KendoMaskedTextBox.Element(this.Element, this.Mask);
+            //KendoMaskedTextBox.Element(this.Element, this.Mask);
         }
     }
 

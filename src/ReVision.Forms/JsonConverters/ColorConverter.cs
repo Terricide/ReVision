@@ -23,7 +23,7 @@ namespace ReVision.Forms.JsonConverters
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             Color img = (Color)value;
-            writer.WriteValue(ColorTranslator.ToHtml(img));
+            writer.WriteValue(ColorTranslator.ToHtml(img).ToLower());
             writer.Flush();
         }
     }

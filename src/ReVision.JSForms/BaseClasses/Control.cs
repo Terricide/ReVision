@@ -12,7 +12,7 @@ namespace System.Windows.Forms
 {
     public class Control : Component
     {
-        public Bridge.Html5.Element Element = new Bridge.Html5.Element();
+        public qx.core.Object Element = new qx.html.Element();
         public Label Label;
         public string ForeColor;
         public string Font;
@@ -113,164 +113,198 @@ namespace System.Windows.Forms
 
         protected void SetAttributes()
         {
-            this.Element.Id = "WU_" + this.ClientId;
-
-            this.Element.Style.BackgroundColor = this.BackColor;
-            this.Element.Style.Visibility = this.Visible ? Visibility.Visible : Visibility.Hidden;
-
-            if (this.Parent != null)
+            qx.core.Object parentElement = null;
+            if( this.Parent == null )
             {
-                bool rightSet = false, leftSet = false, topSet = false, bottomSet = false;
-                if (this.Anchor.HasFlag(AnchorStyles.Right))
-                {
-                    rightSet = true;
-                }
-                if (this.Anchor.HasFlag(AnchorStyles.Left))
-                {
-                    leftSet = true;
-                }
-                if (this.Anchor.HasFlag(AnchorStyles.Top))
-                {
-                    topSet = true;
-                }
-                if (this.Anchor.HasFlag(AnchorStyles.Bottom))
-                {
-                    bottomSet = true;
-                }
-
-                if (topSet && !rightSet && !leftSet && !bottomSet)
-                {
-                    var width = this.Parent.Width;
-                    this.Location.X = width / 2 - (this.Width / 2);
-                }
-
-                if (bottomSet && topSet && !rightSet && !leftSet)
-                {
-                    var height = this.Parent.Height;
-                    this.Location.Y = height / 2 - (this.Height / 2);
-                }
-
-                if (bottomSet && leftSet && !topSet && !rightSet)
-                {
-                    var height = this.Parent.Height;
-                    this.Location.Y = height - this.Height;
-                }
-
-                if (bottomSet && rightSet && !topSet && !leftSet)
-                {
-                    var width = this.Parent.Width;
-                    this.Location.X = width - this.Width;
-
-                    var height = this.Parent.Height;
-                    this.Location.Y = height - this.Height;
-                }
-
-                if (topSet && rightSet && !leftSet && !bottomSet)
-                {
-                    var width = this.Parent.Width;
-                    this.Location.X = width - this.Width;
-                }
-
-                this.Element.Style.Position = Position.Absolute;
+                this.Element = Application.RootDocument;
             }
             else
             {
-                this.Element.Style.Position = Position.Absolute;
-            }
+                parentElement = this.Parent.Element;
 
-            switch (this.Dock)
-            {
-                case DockStyle.None:
-                    this.Element.Style.Width = this.Width + "px";
-                    this.Element.Style.Height = this.Height + "px";
-                    this.Element.Style.Top = this.Location.Y + "px";
-                    this.Element.Style.Left = this.Location.X + "px";
-                    break;
-                case DockStyle.Left:
-                    this.Element.Style.Left = "0px";
-                    this.Element.Style.Width = this.Width + "px";
-                    this.Element.Style.Height = "100%";
-                    break;
-                case DockStyle.Right:
-                    this.Element.Style.Right = "0px";
-                    this.Element.Style.Width = this.Width + "px";
-                    this.Element.Style.Height = "100%";
-                    break;
-                case DockStyle.Top:
-                    this.Element.Style.Top = "0px";
-                    this.Element.Style.Height = this.Height + "px";
-                    this.Element.Style.Width = "100%";
-                    break;
-                case DockStyle.Bottom:
-                    this.Element.Style.Bottom = "0px";
-                    this.Element.Style.Height = this.Height + "px";
-                    this.Element.Style.Width = "100%";
-                    break;
-                case DockStyle.Fill:
-                    this.Element.Style.Right = "0px";
-                    this.Element.Style.Bottom = "0px";
-                    this.Element.Style.Left = "0px";
-                    this.Element.Style.Top = "0px";
-                    this.Element.Style.Height = "100%";
-                    this.Element.Style.Width = "100%";
-                    break;
-            }
-
-            this.Element.Style.PaddingTop = this.Padding.Top + "px";
-            this.Element.Style.PaddingLeft = this.Padding.Left + "px";
-            this.Element.Style.PaddingRight = this.Padding.Right + "px";
-            this.Element.Style.PaddingBottom = this.Padding.Bottom + "px";
-
-            if (Parent != null)
-            {
-                if (jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0)
+                parentElement.Add(this.Element, new qx.core.Options()
                 {
-                    this.Parent.Element.AppendChild(this.Element);
-                }
-            }
-            else
-            {
-                this.Element.Style.Height = "100%";
-                this.Element.Style.Width = "100%";
+                    Left = this.Location.X,
+                    Top = this.Location.Y
+                });
             }
 
-            SetupEventHandlers();
-
-            if (this.RenderLabel)
+            if (this.Element is qx.ui.core.LayoutItem)
             {
-                if (!string.IsNullOrEmpty(this.Text))
+                var li = (qx.ui.core.LayoutItem)this.Element;
+                li.Width = this.Width;
+                li.Height = this.Height;
+            }
+
+            if (this.Element is qx.ui.core.Widget)
+            {
+                var li = (qx.ui.core.Widget)this.Element;
+                var bc = this.BackColor;
+                if( !string.IsNullOrEmpty(bc) )
                 {
-                    if( this.Label == null )
-                    {
-                        this.Label = new Label();
-                    }
-                    SetText(this.Label.Element);
-                    if (this.HasEvent("TextChanged"))
-                    {
-                        this.Label.Element.OnChange = (e) =>
-                        {
-                            this.FireEvent(new WSEventArgs()
-                            {
-                                ClientId = this.ClientId,
-                                EventType = "textchanged",
-                                Value = this.Label.Element.InnerHTML
-                            });
-                        };
-                    }
-                    this.Element.AppendChild(this.Label.Element);
+                    li.BackgroundColor = this.BackColor;
+                    //li.BackgroundColor = "#0f0";
                 }
             }
 
-            if (!string.IsNullOrEmpty(this.BackgroundImage))
-            {
-                jQuery.Element(this.Element).Css("background-image", "url('data:image/png;base64," + this.BackgroundImage + "')");
-                switch (this.BackgroundImageLayout)
-                {
-                    case ImageLayout.Stretch:
-                        jQuery.Element(this.Element).Css("background-size", "cover");
-                        break;
-                }
-            }
+            //this.Element.Id = "WU_" + this.ClientId;
+
+            //this.Element.Style.BackgroundColor = this.BackColor;
+            //this.Element.Style.Visibility = this.Visible ? Visibility.Visible : Visibility.Hidden;
+
+            //if (this.Parent != null)
+            //{
+            //    bool rightSet = false, leftSet = false, topSet = false, bottomSet = false;
+            //    if (this.Anchor.HasFlag(AnchorStyles.Right))
+            //    {
+            //        rightSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Left))
+            //    {
+            //        leftSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Top))
+            //    {
+            //        topSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Bottom))
+            //    {
+            //        bottomSet = true;
+            //    }
+
+            //    if (topSet && !rightSet && !leftSet && !bottomSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width / 2 - (this.Width / 2);
+            //    }
+
+            //    if (bottomSet && topSet && !rightSet && !leftSet)
+            //    {
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height / 2 - (this.Height / 2);
+            //    }
+
+            //    if (bottomSet && leftSet && !topSet && !rightSet)
+            //    {
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height - this.Height;
+            //    }
+
+            //    if (bottomSet && rightSet && !topSet && !leftSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width - this.Width;
+
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height - this.Height;
+            //    }
+
+            //    if (topSet && rightSet && !leftSet && !bottomSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width - this.Width;
+            //    }
+
+            //    this.Element.Style.Position = Position.Absolute;
+            //}
+            //else
+            //{
+            //    this.Element.Style.Position = Position.Absolute;
+            //}
+
+            //switch (this.Dock)
+            //{
+            //    case DockStyle.None:
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Top = this.Location.Y + "px";
+            //        this.Element.Style.Left = this.Location.X + "px";
+            //        break;
+            //    case DockStyle.Left:
+            //        this.Element.Style.Left = "0px";
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = "100%";
+            //        break;
+            //    case DockStyle.Right:
+            //        this.Element.Style.Right = "0px";
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = "100%";
+            //        break;
+            //    case DockStyle.Top:
+            //        this.Element.Style.Top = "0px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //    case DockStyle.Bottom:
+            //        this.Element.Style.Bottom = "0px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //    case DockStyle.Fill:
+            //        this.Element.Style.Right = "0px";
+            //        this.Element.Style.Bottom = "0px";
+            //        this.Element.Style.Left = "0px";
+            //        this.Element.Style.Top = "0px";
+            //        this.Element.Style.Height = "100%";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //}
+
+            //this.Element.Style.PaddingTop = this.Padding.Top + "px";
+            //this.Element.Style.PaddingLeft = this.Padding.Left + "px";
+            //this.Element.Style.PaddingRight = this.Padding.Right + "px";
+            //this.Element.Style.PaddingBottom = this.Padding.Bottom + "px";
+
+            //if (Parent != null)
+            //{
+            //    if (jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0)
+            //    {
+            //        this.Parent.Element.AppendChild(this.Element);
+            //    }
+            //}
+            //else
+            //{
+            //    this.Element.Style.Height = "100%";
+            //    this.Element.Style.Width = "100%";
+            //}
+
+            //SetupEventHandlers();
+
+            //if (this.RenderLabel)
+            //{
+            //    if (!string.IsNullOrEmpty(this.Text))
+            //    {
+            //        if( this.Label == null )
+            //        {
+            //            this.Label = new Label();
+            //        }
+            //        SetText(this.Label.Element);
+            //        if (this.HasEvent("TextChanged"))
+            //        {
+            //            this.Label.Element.OnChange = (e) =>
+            //            {
+            //                this.FireEvent(new WSEventArgs()
+            //                {
+            //                    ClientId = this.ClientId,
+            //                    EventType = "textchanged",
+            //                    Value = this.Label.Element.InnerHTML
+            //                });
+            //            };
+            //        }
+            //        this.Element.AppendChild(this.Label.Element);
+            //    }
+            //}
+
+            //if (!string.IsNullOrEmpty(this.BackgroundImage))
+            //{
+            //    jQuery.Element(this.Element).Css("background-image", "url('data:image/png;base64," + this.BackgroundImage + "')");
+            //    switch (this.BackgroundImageLayout)
+            //    {
+            //        case ImageLayout.Stretch:
+            //            jQuery.Element(this.Element).Css("background-size", "cover");
+            //            break;
+            //    }
+            //}
         }
 
         public virtual void Render()
@@ -282,77 +316,77 @@ namespace System.Windows.Forms
                 ctrl.Render();
             }
 
-            if (this.Parent != null)
-            {
-                ReAlignControls(this.Parent, this);
-            }
+            //if (this.Parent != null)
+            //{
+            //    ReAlignControls(this.Parent, this);
+            //}
         }
 
         private void SetupEventHandlers()
         {
-            if (this.HasEvent("Click"))
-            {
-                this.Element.OnClick = (e) =>
-                {
-                    this.FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "click"
-                    });
-                };
-            }
+            //if (this.HasEvent("Click"))
+            //{
+            //    this.Element.OnClick = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "click"
+            //        });
+            //    };
+            //}
 
-            if (this.HasEvent("MouseMove"))
-            {
-                this.Element.OnMouseMove = (e) =>
-                {
-                    this.FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "mousemove",
-                        Value = e
-                    });
-                };
-            };
+            //if (this.HasEvent("MouseMove"))
+            //{
+            //    this.Element.OnMouseMove = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mousemove",
+            //            Value = e
+            //        });
+            //    };
+            //};
 
-            if (this.HasEvent("MouseEnter"))
-            {
-                this.Element.OnMouseEnter = (e) =>
-                {
-                    this.FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "mouseenter",
-                        Value = e
-                    });
-                };
-            };
+            //if (this.HasEvent("MouseEnter"))
+            //{
+            //    this.Element.OnMouseEnter = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseenter",
+            //            Value = e
+            //        });
+            //    };
+            //};
 
-            if (this.HasEvent("MouseLeave"))
-            {
-                this.Element.OnMouseLeave = (e) =>
-                {
-                    this.FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "mouseleave",
-                        Value = e
-                    });
-                };
-            };
+            //if (this.HasEvent("MouseLeave"))
+            //{
+            //    this.Element.OnMouseLeave = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseleave",
+            //            Value = e
+            //        });
+            //    };
+            //};
 
-            if (this.HasEvent("TextChanged"))
-            {
-                this.Element.OnChange = (e) =>
-                {
-                    this.FireEvent(new WSEventArgs()
-                    {
-                        ClientId = this.ClientId,
-                        EventType = "mouseleave",
-                        Value = e
-                    });
-                };
-            }
+            //if (this.HasEvent("TextChanged"))
+            //{
+            //    this.Element.OnChange = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseleave",
+            //            Value = e
+            //        });
+            //    };
+            //}
         }
 
         public virtual async Task FireEvent(WSEventArgs evt)
@@ -435,6 +469,10 @@ namespace System.Windows.Forms
                             var tv = JSON.Parse<TreeView>(JSON.Stringify(ctrl));
                             ctrl1 = tv;
                             break;
+                        case "CheckedListBox":
+                            var clb = JSON.Parse<CheckedListBox>(JSON.Stringify(ctrl));
+                            ctrl1 = clb;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;
@@ -463,153 +501,161 @@ namespace System.Windows.Forms
             });
         }
 
-        private void ReAlignControls(Control parent, Control current)
-        {
-            var childControls = parent.GetControls();
+        //public void RealignControls()
+        //{
+        //    foreach (var ctrl in this.GetControls())
+        //    {
+        //        ctrl.ReAlignControls(this, ctrl);
+        //    }
+        //}
 
-            var top = 0;
-            var left = 0;
-            var bottom = 0;
-            var right = 0;
+        //protected void ReAlignControls(Control parent, Control current)
+        //{
+        //    var childControls = parent.GetControls();
 
-            switch (current.Dock)
-            {
-                //Left
-                case DockStyle.Left:
-                    {
-                        left = jQuery.Element(current.Element).Width();
-                        foreach(var child in childControls)
-                        {
-                            if (child.ClientId == current.ClientId)
-                            {
-                                break;
-                            }
-                            switch (child.Dock)
-                            {
-                                case DockStyle.Left:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlWidth = item.Width();
-                                        item.Css("left", jQuery.Element(current.Element).Position().Left + ctrlWidth);
-                                    }
-                                    break;
-                                case DockStyle.Top:
-                                case DockStyle.Bottom:
-                                case DockStyle.Fill:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlWidth = item.Width();
-                                        var ctrlLeft = item.Position().Left;
-                                        item.Css("left", ctrlLeft + left);
-                                        item.Css("width", ctrlWidth - left);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                //Right
-                case DockStyle.Right:
-                    {
-                        right = jQuery.Element(current.Element).Width();
-                        foreach (var child in childControls)
-                        {
-                            if (child.ClientId == current.ClientId)
-                            {
-                                break;
-                            }
-                            switch (child.Dock)
-                            {
-                                case DockStyle.Right:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlWidth = item.Width();
-                                        item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
-                                    }
-                                    break;
-                                case DockStyle.Top:
-                                case DockStyle.Bottom:
-                                case DockStyle.Fill:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlWidth = item.Width();
+        //    var top = 0;
+        //    var left = 0;
+        //    var bottom = 0;
+        //    var right = 0;
 
-                                        item.Css("width", ctrlWidth - right);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                //Top
-                case DockStyle.Top:
-                    {
-                        top = jQuery.Element(current.Element).Height();
-                        foreach (var child in childControls)
-                        {
-                            if (child.ClientId == current.ClientId)
-                            {
-                                break;
-                            }
-                            switch (child.Dock)
-                            {
-                                case DockStyle.Top:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlTop = item.Position().Top;
-                                        item.Css("top", ctrlTop + top);
-                                    }
-                                    break;
-                                case DockStyle.Left:
-                                case DockStyle.Right:
-                                case DockStyle.Fill:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlTop = item.Position().Top;
+        //    switch (current.Dock)
+        //    {
+        //        //Left
+        //        case DockStyle.Left:
+        //            {
+        //                left = jQuery.Element(current.Element).Width();
+        //                foreach(var child in childControls)
+        //                {
+        //                    if (child.ClientId == current.ClientId)
+        //                    {
+        //                        break;
+        //                    }
+        //                    switch (child.Dock)
+        //                    {
+        //                        case DockStyle.Left:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlWidth = item.Width();
+        //                                item.Css("left", jQuery.Element(current.Element).Position().Left + ctrlWidth);
+        //                            }
+        //                            break;
+        //                        case DockStyle.Top:
+        //                        case DockStyle.Bottom:
+        //                        case DockStyle.Fill:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlWidth = item.Width();
+        //                                var ctrlLeft = item.Position().Left;
+        //                                item.Css("left", ctrlLeft + left);
+        //                                item.Css("width", ctrlWidth - left);
+        //                            }
+        //                            break;
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //        //Right
+        //        case DockStyle.Right:
+        //            {
+        //                right = jQuery.Element(current.Element).Width();
+        //                foreach (var child in childControls)
+        //                {
+        //                    if (child.ClientId == current.ClientId)
+        //                    {
+        //                        break;
+        //                    }
+        //                    switch (child.Dock)
+        //                    {
+        //                        case DockStyle.Right:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlWidth = item.Width();
+        //                                item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
+        //                            }
+        //                            break;
+        //                        case DockStyle.Top:
+        //                        case DockStyle.Bottom:
+        //                        case DockStyle.Fill:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlWidth = item.Width();
 
-                                        var ctrlHeight = item.Height();
-                                        item.Css("top", ctrlTop + top);
-                                        item.Css("height", ctrlHeight - top);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                //Bottom
-                case DockStyle.Bottom:
-                    {
-                        bottom = jQuery.Element(current.Element).Height();
-                        foreach (var child in childControls)
-                        {
-                            if (child.ClientId == current.ClientId)
-                            {
-                                break;
-                            }
-                            switch (child.Dock)
-                            {
-                                case DockStyle.Right:
-                                case DockStyle.Fill:
-                                case DockStyle.Left:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        item.Css("height", item.Height() - bottom);
-                                    }
-                                    break;
-                                case DockStyle.Bottom:
-                                    {
-                                        var item = jQuery.Element(child.Element);
-                                        var ctrlTop = child.Element.OffsetTop;
-                                        item.Css("top", ctrlTop - bottom);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-            }
+        //                                item.Css("width", ctrlWidth - right);
+        //                            }
+        //                            break;
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //        //Top
+        //        case DockStyle.Top:
+        //            {
+        //                top = jQuery.Element(current.Element).Height();
+        //                foreach (var child in childControls)
+        //                {
+        //                    if (child.ClientId == current.ClientId)
+        //                    {
+        //                        break;
+        //                    }
+        //                    switch (child.Dock)
+        //                    {
+        //                        case DockStyle.Top:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlTop = item.Position().Top;
+        //                                item.Css("top", ctrlTop + top);
+        //                            }
+        //                            break;
+        //                        case DockStyle.Left:
+        //                        case DockStyle.Right:
+        //                        case DockStyle.Fill:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlTop = item.Position().Top;
 
-        }
+        //                                var ctrlHeight = item.Height();
+        //                                item.Css("top", ctrlTop + top);
+        //                                item.Css("height", ctrlHeight - top);
+        //                            }
+        //                            break;
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //        //Bottom
+        //        case DockStyle.Bottom:
+        //            {
+        //                bottom = jQuery.Element(current.Element).Height();
+        //                foreach (var child in childControls)
+        //                {
+        //                    if (child.ClientId == current.ClientId)
+        //                    {
+        //                        break;
+        //                    }
+        //                    switch (child.Dock)
+        //                    {
+        //                        case DockStyle.Right:
+        //                        case DockStyle.Fill:
+        //                        case DockStyle.Left:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                item.Css("height", item.Height() - bottom);
+        //                            }
+        //                            break;
+        //                        case DockStyle.Bottom:
+        //                            {
+        //                                var item = jQuery.Element(child.Element);
+        //                                var ctrlTop = child.Element.OffsetTop;
+        //                                item.Css("top", ctrlTop - bottom);
+        //                            }
+        //                            break;
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //    }
+
+        //}
 
 
         public int GetInt(string px)
@@ -640,6 +686,15 @@ namespace System.Windows.Forms
                     RaisePropertyChanged("Dock", value);
                 }
             }
+        }
+
+        public void OnClick()
+        {
+            this.FireEvent(new WSEventArgs()
+            {
+                ClientId = this.ClientId,
+                EventType = "click"
+            });
         }
 
         private string mText;
@@ -792,13 +847,8 @@ namespace System.Windows.Forms
             //}
         }
 
-        public Size ClientSize
-        {
-            get
-            {
-                return this.Size;
-            }
-        }
+        public Size ClientSize;
+
         private bool mVisible = true;
         public bool Visible
         {

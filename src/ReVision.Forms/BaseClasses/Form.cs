@@ -145,8 +145,6 @@ namespace System.Windows.Forms
         public System.Drawing.Size AutoScaleBaseSize { get; set; }
         public AutoScaleMode AutoScaleMode { get; set; }
 
-        public System.Drawing.Size ClientSize { get; set; }
-
         public FormBorderStyle FormBorderStyle { get; set; }
 
         public bool MaximizeBox { get; set; }

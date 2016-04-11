@@ -42,6 +42,9 @@
     <Compile Include="..\ReVision.Forms\Enumerations\DockStyle.cs">
       <Link>Enumerations\DockStyle.cs</Link>
     </Compile>
+    <Compile Include="..\ReVision.Forms\Enumerations\FormStartPosition.cs">
+      <Link>Shared\FormStartPosition.cs</Link>
+    </Compile>
     <Compile Include="..\ReVision.Forms\Enumerations\ImageLayout.cs">
       <Link>Enumerations\ImageLayout.cs</Link>
     </Compile>
@@ -66,6 +69,7 @@
     <Compile Include="BaseClasses\Component.cs" />
     <Compile Include="BaseClasses\Control.cs" />
     <Compile Include="BaseClasses\ControlsCollection.cs" />
+    <Compile Include="Controls\CheckedListBox.cs" />
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Controls\GroupBox.cs" />
@@ -90,6 +94,36 @@
     <Compile Include="Controls\LinkLabel.cs" />
     <Compile Include="BaseClasses\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="qx\data\Array.cs" />
+    <Compile Include="qx\data\controller\ControllerDelegate.cs" />
+    <Compile Include="qx\data\controller\List.cs" />
+    <Compile Include="qx\data\marshal\Json.cs" />
+    <Compile Include="qx\ui\container\Scroll.cs" />
+    <Compile Include="qx\ui\core\LayoutItem.cs" />
+    <Compile Include="qx\core\Object.cs" />
+    <Compile Include="qx\ui\core\scroll\AbstractScroll.cs" />
+    <Compile Include="qx\ui\core\scroll\AbstractScrollArea.cs" />
+    <Compile Include="qx\ui\core\Widget.cs" />
+    <Compile Include="qx\html\Element.cs" />
+    <Compile Include="qx\html\RootElement.cs" />
+    <Compile Include="qx\ui\basic\Atom.cs" />
+    <Compile Include="qx\ui\basic\Label.cs" />
+    <Compile Include="qx\ui\container\Composite.cs" />
+    <Compile Include="qx\ui\form\AbstractField.cs" />
+    <Compile Include="qx\ui\form\AbstractSelectBox.cs" />
+    <Compile Include="qx\ui\form\Button.cs" />
+    <Compile Include="qx\ui\form\ComboBox.cs" />
+    <Compile Include="qx\ui\form\DateField.cs" />
+    <Compile Include="qx\ui\form\List.cs" />
+    <Compile Include="qx\ui\form\ListItem.cs" />
+    <Compile Include="qx\ui\form\RadioButton.cs" />
+    <Compile Include="qx\ui\form\CheckBox.cs" />
+    <Compile Include="qx\ui\form\TextField.cs" />
+    <Compile Include="qx\ui\form\ToogleButton.cs" />
+    <Compile Include="qx\ui\layout\Abstract.cs" />
+    <Compile Include="qx\ui\layout\Basic.cs" />
+    <Compile Include="qx\ui\tabview\Page.cs" />
+    <Compile Include="qx\ui\tabview\TabView.cs" />
     <Compile Include="Shared\ColumnHeader.cs" />
     <Compile Include="Shared\ToolStripLabel.cs" />
     <Compile Include="Shared\ToolStripMenuItem.cs" />

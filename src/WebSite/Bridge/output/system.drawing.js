@@ -25,8 +25,8 @@
                 return false;
             }
         },
-        height: 0,
         width: 0,
+        height: 0,
         constructor: function (width, height) {
             this.width = width;
             this.height = height;

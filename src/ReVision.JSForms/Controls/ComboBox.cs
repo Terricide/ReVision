@@ -10,6 +10,10 @@ namespace System.Windows.Forms
 {
     public class ComboBox : Control
     {
+        public ComboBox()
+        {
+            this.Element = new qx.ui.form.ComboBox();
+        }
         public object[] Items;
 
         private InputElement cb;
@@ -18,12 +22,12 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            if (this.cb == null)
-            {
-                this.cb = new Bridge.Html5.InputElement();
-                this.cb.Id = "CB_" + this.ClientId;
-                this.Element.AppendChild(this.cb);
-            }
+            //if (this.cb == null)
+            //{
+            //    this.cb = new Bridge.Html5.InputElement();
+            //    this.cb.Id = "CB_" + this.ClientId;
+            //    this.Element.AppendChild(this.cb);
+            //}
 
             //        for (var i = 0; i < obj.Items.length; i++)
             //        {
@@ -51,31 +55,37 @@ namespace System.Windows.Forms
             //    }
             //});
 
-            ListItem[] arr = new ListItem[Items.Length];
+            //ListItem[] arr = new ListItem[Items.Length];
 
-            for (int i = 0; i < Items.Length; i++)
-            {
-                arr[i] = new ListItem()
-                {
-                    Text = Items[i],
-                    Value = i
-                };
-            }
+            //for (int i = 0; i < Items.Length; i++)
+            //{
+            //    arr[i] = new ListItem()
+            //    {
+            //        Text = Items[i],
+            //        Value = i
+            //    };
+            //}
 
-            var kb = KendoComboBox.Element(this.cb, "text", "value", "contains", true, arr, (e) =>
-            {
-                var cmd = e.ToDynamic();
-                this.SelectedIndex = cmd.sender.selectedIndex;
-                FireEvent(new WSEventArgs()
-                {
-                    ClientId = this.ClientId,
-                    EventType = "selectedIndexChanged",
-                    Value = cmd.sender.selectedIndex
-                });
-            }, this.SelectedIndex);
+            //var kb = KendoComboBox.Element(this.cb, "text", "value", "contains", true, arr, (e) =>
+            //{
+            //    var cmd = e.ToDynamic();
+            //    this.SelectedIndex = cmd.sender.selectedIndex;
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "selectedIndexChanged",
+            //        Value = cmd.sender.selectedIndex
+            //    });
+            //}, this.SelectedIndex);
 
             base.Render();
-
+            var cb = (qx.ui.form.ComboBox)this.Element;
+            cb.Value = this.Text;
+            //cb.TextField.Value = this.Text;
+            foreach (var obj in Items)
+            {
+                cb.Add(new qx.ui.form.ListItem(obj.ToString()));
+            }
         }
 
         public class KendoComboBox

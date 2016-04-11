@@ -25,6 +25,15 @@
     
     Bridge.define('System.Windows.Forms.IObservableItem');
     
+    Bridge.define('System.Windows.Forms.CheckedListBox.CheckedItem', {
+        config: {
+            properties: {
+                Checked: false,
+                Name: null
+            }
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.ComboBox.KendoComboBox', {
         dataTextField: null,
         dataValueField: null,
@@ -54,6 +63,17 @@
     
     Bridge.define('System.Windows.Forms.Fancytree');
     
+    Bridge.define('System.Windows.Forms.FormStartPosition', {
+        statics: {
+            windowsDefaultLocation: 0,
+            centerParent: 1,
+            centerScreen: 2,
+            manual: 3,
+            windowsDefaultBounds: 4
+        },
+        $enum: true
+    });
+    
     Bridge.define('System.Windows.Forms.ImageLayout', {
         statics: {
             none: 0,
@@ -72,6 +92,25 @@
     Bridge.define('System.Windows.Forms.KendoSplitter');
     
     Bridge.define('System.Windows.Forms.KendoTabStrip');
+    
+    Bridge.define('System.Windows.Forms.KendoWindow', {
+        title: null,
+        width: 0,
+        height: 0,
+        position: null,
+        actions: null,
+        config: {
+            init: function () {
+                this.position = new System.Windows.Forms.KendoWindow.ControlPosition();
+                this.actions = Bridge.Array.init(0, null);
+            }
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.KendoWindow.ControlPosition', {
+        left: null,
+        top: null
+    });
     
     Bridge.define('System.Windows.Forms.ListViewItem');
     
@@ -232,6 +271,7 @@
         mText: null,
         mLocation: null,
         mSize: null,
+        clientSize: null,
         mVisible: true,
         config: {
             events: {
@@ -248,7 +288,7 @@
                 AutoSize: false
             },
             init: function () {
-                this.element = document.createElement('div');
+                this.element = new qx.html.Element();
                 this.mSize = new System.Drawing.Size(300, 300);
             }
         },
@@ -351,9 +391,6 @@
         getHeight: function () {
             return this.getSize().height;
         },
-        getClientSize: function () {
-            return this.getSize();
-        },
         getVisible: function () {
             return this.mVisible;
         },
@@ -401,135 +438,189 @@
             elm.innerHTML = this.getText();
         },
         setAttributes: function () {
-            this.element.id = "WU_" + this.getClientId();
-    
-            this.element.style.backgroundColor = this.getBackColor();
-            this.element.style.visibility = this.getVisible() ? "visible" : "hidden";
-    
-            if (Bridge.hasValue(this.getParent())) {
-                var rightSet = false, leftSet = false, topSet = false, bottomSet = false;
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.right)) {
-                    rightSet = true;
-                }
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.left)) {
-                    leftSet = true;
-                }
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.top)) {
-                    topSet = true;
-                }
-                if (Bridge.Enum.hasFlag(this.getAnchor(), System.Windows.Forms.AnchorStyles.bottom)) {
-                    bottomSet = true;
-                }
-    
-                if (topSet && !rightSet && !leftSet && !bottomSet) {
-                    var width = this.getParent().getWidth();
-                    this.getLocation().x = (((Bridge.Int.div(width, 2)) | 0) - (((Bridge.Int.div(this.getWidth(), 2)) | 0))) | 0;
-                }
-    
-                if (bottomSet && topSet && !rightSet && !leftSet) {
-                    var height = this.getParent().getHeight();
-                    this.getLocation().y = (((Bridge.Int.div(height, 2)) | 0) - (((Bridge.Int.div(this.getHeight(), 2)) | 0))) | 0;
-                }
-    
-                if (bottomSet && leftSet && !topSet && !rightSet) {
-                    var height1 = this.getParent().getHeight();
-                    this.getLocation().y = (height1 - this.getHeight()) | 0;
-                }
-    
-                if (bottomSet && rightSet && !topSet && !leftSet) {
-                    var width1 = this.getParent().getWidth();
-                    this.getLocation().x = (width1 - this.getWidth()) | 0;
-    
-                    var height2 = this.getParent().getHeight();
-                    this.getLocation().y = (height2 - this.getHeight()) | 0;
-                }
-    
-                if (topSet && rightSet && !leftSet && !bottomSet) {
-                    var width2 = this.getParent().getWidth();
-                    this.getLocation().x = (width2 - this.getWidth()) | 0;
-                }
-    
-                this.element.style.position = "absolute";
+            var parentElement = null;
+            if (!Bridge.hasValue(this.getParent())) {
+                this.element = ReVision.JSForms.Application.rootDocument;
             }
             else  {
-                this.element.style.position = "absolute";
+                parentElement = this.getParent().element;
+    
+                parentElement.add(this.element,{ left: this.getLocation().x, top: this.getLocation().y });
             }
     
-            switch (this.getDock()) {
-                case System.Windows.Forms.DockStyle.none: 
-                    this.element.style.width = this.getWidth() + "px";
-                    this.element.style.height = this.getHeight() + "px";
-                    this.element.style.top = this.getLocation().y + "px";
-                    this.element.style.left = this.getLocation().x + "px";
-                    break;
-                case System.Windows.Forms.DockStyle.left: 
-                    this.element.style.left = "0px";
-                    this.element.style.width = this.getWidth() + "px";
-                    this.element.style.height = "100%";
-                    break;
-                case System.Windows.Forms.DockStyle.right: 
-                    this.element.style.right = "0px";
-                    this.element.style.width = this.getWidth() + "px";
-                    this.element.style.height = "100%";
-                    break;
-                case System.Windows.Forms.DockStyle.top: 
-                    this.element.style.top = "0px";
-                    this.element.style.height = this.getHeight() + "px";
-                    this.element.style.width = "100%";
-                    break;
-                case System.Windows.Forms.DockStyle.bottom: 
-                    this.element.style.bottom = "0px";
-                    this.element.style.height = this.getHeight() + "px";
-                    this.element.style.width = "100%";
-                    break;
-                case System.Windows.Forms.DockStyle.fill: 
-                    this.element.style.right = "0px";
-                    this.element.style.bottom = "0px";
-                    this.element.style.left = "0px";
-                    this.element.style.top = "0px";
-                    this.element.style.height = "100%";
-                    this.element.style.width = "100%";
-                    break;
+            if (Bridge.is(this.element, qx.ui.core.LayoutItem)) {
+                var li = Bridge.cast(this.element, qx.ui.core.LayoutItem);
+                li.setWidth(this.getWidth());
+                li.setHeight(this.getHeight());
             }
     
-            this.element.style.paddingTop = this.getPadding().getTop() + "px";
-            this.element.style.paddingLeft = this.getPadding().getLeft() + "px";
-            this.element.style.paddingRight = this.getPadding().getRight() + "px";
-            this.element.style.paddingBottom = this.getPadding().getBottom() + "px";
-    
-            if (Bridge.hasValue(this.getParent())) {
-                if ($(this.getParent().element).has(this.element).length === 0) {
-                    this.getParent().element.appendChild(this.element);
-                }
-            }
-            else  {
-                this.element.style.height = "100%";
-                this.element.style.width = "100%";
-            }
-    
-            this.setupEventHandlers();
-    
-            if (this.renderLabel) {
-                if (!Bridge.String.isNullOrEmpty(this.getText())) {
-                    if (!Bridge.hasValue(this.label)) {
-                        this.label = new System.Windows.Forms.Label();
-                    }
-                    this.setText$1(this.label.element);
-                    if (this.hasEvent("TextChanged")) {
-                        this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1);
-                    }
-                    this.element.appendChild(this.label.element);
+            if (Bridge.is(this.element, qx.ui.core.Widget)) {
+                var li1 = Bridge.cast(this.element, qx.ui.core.Widget);
+                var bc = this.getBackColor();
+                if (!Bridge.String.isNullOrEmpty(bc)) {
+                    li1.setBackgroundColor(this.getBackColor());
+                    //li.BackgroundColor = "#0f0";
                 }
             }
     
-            if (!Bridge.String.isNullOrEmpty(this.getBackgroundImage())) {
-                $(this.element).css("background-image", "url('data:image/png;base64," + this.getBackgroundImage() + "')");
-                switch (this.backgroundImageLayout) {
-                    case System.Windows.Forms.ImageLayout.stretch: 
-                        $(this.element).css("background-size", "cover");
-                        break;
-                }
-            }
+            //this.Element.Id = "WU_" + this.ClientId;
+    
+            //this.Element.Style.BackgroundColor = this.BackColor;
+            //this.Element.Style.Visibility = this.Visible ? Visibility.Visible : Visibility.Hidden;
+    
+            //if (this.Parent != null)
+            //{
+            //    bool rightSet = false, leftSet = false, topSet = false, bottomSet = false;
+            //    if (this.Anchor.HasFlag(AnchorStyles.Right))
+            //    {
+            //        rightSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Left))
+            //    {
+            //        leftSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Top))
+            //    {
+            //        topSet = true;
+            //    }
+            //    if (this.Anchor.HasFlag(AnchorStyles.Bottom))
+            //    {
+            //        bottomSet = true;
+            //    }
+    
+            //    if (topSet && !rightSet && !leftSet && !bottomSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width / 2 - (this.Width / 2);
+            //    }
+    
+            //    if (bottomSet && topSet && !rightSet && !leftSet)
+            //    {
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height / 2 - (this.Height / 2);
+            //    }
+    
+            //    if (bottomSet && leftSet && !topSet && !rightSet)
+            //    {
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height - this.Height;
+            //    }
+    
+            //    if (bottomSet && rightSet && !topSet && !leftSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width - this.Width;
+    
+            //        var height = this.Parent.Height;
+            //        this.Location.Y = height - this.Height;
+            //    }
+    
+            //    if (topSet && rightSet && !leftSet && !bottomSet)
+            //    {
+            //        var width = this.Parent.Width;
+            //        this.Location.X = width - this.Width;
+            //    }
+    
+            //    this.Element.Style.Position = Position.Absolute;
+            //}
+            //else
+            //{
+            //    this.Element.Style.Position = Position.Absolute;
+            //}
+    
+            //switch (this.Dock)
+            //{
+            //    case DockStyle.None:
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Top = this.Location.Y + "px";
+            //        this.Element.Style.Left = this.Location.X + "px";
+            //        break;
+            //    case DockStyle.Left:
+            //        this.Element.Style.Left = "0px";
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = "100%";
+            //        break;
+            //    case DockStyle.Right:
+            //        this.Element.Style.Right = "0px";
+            //        this.Element.Style.Width = this.Width + "px";
+            //        this.Element.Style.Height = "100%";
+            //        break;
+            //    case DockStyle.Top:
+            //        this.Element.Style.Top = "0px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //    case DockStyle.Bottom:
+            //        this.Element.Style.Bottom = "0px";
+            //        this.Element.Style.Height = this.Height + "px";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //    case DockStyle.Fill:
+            //        this.Element.Style.Right = "0px";
+            //        this.Element.Style.Bottom = "0px";
+            //        this.Element.Style.Left = "0px";
+            //        this.Element.Style.Top = "0px";
+            //        this.Element.Style.Height = "100%";
+            //        this.Element.Style.Width = "100%";
+            //        break;
+            //}
+    
+            //this.Element.Style.PaddingTop = this.Padding.Top + "px";
+            //this.Element.Style.PaddingLeft = this.Padding.Left + "px";
+            //this.Element.Style.PaddingRight = this.Padding.Right + "px";
+            //this.Element.Style.PaddingBottom = this.Padding.Bottom + "px";
+    
+            //if (Parent != null)
+            //{
+            //    if (jQuery.Element(this.Parent.Element).Has(this.Element).Length == 0)
+            //    {
+            //        this.Parent.Element.AppendChild(this.Element);
+            //    }
+            //}
+            //else
+            //{
+            //    this.Element.Style.Height = "100%";
+            //    this.Element.Style.Width = "100%";
+            //}
+    
+            //SetupEventHandlers();
+    
+            //if (this.RenderLabel)
+            //{
+            //    if (!string.IsNullOrEmpty(this.Text))
+            //    {
+            //        if( this.Label == null )
+            //        {
+            //            this.Label = new Label();
+            //        }
+            //        SetText(this.Label.Element);
+            //        if (this.HasEvent("TextChanged"))
+            //        {
+            //            this.Label.Element.OnChange = (e) =>
+            //            {
+            //                this.FireEvent(new WSEventArgs()
+            //                {
+            //                    ClientId = this.ClientId,
+            //                    EventType = "textchanged",
+            //                    Value = this.Label.Element.InnerHTML
+            //                });
+            //            };
+            //        }
+            //        this.Element.AppendChild(this.Label.Element);
+            //    }
+            //}
+    
+            //if (!string.IsNullOrEmpty(this.BackgroundImage))
+            //{
+            //    jQuery.Element(this.Element).Css("background-image", "url('data:image/png;base64," + this.BackgroundImage + "')");
+            //    switch (this.BackgroundImageLayout)
+            //    {
+            //        case ImageLayout.Stretch:
+            //            jQuery.Element(this.Element).Css("background-size", "cover");
+            //            break;
+            //    }
+            //}
         },
         render: function () {
             var $t;
@@ -541,33 +632,75 @@
                 ctrl.render();
             }
     
-            if (Bridge.hasValue(this.getParent())) {
-                this.reAlignControls(this.getParent(), this);
-            }
+            //if (this.Parent != null)
+            //{
+            //    ReAlignControls(this.Parent, this);
+            //}
         },
         setupEventHandlers: function () {
-            if (this.hasEvent("Click")) {
-                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2);
-            }
+            //if (this.HasEvent("Click"))
+            //{
+            //    this.Element.OnClick = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "click"
+            //        });
+            //    };
+            //}
     
-            if (this.hasEvent("MouseMove")) {
-                this.element.onmousemove = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3);
-            }
-            ;
+            //if (this.HasEvent("MouseMove"))
+            //{
+            //    this.Element.OnMouseMove = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mousemove",
+            //            Value = e
+            //        });
+            //    };
+            //};
     
-            if (this.hasEvent("MouseEnter")) {
-                this.element.onmouseenter = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4);
-            }
-            ;
+            //if (this.HasEvent("MouseEnter"))
+            //{
+            //    this.Element.OnMouseEnter = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseenter",
+            //            Value = e
+            //        });
+            //    };
+            //};
     
-            if (this.hasEvent("MouseLeave")) {
-                this.element.onmouseleave = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f5);
-            }
-            ;
+            //if (this.HasEvent("MouseLeave"))
+            //{
+            //    this.Element.OnMouseLeave = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseleave",
+            //            Value = e
+            //        });
+            //    };
+            //};
     
-            if (this.hasEvent("TextChanged")) {
-                this.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f5);
-            }
+            //if (this.HasEvent("TextChanged"))
+            //{
+            //    this.Element.OnChange = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "mouseleave",
+            //            Value = e
+            //        });
+            //    };
+            //}
         },
         fireEvent: function (evt) {
             var $step = 0,
@@ -672,6 +805,10 @@
                             var tv = Bridge.merge(new System.Windows.Forms.TreeView(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = tv;
                             break;
+                        case "CheckedListBox": 
+                            var clb = Bridge.merge(new System.Windows.Forms.CheckedListBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = clb;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -734,189 +871,16 @@
             $asyncBody();
             return $tcs.task;
         },
-        reAlignControls: function (parent, current) {
-            var $t, $t1, $t2, $t3;
-            var childControls = parent.getControls();
-    
-            var top = 0;
-            var left = 0;
-            var bottom = 0;
-            var right = 0;
-    
-            switch (current.getDock()) {
-                case System.Windows.Forms.DockStyle.left: 
-                    {
-                        left = $(current.element).width();
-                        $t = Bridge.getEnumerator(childControls);
-                        while ($t.moveNext()) {
-                            var child = $t.getCurrent();
-                            if (child.getClientId() === current.getClientId()) {
-                                break;
-                            }
-                            switch (child.getDock()) {
-                                case System.Windows.Forms.DockStyle.left: 
-                                    {
-                                        var item = $(child.element);
-                                        var ctrlWidth = item.width();
-                                        item.css("left", (($(current.element).position().left + ctrlWidth) | 0));
-                                    }
-                                    break;
-                                case System.Windows.Forms.DockStyle.top: 
-                                case System.Windows.Forms.DockStyle.bottom: 
-                                case System.Windows.Forms.DockStyle.fill: 
-                                    {
-                                        var item1 = $(child.element);
-                                        var ctrlWidth1 = item1.width();
-                                        var ctrlLeft = item1.position().left;
-                                        item1.css("left", ((ctrlLeft + left) | 0));
-                                        item1.css("width", ((ctrlWidth1 - left) | 0));
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                case System.Windows.Forms.DockStyle.right: 
-                    {
-                        right = $(current.element).width();
-                        $t1 = Bridge.getEnumerator(childControls);
-                        while ($t1.moveNext()) {
-                            var child1 = $t1.getCurrent();
-                            if (child1.getClientId() === current.getClientId()) {
-                                break;
-                            }
-                            switch (child1.getDock()) {
-                                case System.Windows.Forms.DockStyle.right: 
-                                    {
-                                        var item2 = $(child1.element);
-                                        var ctrlWidth2 = item2.width();
-                                        item2.css("left", (($(current.element).position().left - ctrlWidth2) | 0));
-                                    }
-                                    break;
-                                case System.Windows.Forms.DockStyle.top: 
-                                case System.Windows.Forms.DockStyle.bottom: 
-                                case System.Windows.Forms.DockStyle.fill: 
-                                    {
-                                        var item3 = $(child1.element);
-                                        var ctrlWidth3 = item3.width();
-    
-                                        item3.css("width", ((ctrlWidth3 - right) | 0));
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                case System.Windows.Forms.DockStyle.top: 
-                    {
-                        top = $(current.element).height();
-                        $t2 = Bridge.getEnumerator(childControls);
-                        while ($t2.moveNext()) {
-                            var child2 = $t2.getCurrent();
-                            if (child2.getClientId() === current.getClientId()) {
-                                break;
-                            }
-                            switch (child2.getDock()) {
-                                case System.Windows.Forms.DockStyle.top: 
-                                    {
-                                        var item4 = $(child2.element);
-                                        var ctrlTop = item4.position().top;
-                                        item4.css("top", ((ctrlTop + top) | 0));
-                                    }
-                                    break;
-                                case System.Windows.Forms.DockStyle.left: 
-                                case System.Windows.Forms.DockStyle.right: 
-                                case System.Windows.Forms.DockStyle.fill: 
-                                    {
-                                        var item5 = $(child2.element);
-                                        var ctrlTop1 = item5.position().top;
-    
-                                        var ctrlHeight = item5.height();
-                                        item5.css("top", ((ctrlTop1 + top) | 0));
-                                        item5.css("height", ((ctrlHeight - top) | 0));
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-                case System.Windows.Forms.DockStyle.bottom: 
-                    {
-                        bottom = $(current.element).height();
-                        $t3 = Bridge.getEnumerator(childControls);
-                        while ($t3.moveNext()) {
-                            var child3 = $t3.getCurrent();
-                            if (child3.getClientId() === current.getClientId()) {
-                                break;
-                            }
-                            switch (child3.getDock()) {
-                                case System.Windows.Forms.DockStyle.right: 
-                                case System.Windows.Forms.DockStyle.fill: 
-                                case System.Windows.Forms.DockStyle.left: 
-                                    {
-                                        var item6 = $(child3.element);
-                                        item6.css("height", ((item6.height() - bottom) | 0));
-                                    }
-                                    break;
-                                case System.Windows.Forms.DockStyle.bottom: 
-                                    {
-                                        var item7 = $(child3.element);
-                                        var ctrlTop2 = child3.element.offsetTop;
-                                        item7.css("top", ((ctrlTop2 - bottom) | 0));
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-            }
-    
-        },
         getInt: function (px) {
             if (Bridge.String.endsWith(px, "px")) {
                 px = px.substr(0, ((px.length - 2) | 0));
             }
             return Bridge.Int.parseInt(px, -2147483648, 2147483647);
-        }
-    });
-    
-    var $_ = {};
-    
-    Bridge.ns("System.Windows.Forms.Control", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.Control, {
-        f1: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "textchanged",
-                value: this.label.element.innerHTML
-            } ));
         },
-        f2: function (e) {
+        onClick: function () {
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
                 eventType: "click"
-            } ));
-        },
-        f3: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "mousemove",
-                value: e
-            } ));
-        },
-        f4: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "mouseenter",
-                value: e
-            } ));
-        },
-        f5: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "mouseleave",
-                value: e
             } ));
         }
     });
@@ -934,6 +898,11 @@
     
     Bridge.define('System.Windows.Forms.ButtonBase', {
         inherits: [System.Windows.Forms.Control]
+    });
+    
+    Bridge.define('System.Windows.Forms.ListControl', {
+        inherits: [System.Windows.Forms.Control],
+        items: null
     });
     
     Bridge.define('System.Windows.Forms.ColumnHeader', {
@@ -984,12 +953,19 @@
         items: null,
         cb: null,
         selectedIndex: 0,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.form.ComboBox();
+        },
         render: function () {
-            if (!Bridge.hasValue(this.cb)) {
-                this.cb = document.createElement('input');
-                this.cb.id = "CB_" + this.getClientId();
-                this.element.appendChild(this.cb);
-            }
+            var $t;
+            //if (this.cb == null)
+            //{
+            //    this.cb = new Bridge.Html5.InputElement();
+            //    this.cb.Id = "CB_" + this.ClientId;
+            //    this.Element.AppendChild(this.cb);
+            //}
     
             //        for (var i = 0; i < obj.Items.length; i++)
             //        {
@@ -1017,33 +993,38 @@
             //    }
             //});
     
-            var arr = Bridge.Array.init(this.items.length, null);
+            //ListItem[] arr = new ListItem[Items.Length];
     
-            for (var i = 0; i < this.items.length; i = (i + 1) | 0) {
-                arr[i] = Bridge.merge(new System.Windows.Forms.ComboBox.ListItem(), {
-                    text: this.items[i],
-                    value: i
-                } );
-            }
+            //for (int i = 0; i < Items.Length; i++)
+            //{
+            //    arr[i] = new ListItem()
+            //    {
+            //        Text = Items[i],
+            //        Value = i
+            //    };
+            //}
     
-            var kb = $(this.cb).kendoComboBox({ dataTextField:"text", dataValueField:"value", filter:"contains", suggest:true, dataSource:arr, change: Bridge.fn.bind(this, $_.System.Windows.Forms.ComboBox.f1), index:this.selectedIndex });
+            //var kb = KendoComboBox.Element(this.cb, "text", "value", "contains", true, arr, (e) =>
+            //{
+            //    var cmd = e.ToDynamic();
+            //    this.SelectedIndex = cmd.sender.selectedIndex;
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "selectedIndexChanged",
+            //        Value = cmd.sender.selectedIndex
+            //    });
+            //}, this.SelectedIndex);
     
             System.Windows.Forms.Control.prototype.render.call(this);
-    
-        }
-    });
-    
-    Bridge.ns("System.Windows.Forms.ComboBox", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.ComboBox, {
-        f1: function (e) {
-            var cmd = e;
-            this.selectedIndex = cmd.sender.selectedIndex;
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "selectedIndexChanged",
-                value: cmd.sender.selectedIndex
-            } ));
+            var cb = Bridge.cast(this.element, qx.ui.form.ComboBox);
+            cb.setValue(this.getText());
+            //cb.TextField.Value = this.Text;
+            $t = Bridge.getEnumerator(this.items);
+            while ($t.moveNext()) {
+                var obj = $t.getCurrent();
+                cb.add(new qx.ui.form.ListItem(obj.toString()),null);
+            }
         }
     });
     
@@ -1091,45 +1072,52 @@
     
     Bridge.define('System.Windows.Forms.DateTimePicker', {
         inherits: [System.Windows.Forms.Control],
-        dtp: null,
-        config: {
-            init: function () {
-                this.value = new Date(-864e13);
-            }
-        },
+        mValue: null,
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            this.value = new Date();
+            //this.Value = DateTime.Now;
+            this.element = new qx.ui.form.DateField();
+        },
+        getValue: function () {
+            return this.mValue;
+        },
+        setValue: function (value) {
+            var val = value;
+            this.mValue = new Date(val);
         },
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
     
-            if (!Bridge.hasValue(this.dtp)) {
-                this.dtp = document.createElement('input');
-                this.element.appendChild(this.dtp);
-            }
-            this.dtp.value = this.value;
+            var dtp = Bridge.cast(this.element, qx.ui.form.DateField);
+            dtp.setValue(this.mValue);
     
-            $(this.dtp).kendoDatePicker({ change: Bridge.fn.bind(this, $_.System.Windows.Forms.DateTimePicker.f1), value: this.value });
-        }
-    });
+            //if( dtp == null )
+            //{
+            //    dtp = new Bridge.Html5.InputElement();
+            //    this.Element.AppendChild(dtp);
+            //}
+            //dtp.Value = (dynamic)this.Value;
     
-    Bridge.ns("System.Windows.Forms.DateTimePicker", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.DateTimePicker, {
-        f1: function (e) {
-            this.value = e.sender.value();
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "valueChanged",
-                value: this.value
-            } ));
+            //KendoDatePicker.Element(dtp, (e) =>
+            //{
+            //    Value = e.ToDynamic().sender.value();
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "valueChanged",
+            //        Value = this.Value
+            //    });
+            //}, this.Value);
         }
     });
     
     Bridge.define('System.Windows.Forms.Form', {
         inherits: [System.Windows.Forms.Control],
+        backgroundImageData: null,
+        jWindow: null,
+        window: null,
+        startPosition: 0,
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
@@ -1137,11 +1125,142 @@
         },
         showDialog: function () {
             this.render();
+            //this.Window = new DivElement();
+            //this.Window.Id = "WI_" + this.ClientId;
+            //this.jWindow = jQuery.Element(this.Window);
+    
+            //if (!string.IsNullOrEmpty(this.BackgroundImageData))
+            //{
+            //    jWindow.Css("background-image", "url('data:image/png;base64," + this.BackgroundImageData + "')");
+            //}
+    
+            //this.Window.AppendChild(this.Element);
+    
+            //if (this.Parent == null)
+            //{
+            //    Document.Body.AppendChild(this.Window);
+    
+            //    this.Element.Style.Width = "100%";
+            //    this.Element.Style.Height = "100%";
+            //    this.Window.Style.Width = "100%";
+            //    this.Window.Style.Height = "100%";
+    
+            //    this.Render();
+            //}
+            //else
+            //{
+            //    Parent.Element.AppendChild(this.Window);
+    
+            //    this.Element.Style.Width = this.ClientSize.Width - 10 + "px";
+    
+            //    var data = this.jWindow.Data("kendoWindow");
+            //    if (data == null)
+            //    {
+            //        var loc = this.Location;
+    
+            //        switch (this.StartPosition)
+            //        {
+            //            case FormStartPosition.CenterScreen:
+            //            case FormStartPosition.CenterParent:
+            //                {
+            //                    var w = GetWidth();
+            //                    var h = GetHeight();
+            //                    loc.Y = h / 2 - (this.ClientSize.Height) / 2;
+            //                    loc.X = w / 2 - (this.ClientSize.Width) / 2;
+            //                }
+            //                break;
+            //        }
+    
+            //        KendoWindow options = new KendoWindow();
+            //        options.Width = this.ClientSize.Width;
+            //        options.Height = this.ClientSize.Height;
+            //        options.Title = this.Text;
+            //        options.Actions = new string[]
+            //        {
+            //            "Minimize",
+            //            "Maximize",
+            //            "Close"
+            //        };
+            //        options.Position.Left = loc.X + "px";
+            //        options.Position.Top = loc.Y + "px";
+    
+            //        var kendoWin = KendoWindow.Element(this.Window, options);
+    
+            //        this.Window.Style.BackgroundColor = this.BackColor;
+            //        this.Window.Style.Overflow = Overflow.Hidden;
+    
+            //        foreach (var ctrl in this.GetControls())
+            //        {
+            //            ctrl.Render();
+            //        }
+    
+            //        var width = size[0] + 'px';
+            //        var height = size[1] + 'px';
+            //        window.kendoWindow({
+            //        width: width,
+            //                        height: height,
+            //                        title: obj.Text,
+            //                        actions: [
+            //                            "Minimize",
+            //                            "Maximize",
+            //                            "Close"
+            //                        ],
+            //                        position:
+            //            {
+            //            left: loc[0] + 'px',
+            //                            top: loc[1] + 'px'
+            //                        },
+            //                        close: onClose,
+            //                        resize: onResize,
+            //                    });
+    
+            //        window[0].style.overflow = 'hidden';
+            //        window[0].style.backgroundColor = obj.BackColor;
+            //    }
+    
+            //var undoButton = (ButtonElement)Document.GetElementById("#undo");
+            //undoButton.OnClick = (e) =>
+            //{
+            //    KendoWindow win = (KendoWindow)this.jWindow.Data("kendoWindow");
+            //    win.Open();
+            //    undoButton.Style.Visibility = Visibility.Hidden;
+            //};
+    
+            //var window = $(this.Window),
+            //var undo = jQuery.Element("#undo");
+            //undo.Click = (e) =>
+            //{
+    
+            //};
+            //undo = $("#undo")
+            //        .bind("click", function() {
+            //    window.data("kendoWindow").open();
+            //    undo.hide();
+            //});
+    
+            //var onClose = function(e) {
+            //    if (this.element[0].Visible != undefined && !this.element[0].Visible)
+            //    {
+            //        this.destroy();
+            //        return;
+            //    }
+            //    var evt = {
+            //ClientId: this.element[0].id,
+            //EventType: 'FormClose'
+            //   };
+            //send(evt);
+    
+            //e.preventDefault();
+            //}
         }
     });
     
     Bridge.define('System.Windows.Forms.Panel', {
-        inherits: [System.Windows.Forms.Control]
+        inherits: [System.Windows.Forms.Control],
+        render: function () {
+            this.element = new qx.ui.container.Scroll();
+            System.Windows.Forms.Control.prototype.render.call(this);
+        }
     });
     
     Bridge.define('System.Windows.Forms.Label', {
@@ -1150,11 +1269,14 @@
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
-            this.element = document.createElement('span');
+            this.element = new qx.ui.basic.Label();
         },
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
-            this.setText$1(this.element);
+            var lbl = Bridge.cast(this.element, qx.ui.basic.Label);
+            lbl.setValue(this.getText());
+            lbl.setWidth(this.getWidth());
+            //SetText(this.Element);
         }
     });
     
@@ -1163,34 +1285,26 @@
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
     
-            $(this.element).css("cursor", "pointer");
+            //jQuery.Element(this.Element).Css("cursor", "pointer");
     
-            if (Bridge.String.isNullOrEmpty(this.font)) {
-                this.label.element.style.color = "blue";
-                this.label.element.style.textDecoration = "underline";
-            }
+            //if (string.IsNullOrEmpty(this.Font))
+            //{
+            //    this.Label.Element.Style.Color = "blue";
+            //    this.Label.Element.Style.TextDecoration = Bridge.Html5.TextDecoration.Underline;
+            //}
     
-            if (this.hasEvent("LinkClicked")) {
-                this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.LinkLabel.f1);
-            }
-            ;
+            //if (this.HasEvent("LinkClicked"))
+            //{
+            //    this.Element.OnClick = (e) =>
+            //    {
+            //        FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "linkClicked"
+            //        });
+            //    };
+            //};
         }
-    });
-    
-    Bridge.ns("System.Windows.Forms.LinkLabel", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.LinkLabel, {
-        f1: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "linkClicked"
-            } ));
-        }
-    });
-    
-    Bridge.define('System.Windows.Forms.ListControl', {
-        inherits: [System.Windows.Forms.Control],
-        items: null
     });
     
     Bridge.define('System.Windows.Forms.ListView', {
@@ -1210,26 +1324,35 @@
             this.renderLabel = false;
         },
         render: function () {
-            if (this.multiline) {
-                if (!Bridge.hasValue(this.textArea)) {
-                    this.textArea = document.createElement('textarea');
-                    this.element = this.textArea;
-                }
-                if (!Bridge.String.isNullOrEmpty(this.getText())) {
-                    this.textArea.value = this.getText();
-                }
-            }
-            else  {
-                if (!Bridge.hasValue(this.inputElement)) {
-                    this.inputElement = document.createElement('input');
-                    this.element = this.inputElement;
-                }
-                if (Bridge.hasValue(this.passwordChar) && this.passwordChar.length > 0 && this.passwordChar.charCodeAt(0) !== 0) {
-                    this.inputElement.type = "password";
-                }
-                this.inputElement.value = this.getText();
-            }
-            this.element.className = "k-textbox";
+            var tf = new qx.ui.form.TextField();
+            tf.setValue(this.getText());
+            this.element = tf;
+            //if (this.Multiline)
+            //{
+            //    if( this.textArea == null )
+            //    {
+            //        textArea = new TextAreaElement();
+            //        this.Element = textArea;
+            //    }
+            //    if( !string.IsNullOrEmpty(this.Text) )
+            //    {
+            //        textArea.Value = this.Text;
+            //    }
+            //}
+            //else
+            //{
+            //    if ( inputElement == null )
+            //    {
+            //        inputElement = new InputElement();
+            //        this.Element = inputElement;
+            //    }
+            //    if (this.PasswordChar != null && this.PasswordChar.Length > 0 && this.PasswordChar[0] != '\0')
+            //    {
+            //        inputElement.Type = InputType.Password;
+            //    }
+            //    inputElement.Value = this.Text;
+            //}
+            //this.Element.ClassName = "k-textbox";
     
             System.Windows.Forms.Control.prototype.render.call(this);
         }
@@ -1258,23 +1381,24 @@
                 return;
             }
     
-            var element = $(this.element);
-            element.css("background-image", "url('data:image/png;base64," + this.image + "')");
-            switch (this.sizeMode) {
-                case System.Windows.Forms.PictureBoxSizeMode.normal: 
-                    element.css("background-repeat", "no-repeat");
-                    break;
-                case System.Windows.Forms.PictureBoxSizeMode.autoSize: 
-                    break;
-                case System.Windows.Forms.PictureBoxSizeMode.centerImage: 
-                    element.css("background-repeat", "no-repeat");
-                    break;
-                case System.Windows.Forms.PictureBoxSizeMode.stretchImage: 
-                    element.css("background-size", "cover");
-                    break;
-                case System.Windows.Forms.PictureBoxSizeMode.zoom: 
-                    break;
-            }
+            //var element = jQuery.Element(this.Element);
+            //element.Css("background-image", "url('data:image/png;base64," + this.Image + "')");
+            //switch (this.SizeMode)
+            //{
+            //    case PictureBoxSizeMode.Normal:
+            //        element.Css("background-repeat", "no-repeat");
+            //        break;
+            //    case PictureBoxSizeMode.AutoSize:
+            //        break;
+            //    case PictureBoxSizeMode.CenterImage:
+            //        element.Css("background-repeat", "no-repeat");
+            //        break;
+            //    case PictureBoxSizeMode.StretchImage:
+            //        element.Css("background-size", "cover");
+            //        break;
+            //    case PictureBoxSizeMode.Zoom:
+            //        break;
+            //}
         }
     });
     
@@ -1288,15 +1412,15 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            this.element = document.createElement('textarea');
+            //this.Element = new Bridge.Html5.TextAreaElement();
         },
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
     
-            var area = Bridge.cast(this.element, HTMLTextAreaElement);
-            area.readOnly = this.readOnly;
-            area.value = this.getText();
-            area.style.overflowY = "auto";
+            //var area = (TextAreaElement)this.Element;
+            //area.ReadOnly = this.ReadOnly;
+            //area.Value = this.Text;
+            //area.Style.OverflowY = Bridge.Html5.Overflow.Auto;
         }
     });
     
@@ -1329,7 +1453,7 @@
     
             System.Windows.Forms.Control.prototype.render.call(this);
     
-            $(this.element).kendoSplitter({panes: [{ size: this.splitterDistance },]});
+            //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }
     });
     
@@ -1340,76 +1464,13 @@
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
-            this.element = document.createElement('div');
-        },
-        render: function () {
-            var $t, $t1;
-            this.setAttributes();
-            this.element.style.borderStyle = "none";
-            var ul = document.createElement('ul');
-            this.element.appendChild(ul);
-            var index = 0;
-            $t = Bridge.getEnumerator(this.getControls());
-            while ($t.moveNext()) {
-                var child = $t.getCurrent();
-                var tp = Bridge.as(child, System.Windows.Forms.TabPage);
-                if (Bridge.hasValue(tp)) {
-                    if (this.selectedIndex === index) {
-                        tp.setIsSelected(true);
-                    }
-                    tp.renderTabs(ul);
-                    index = (index + 1) | 0;
-                }
-            }
-    
-            $t1 = Bridge.getEnumerator(this.getControls());
-            while ($t1.moveNext()) {
-                var child1 = $t1.getCurrent();
-                child1.render();
-            }
-    
-            $(this.element).kendoTabStrip({animation:{open:{effects: 'none'}}});
-    
-            //int i = 0;
-            //foreach(var ctrl in this.GetControls())
-            //{
-            //    var li = new Bridge.Html5.LIElement();
-            //    if (i == this.SelectedIndex)
-            //    {
-            //        li.ClassName = "k-state-active";
-            //    }
-            //    i++;
-            //    ul.AppendChild(li);
-            //}
-            //this.Element.AppendChild(ul);
-            //        for (var i = 0; i < obj.Controls.length; i++)
-            //        {
-            //            var div = document.createElement('div');
-            //            var size = obj.Controls[i].Size.split(',');
-            //            div.style.height = size[1] + 'px';
-            //            var newElement = createNewElement(obj.Controls[i], div);
-            //            controls[obj.ClientId].children.push(newElement);
-            //            this.Element.appendChild(div);
-            //        }
-    
-            //$(this.Element).kendoTabStrip({
-            //            show: function(e) {
-            //                var selectedIndex = $(e.item).index();
-            //                var evt = {
-            //            ClientId: this.element[0].id,
-            //            EventType: 'selectedIndexChanged',
-            //            Value: selectedIndex
-            //               };
-            //            send(evt);
-            //        }
-            //    });
+            this.element = new qx.ui.tabview.TabView();
+            //this.Element = new Bridge.Html5.DivElement();
         }
     });
     
     Bridge.define('System.Windows.Forms.TabPage', {
         inherits: [System.Windows.Forms.Control],
-        isLoaded: false,
-        li: null,
         config: {
             properties: {
                 IsSelected: false
@@ -1418,37 +1479,26 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-    
+            this.element = new qx.ui.tabview.Page();
         },
         render: function () {
-            var $t;
-            this.element.style.width = (((this.getParent().getWidth() - 27) | 0)) + "px";
-            this.element.style.height = (((this.getParent().getHeight() - 35) | 0)) + "px";
-            this.element.style.position = "relative";
-            if (!this.isLoaded) {
-                this.getParent().element.appendChild(this.element);
-                this.isLoaded = true;
-            }
+            System.Windows.Forms.Control.prototype.render.call(this);
     
-            $t = Bridge.getEnumerator(this.getControls());
-            while ($t.moveNext()) {
-                var ctrl = $t.getCurrent();
-                ctrl.render();
-            }
-        },
-        renderTabs: function (parent) {
-            if (!Bridge.hasValue(this.li)) {
-                this.li = document.createElement('li');
-                this.li.id = "LI_" + this.getClientId();
-                parent.appendChild(this.li);
-            }
-            this.li.innerHTML = this.getText();
-            if (this.getIsSelected()) {
-                this.li.className = "k-state-active";
-            }
-            else  {
-                this.li.className = "";
-            }
+            var page = Bridge.cast(this.element, qx.ui.tabview.Page);
+            page.setLabel(this.getText());
+            //this.Element.Style.Width = (this.Parent.Width - 27) + "px";
+            //this.Element.Style.Height = (this.Parent.Height - 35) + "px";
+            //this.Element.Style.Position = Bridge.Html5.Position.Relative;
+            //if(!IsLoaded)
+            //{
+            //    this.Parent.Element.AppendChild(this.Element);
+            //    IsLoaded = true;
+            //}
+    
+            //foreach (var ctrl in this.GetControls())
+            //{
+            //    ctrl.Render();
+            //}
         }
     });
     
@@ -1472,20 +1522,20 @@
             this.mNodes = Bridge.merge(new Array(), JSON.parse(JSON.stringify(value)));
         },
         render: function () {
-            this.element.style.overflow = "auto";
-            this.treeElement = document.createElement('div');
-            this.treeElement.id = "TR_" + this.getClientId();
+            //this.Element.Style.Overflow = Bridge.Html5.Overflow.Auto;
+            //this.TreeElement = new DivElement();
+            //this.TreeElement.Id = "TR_" + this.ClientId;
     
             this.renderNode(this.treeElement, null);
     
     
             System.Windows.Forms.Control.prototype.render.call(this);
     
-            this.element.appendChild(this.treeElement);
-            this.element.style.borderStyle = "solid";
-            this.element.style.borderWidth = "thin";
-            this.element.style.borderColor = "gray";
-            this.fancyTree = $(this.treeElement).fancytree();
+            //this.Element.AppendChild(this.TreeElement);
+            //this.Element.Style.BorderStyle = BorderStyle.Solid;
+            //this.Element.Style.BorderWidth = BorderWidth.Thin;
+            //this.Element.Style.BorderColor = "gray";
+            //this.FancyTree = Fancytree.Element(this.TreeElement);
         },
         renderNode: function (parent, parentNode) {
             var ul = document.createElement('ul');
@@ -1524,12 +1574,30 @@
         constructor: function () {
             System.Windows.Forms.ButtonBase.prototype.$constructor.call(this);
     
-            this.element = document.createElement('button');
+            this.element = new qx.ui.form.Button();
         },
         render: function () {
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
     
-            $(this.element).kendoButton();
+            (Bridge.cast(this.element, qx.ui.form.Button)).setLabel(this.getText());
+            this.element.addListener("execute", Bridge.fn.bind(this, $_.System.Windows.Forms.Button.f1));
+    
+            //this.Parent.Element.Add(this.Element, new qx.html.Options()
+            //{
+            //    Left = this.Location.X,
+            //    Top = this.Location.Y
+            //});
+            //KendoButton.Element(this.Element);
+        }
+    });
+    
+    var $_ = {};
+    
+    Bridge.ns("System.Windows.Forms.Button", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.Button, {
+        f1: function (e) {
+            this.onClick();
         }
     });
     
@@ -1541,49 +1609,62 @@
                 Checked: false
             }
         },
+        constructor: function () {
+            System.Windows.Forms.ButtonBase.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.form.CheckBox();
+        },
         render: function () {
-            var elm = $(this.element);
-    
-            elm.css("cursor", "pointer");
-    
-            if (!Bridge.hasValue(this.rb)) {
-                this.rb = document.createElement('input');
-                this.element.appendChild(this.rb);
-            }
-            this.rb.id = "RB_" + this.getClientId();
-            this.rb.type = "checkbox";
-            this.rb.name = this.getParent().getClientId() + "rb_group";
-            this.rb.checked = this.getChecked();
-    
-            this.rb.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.CheckBox.f1);
-    
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
+            var cb = Bridge.cast(this.element, qx.ui.form.CheckBox);
+            cb.setLabel(this.getText());
+            cb.setValue(this.getChecked());
     
-            this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.CheckBox.f2);
+            //var elm = jQuery.Element(this.Element);
+    
+            //elm.Css("cursor", "pointer");
+    
+            //if (rb == null)
+            //{
+            //    rb = new Bridge.Html5.InputElement();
+            //    this.Element.AppendChild(rb);
+            //}
+            //rb.Id = "RB_" + this.ClientId;
+            //rb.Type = InputType.Checkbox;
+            //rb.Name = this.Parent.ClientId + "rb_group";
+            //rb.Checked = this.Checked;
+    
+            //rb.OnChange = (e) =>
+            //{
+            //    this.Checked = rb.Checked;
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "checkChanged",
+            //        Value = rb.Checked
+            //    });
+            //};
+    
+            //base.Render();
+    
+            //this.Element.OnClick = (e) =>
+            //{
+            //    rb.Checked = !rb.Checked;
+            //    if (this.HasEvent("Click"))
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "click"
+            //        });
+            //    }
+            //};
     
         }
     });
     
-    Bridge.ns("System.Windows.Forms.CheckBox", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.CheckBox, {
-        f1: function (e) {
-            this.setChecked(this.rb.checked);
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "checkChanged",
-                value: this.rb.checked
-            } ));
-        },
-        f2: function (e) {
-            this.rb.checked = !this.rb.checked;
-            if (this.hasEvent("Click")) {
-                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                    clientId: this.getClientId(),
-                    eventType: "click"
-                } ));
-            }
-        }
+    Bridge.define('System.Windows.Forms.ListBox', {
+        inherits: [System.Windows.Forms.ListControl]
     });
     
     Bridge.define('System.Windows.Forms.GroupBox', {
@@ -1595,41 +1676,35 @@
         },
         render: function () {
             System.Windows.Forms.Panel.prototype.render.call(this);
-            this.element.style.borderStyle = "solid";
-            this.element.style.borderWidth = "thin";
-            this.element.style.borderColor = "gray";
+            //this.Element.Style.BorderStyle = Bridge.Html5.BorderStyle.Solid;
+            //this.Element.Style.BorderWidth = Bridge.Html5.BorderWidth.Thin;
+            //this.Element.Style.BorderColor = "gray";
     
-            if (!Bridge.hasValue(this.label)) {
-                this.label = new System.Windows.Forms.Label();
-                this.element.appendChild(this.label.element);
-            }
-            this.label.element.style.top = "-6px";
-            this.label.element.style.left = "10px";
-            this.label.element.style.paddingLeft = "2px";
-            this.label.element.style.paddingRight = "2px";
-            this.label.element.style.backgroundColor = "white";
-            this.label.element.style.position = "relative";
-            this.setText$1(this.label.element);
-            if (this.hasEvent("TextChanged")) {
-                this.label.element.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.GroupBox.f1);
-            }
+            //if( this.Label == null )
+            //{
+            //    this.Label = new Label();
+            //    this.Element.AppendChild(this.Label.Element);
+            //}
+            //this.Label.Element.Style.Top = "-6px";
+            //this.Label.Element.Style.Left = "10px";
+            //this.Label.Element.Style.PaddingLeft = "2px";
+            //this.Label.Element.Style.PaddingRight = "2px";
+            //this.Label.Element.Style.BackgroundColor = "white";
+            //this.Label.Element.Style.Position = Bridge.Html5.Position.Relative;
+            //SetText(this.Label.Element);
+            //if (this.HasEvent("TextChanged"))
+            //{
+            //    this.Label.Element.OnChange = (e) =>
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "textchanged",
+            //            Value = this.Label.Element.InnerHTML
+            //        });
+            //    };
+            //}
         }
-    });
-    
-    Bridge.ns("System.Windows.Forms.GroupBox", $_)
-    
-    Bridge.apply($_.System.Windows.Forms.GroupBox, {
-        f1: function (e) {
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "textchanged",
-                value: this.label.element.innerHTML
-            } ));
-        }
-    });
-    
-    Bridge.define('System.Windows.Forms.ListBox', {
-        inherits: [System.Windows.Forms.ListControl]
     });
     
     Bridge.define('System.Windows.Forms.MaskedTextBox', {
@@ -1637,7 +1712,7 @@
         mask: null,
         render: function () {
             System.Windows.Forms.TextBox.prototype.render.call(this);
-            $(this.element).kendoMaskedTextBox({mask:this.mask});
+            //KendoMaskedTextBox.Element(this.Element, this.Mask);
         }
     });
     
@@ -1649,50 +1724,60 @@
                 Checked: false
             }
         },
+        constructor: function () {
+            System.Windows.Forms.ButtonBase.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.form.RadioButton();
+        },
         render: function () {
-            var elm = $(this.element);
-    
-            elm.css("cursor", "pointer");
-    
-            if (!Bridge.hasValue(this.rb)) {
-                this.rb = document.createElement('input');
-                this.element.appendChild(this.rb);
-            }
-            this.rb.id = "RB_" + this.getClientId();
-            this.rb.type = "radio";
-            this.rb.name = this.getParent().getClientId() + "rb_group";
-            this.rb.checked = this.getChecked();
-    
-            this.rb.onchange = Bridge.fn.bind(this, $_.System.Windows.Forms.RadioButton.f1);
-    
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
     
-            this.element.onclick = Bridge.fn.bind(this, $_.System.Windows.Forms.RadioButton.f2);
-        }
-    });
+            var rb = Bridge.cast(this.element, qx.ui.form.RadioButton);
+            rb.setLabel(this.getText());
+            rb.setValue(this.getChecked());
+            //var elm = jQuery.Element(this.Element);
     
-    Bridge.ns("System.Windows.Forms.RadioButton", $_)
+            //elm.Css("cursor", "pointer");
     
-    Bridge.apply($_.System.Windows.Forms.RadioButton, {
-        f1: function (e) {
-            this.setChecked(this.rb.checked);
-            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                clientId: this.getClientId(),
-                eventType: "checkChanged",
-                value: this.rb.checked
-            } ));
-        },
-        f2: function (e) {
-            if (!this.rb.checked) {
-                this.rb.checked = true;
-            }
+            //if(rb == null)
+            //{
+            //    rb = new Bridge.Html5.InputElement();
+            //    this.Element.AppendChild(rb);
+            //}
+            //rb.Id = "RB_" + this.ClientId;
+            //rb.Type = InputType.Radio;
+            //rb.Name = this.Parent.ClientId + "rb_group";
+            //rb.Checked = this.Checked;
     
-            if (this.hasEvent("Click")) {
-                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
-                    clientId: this.getClientId(),
-                    eventType: "click"
-                } ));
-            }
+            //rb.OnChange = (e) =>
+            //{
+            //    this.Checked = rb.Checked;
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "checkChanged",
+            //        Value = rb.Checked
+            //    });
+            //};
+    
+            //base.Render();
+    
+            //this.Element.OnClick = (e) =>
+            //{
+            //    if( !rb.Checked )
+            //    {
+            //        rb.Checked = true;
+            //    }
+    
+            //    if (this.HasEvent("Click"))
+            //    {
+            //        this.FireEvent(new WSEventArgs()
+            //        {
+            //            ClientId = this.ClientId,
+            //            EventType = "click"
+            //        });
+            //    }
+            //};
         }
     });
     
@@ -1704,6 +1789,63 @@
         inherits: [System.Windows.Forms.ToolStripLabel],
         getControlName: function () {
             return "ToolStripStatusLabel";
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.CheckedListBox', {
+        inherits: [System.Windows.Forms.ListBox],
+        constructor: function () {
+            System.Windows.Forms.ListBox.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.form.List();
+        },
+        render: function () {
+            System.Windows.Forms.ListBox.prototype.render.call(this);
+    
+            var list = Bridge.cast(this.element, qx.ui.form.List);
+    
+            //var rawData = JSON.Stringify(this.Items);
+            //var arrayWrapper = qx.data.marshal.Json.CreateModel(rawData);
+    
+            //var listController = new qx.data.controller.List(arrayWrapper, list, "name");
+    
+            //foreach (var item in Items)
+            //{
+            //    list.Add(new qx.ui.form.CheckBox(item.ToString()));
+            //}
+            var rawData = (Bridge.Linq.Enumerable.from(this.items).select($_.System.Windows.Forms.CheckedListBox.f1)).toArray();
+    
+            var data = new qx.data.Array(rawData);
+            var controller = new qx.data.controller.List(null, list);
+    
+            // create the delegate to change the bindings
+            var del = { configureItem: $_.System.Windows.Forms.CheckedListBox.f2, createItem: $_.System.Windows.Forms.CheckedListBox.f3, bindItem: $_.System.Windows.Forms.CheckedListBox.f4 };
+            controller.setDelegate(del);
+    
+            controller.setModel(data);
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.CheckedListBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.CheckedListBox, {
+        f1: function (i) {
+            return Bridge.merge(new System.Windows.Forms.CheckedListBox.CheckedItem(), {
+                setName: i.toString(),
+                setChecked: false
+            } );
+        },
+        f2: function (item) {
+            item.setPadding(3);
+        },
+        f3: function () {
+            return new qx.ui.form.CheckBox();
+        },
+        f4: function (ctrl, item, id) {
+            ctrl.bindProperty("", "model", null, item, id);
+            ctrl.bindProperty("name", "label", null, item, id);
+            ctrl.bindProperty("checked", "value", null, item, id);
+            ctrl.bindPropertyReverse("checked", "value", null, item, id);
         }
     });
     

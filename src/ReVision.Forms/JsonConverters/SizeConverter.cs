@@ -12,7 +12,7 @@ namespace ReVision.Forms.JsonConverters
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Point);
+            return objectType == typeof(Size);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
