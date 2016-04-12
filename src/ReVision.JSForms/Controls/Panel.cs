@@ -10,7 +10,7 @@ namespace System.Windows.Forms
     {
         public override void Render()
         {
-            this.Element = new qx.ui.container.Scroll();
+            this.Element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
             base.Render();
         }
     }

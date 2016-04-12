@@ -18,6 +18,12 @@ namespace System.Windows.Forms
             this.Element = new qx.ui.tabview.TabView();
             //this.Element = new Bridge.Html5.DivElement();
         }
+
+        public override void Render()
+        {
+            this.Location.Y -= 22;
+            base.Render();
+        }
     }
 
     public class KendoTabStrip

@@ -25,6 +25,22 @@ namespace qx.core
     {
         public int Left;
         public int Top;
+        public int Bottom;
+        public int Right;
+        [InlineConst]
+        public Edges Edge;
+        public int Flex;
+    }
+
+    [Namespace(false)]
+    [Enum(Emit.StringName)]
+    public enum Edges
+    {
+        North,
+        West,
+        South,
+        East,
+        Center
     }
 
     [External]

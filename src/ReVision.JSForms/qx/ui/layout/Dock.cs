@@ -1,16 +1,14 @@
 ﻿using Bridge;
-using Bridge.Html5;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace qx.html
+namespace qx.ui.layout
 {
     [External]
-    public class Element : qx.core.Object
+    public class Dock : Abstract
     {
-        public extern Bridge.Html5.Element GetDomElement();
-    }    
+    }
 }

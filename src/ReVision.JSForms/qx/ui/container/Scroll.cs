@@ -9,5 +9,9 @@ namespace qx.ui.container
     [Bridge.External]
     public class Scroll : core.scroll.AbstractScroll
     {
+        public Scroll(qx.core.Object item)
+        {
+            return;
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace System.Windows.Forms
         public ImageLayout BackgroundImageLayout;
         public Control Parent { get; set; }
         public string ParentId { get; set; }
+        private qx.ui.container.Composite DockPanel;
         private Padding mPadding;
         public Padding Padding
         {
@@ -122,18 +123,166 @@ namespace System.Windows.Forms
             {
                 parentElement = this.Parent.Element;
 
-                parentElement.Add(this.Element, new qx.core.Options()
+                qx.ui.core.LayoutItem li = null;
+                if (this.Element is qx.ui.core.LayoutItem)
                 {
-                    Left = this.Location.X,
-                    Top = this.Location.Y
-                });
+                    li = (qx.ui.core.LayoutItem)this.Element;
+                }
+
+                switch (this.Dock)
+                {
+                    case DockStyle.None:
+                    case DockStyle.Fill:
+                        parentElement.Add(this.Element, new qx.core.Options()
+                        {
+                            Left = this.Location.X,
+                            Top = this.Location.Y
+                        });
+                        li.Width = this.Width;
+                        li.Height = this.Height;
+                        break;
+                    case DockStyle.Left:
+                        {
+                            CreateDockPanel(parentElement);
+
+                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout.Width = this.Width;
+                            layout.BackgroundColor = this.BackColor;
+                            layout.Add(this.Element);
+
+                            DockPanel.Add(layout, new qx.core.Options()
+                            {
+                                Edge = qx.core.Edges.West,
+                            });
+                            li.Width = this.Width;
+                        }
+                        break;
+                    case DockStyle.Right:
+                        {
+                            CreateDockPanel(parentElement);
+
+                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout.Width = this.Width;
+                            layout.BackgroundColor = this.BackColor;
+                            layout.Add(this.Element);
+
+                            DockPanel.Add(layout, new qx.core.Options()
+                            {
+                                Edge = qx.core.Edges.East,
+                            });
+                            li.Width = this.Width;
+                        }
+                        break;
+                    case DockStyle.Top:
+                        {
+                            CreateDockPanel(parentElement);
+                            //var w1 = new qx.ui.core.Widget();
+                            //w1.BackgroundColor = this.BackColor;//.Add(this.Element);
+                            //w1.Height = this.Height;
+
+                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout.Height = this.Height;
+                            layout.BackgroundColor = this.BackColor;
+                            layout.Add(this.Element);
+
+                            DockPanel.Add(layout, new qx.core.Options()
+                            {
+                                Edge = qx.core.Edges.North,
+                            });
+                            //w1.Add(layout);
+                            li.Height = this.Height;
+                        }
+                        break;
+                    case DockStyle.Bottom:
+                        {
+                            CreateDockPanel(parentElement);
+
+                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout.Height = this.Height;
+                            layout.BackgroundColor = this.BackColor;
+                            layout.Add(this.Element);
+
+                            DockPanel.Add(layout, new qx.core.Options()
+                            {
+                                Edge = qx.core.Edges.South,
+                            });
+                            li.Height = this.Height;
+                        }
+                        break;
+                    //case DockStyle.Fill:
+                    //    {
+                    //        //CreateDockPanel(parentElement);
+
+                    //        var ctrls = this.Parent.GetControls().ToArray();
+                    //        int left = 0, right = 0, top = 0, bottom = 0;
+
+                    //        for (int i=0; i < ctrls.Length; i++)
+                    //        {
+                    //            var ctrl = ctrls[0];
+                    //            if( ctrl == this )
+                    //            {
+                    //                break;
+                    //            }
+                    //            switch(ctrl.Dock)
+                    //            {
+                    //                case DockStyle.Left:
+                    //                    left += ctrl.Width;
+                    //                    break;
+                    //                case DockStyle.Right:
+                    //                    right += ctrl.Width;
+                    //                    break;
+                    //                case DockStyle.Top:
+                    //                    top += ctrl.Height;
+                    //                    break;
+                    //                case DockStyle.Bottom:
+                    //                    bottom += ctrl.Height;
+                    //                    break;
+                    //            }
+                    //        }
+
+                    //        var newLeft = this.Left + left;
+                    //        var newTop = this.Top + top;
+
+                    //        var newWidth = this.Width - newLeft - right;
+                    //        var newHeight = this.Height - newTop - bottom;
+
+                    //        li.Width = newWidth;
+                    //        li.Height = newHeight;
+
+                    //        parentElement.Add(this.Element, new qx.core.Options()
+                    //        {
+                    //            Left = newLeft,
+                    //            Top = newTop
+                    //        });
+
+                    //        //var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                    //        //layout.BackgroundColor = "green";
+                    //        ////layout.Add(this.Element);
+
+                    //        //DockPanel.Add(layout, new qx.core.Options()
+                    //        //{
+                    //        //    Edge = qx.core.Edges.Center,                             
+                    //        //});
+                    //    }
+                    //    break;
+                }
+
             }
 
-            if (this.Element is qx.ui.core.LayoutItem)
+            switch (this.Dock)
             {
-                var li = (qx.ui.core.LayoutItem)this.Element;
-                li.Width = this.Width;
-                li.Height = this.Height;
+                case DockStyle.Fill:
+                    break;
+                default:
+                    {
+                        if (this.Element is qx.ui.core.LayoutItem)
+                        {
+                            var li = (qx.ui.core.LayoutItem)this.Element;
+                            li.Width = this.Width;
+                            li.Height = this.Height;
+                        }
+                    }
+                    break;
             }
 
             if (this.Element is qx.ui.core.Widget)
@@ -305,6 +454,26 @@ namespace System.Windows.Forms
             //            break;
             //    }
             //}
+        }
+
+        private void CreateDockPanel(qx.core.Object parentElement)
+        {
+            if (DockPanel == null)
+            {
+                DockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
+                //DockPanel.AllowStretchX = true;
+                //DockPanel.AllowStretchY = true;
+                //DockPanel.AllowGrowY = true;
+                //DockPanel.AllowGrowX = true;
+                //var pl = ((qx.html.Element)parentElement);
+                //var element = pl.GetDomElement();
+                //DockPanel.Width = element.ClientWidth;
+                //DockPanel.Height = element.ClientHeight;
+                parentElement.Add(DockPanel, new qx.core.Options()
+                {
+                    Edge = 0                
+                });
+            }
         }
 
         public virtual void Render()

@@ -122,6 +122,8 @@
     <Compile Include="qx\ui\form\ToogleButton.cs" />
     <Compile Include="qx\ui\layout\Abstract.cs" />
     <Compile Include="qx\ui\layout\Basic.cs" />
+    <Compile Include="qx\ui\layout\Canvas.cs" />
+    <Compile Include="qx\ui\layout\Dock.cs" />
     <Compile Include="qx\ui\tabview\Page.cs" />
     <Compile Include="qx\ui\tabview\TabView.cs" />
     <Compile Include="Shared\ColumnHeader.cs" />

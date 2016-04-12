@@ -261,6 +261,7 @@
         foreColor: null,
         font: null,
         backgroundImageLayout: 0,
+        dockPanel: null,
         mPadding: null,
         renderLabel: true,
         mBackColor: null,
@@ -445,20 +446,97 @@
             else  {
                 parentElement = this.getParent().element;
     
-                parentElement.add(this.element,{ left: this.getLocation().x, top: this.getLocation().y });
+                var li = null;
+                if (Bridge.is(this.element, qx.ui.core.LayoutItem)) {
+                    li = Bridge.cast(this.element, qx.ui.core.LayoutItem);
+                }
+    
+                switch (this.getDock()) {
+                    case System.Windows.Forms.DockStyle.none: 
+                    case System.Windows.Forms.DockStyle.fill: 
+                        parentElement.add(this.element,{ left: this.getLocation().x, top: this.getLocation().y });
+                        li.setWidth(this.getWidth());
+                        li.setHeight(this.getHeight());
+                        break;
+                    case System.Windows.Forms.DockStyle.left: 
+                        {
+                            this.createDockPanel(parentElement);
+    
+                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout.setWidth(this.getWidth());
+                            layout.setBackgroundColor(this.getBackColor());
+                            layout.add(this.element,null);
+    
+                            this.dockPanel.add(layout,{ edge: "west" });
+                            li.setWidth(this.getWidth());
+                        }
+                        break;
+                    case System.Windows.Forms.DockStyle.right: 
+                        {
+                            this.createDockPanel(parentElement);
+    
+                            var layout1 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout1.setWidth(this.getWidth());
+                            layout1.setBackgroundColor(this.getBackColor());
+                            layout1.add(this.element,null);
+    
+                            this.dockPanel.add(layout1,{ edge: "east" });
+                            li.setWidth(this.getWidth());
+                        }
+                        break;
+                    case System.Windows.Forms.DockStyle.top: 
+                        {
+                            this.createDockPanel(parentElement);
+                            //var w1 = new qx.ui.core.Widget();
+                            //w1.BackgroundColor = this.BackColor;//.Add(this.Element);
+                            //w1.Height = this.Height;
+    
+                            var layout2 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout2.setHeight(this.getHeight());
+                            layout2.setBackgroundColor(this.getBackColor());
+                            layout2.add(this.element,null);
+    
+                            this.dockPanel.add(layout2,{ edge: "north" });
+                            //w1.Add(layout);
+                            li.setHeight(this.getHeight());
+                        }
+                        break;
+                    case System.Windows.Forms.DockStyle.bottom: 
+                        {
+                            this.createDockPanel(parentElement);
+    
+                            var layout3 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                            layout3.setHeight(this.getHeight());
+                            layout3.setBackgroundColor(this.getBackColor());
+                            layout3.add(this.element,null);
+    
+                            this.dockPanel.add(layout3,{ edge: "south" });
+                            li.setHeight(this.getHeight());
+                        }
+                        break;
+                }
+    
             }
     
-            if (Bridge.is(this.element, qx.ui.core.LayoutItem)) {
-                var li = Bridge.cast(this.element, qx.ui.core.LayoutItem);
-                li.setWidth(this.getWidth());
-                li.setHeight(this.getHeight());
+            switch (this.getDock()) {
+                case System.Windows.Forms.DockStyle.fill: 
+                    break;
+                default: 
+                    {
+                        if (Bridge.is(this.element, qx.ui.core.LayoutItem)) {
+                            var li1 = Bridge.cast(this.element, qx.ui.core.LayoutItem);
+                            li1.setWidth(this.getWidth());
+                            li1.setHeight(this.getHeight());
+                        }
+                    }
+                    break;
             }
     
             if (Bridge.is(this.element, qx.ui.core.Widget)) {
-                var li1 = Bridge.cast(this.element, qx.ui.core.Widget);
+                var li2 = Bridge.cast(this.element, qx.ui.core.Widget);
                 var bc = this.getBackColor();
                 if (!Bridge.String.isNullOrEmpty(bc)) {
-                    li1.setBackgroundColor(this.getBackColor());
+                    li2.setBackgroundColor(this.getBackColor());
                     //li.BackgroundColor = "#0f0";
                 }
             }
@@ -621,6 +699,20 @@
             //            break;
             //    }
             //}
+        },
+        createDockPanel: function (parentElement) {
+            if (!Bridge.hasValue(this.dockPanel)) {
+                this.dockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
+                //DockPanel.AllowStretchX = true;
+                //DockPanel.AllowStretchY = true;
+                //DockPanel.AllowGrowY = true;
+                //DockPanel.AllowGrowX = true;
+                //var pl = ((qx.html.Element)parentElement);
+                //var element = pl.GetDomElement();
+                //DockPanel.Width = element.ClientWidth;
+                //DockPanel.Height = element.ClientHeight;
+                parentElement.add(this.dockPanel,{ edge: 0 });
+            }
         },
         render: function () {
             var $t;
@@ -1258,7 +1350,7 @@
     Bridge.define('System.Windows.Forms.Panel', {
         inherits: [System.Windows.Forms.Control],
         render: function () {
-            this.element = new qx.ui.container.Scroll();
+            this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
             System.Windows.Forms.Control.prototype.render.call(this);
         }
     });
@@ -1466,6 +1558,10 @@
             this.renderLabel = false;
             this.element = new qx.ui.tabview.TabView();
             //this.Element = new Bridge.Html5.DivElement();
+        },
+        render: function () {
+            this.getLocation().y = (this.getLocation().y - 22) | 0;
+            System.Windows.Forms.Control.prototype.render.call(this);
         }
     });
     
@@ -1485,20 +1581,8 @@
             System.Windows.Forms.Control.prototype.render.call(this);
     
             var page = Bridge.cast(this.element, qx.ui.tabview.Page);
+            page.setLayout(new qx.ui.layout.Basic());
             page.setLabel(this.getText());
-            //this.Element.Style.Width = (this.Parent.Width - 27) + "px";
-            //this.Element.Style.Height = (this.Parent.Height - 35) + "px";
-            //this.Element.Style.Position = Bridge.Html5.Position.Relative;
-            //if(!IsLoaded)
-            //{
-            //    this.Parent.Element.AppendChild(this.Element);
-            //    IsLoaded = true;
-            //}
-    
-            //foreach (var ctrl in this.GetControls())
-            //{
-            //    ctrl.Render();
-            //}
         }
     });
     

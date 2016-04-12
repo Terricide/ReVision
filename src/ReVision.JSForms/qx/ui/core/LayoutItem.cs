@@ -12,5 +12,9 @@ namespace qx.ui.core
     {
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool AllowGrowX { get; set; }
+        public bool AllowGrowY { get; set; }
+        public bool AllowStretchX { get; set; }
+        public bool AllowStretchY { get; set; }
     }
 }

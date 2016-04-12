@@ -13,6 +13,7 @@ namespace qx.ui.tabview
         public string Label { get; set; }
         public string Icon { get; set; }
         public bool ShowCloseButton { get; set; }
+        public layout.Abstract Layout { get; set; }
         public Page(string text = null, string icon = null)
         {
             return;

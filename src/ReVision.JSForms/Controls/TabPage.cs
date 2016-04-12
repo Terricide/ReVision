@@ -20,6 +20,7 @@ namespace System.Windows.Forms
             base.Render();
 
             var page = (qx.ui.tabview.Page)this.Element;
+            page.Layout = new qx.ui.layout.Basic();
             page.Label = this.Text;
         }
     }
