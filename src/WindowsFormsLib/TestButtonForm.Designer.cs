@@ -45,17 +45,11 @@ namespace WindowsFormsLib
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -165,10 +159,10 @@ namespace WindowsFormsLib
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(103, 87);
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(528, 439);
+            this.tabControl1.Size = new System.Drawing.Size(831, 526);
             this.tabControl1.TabIndex = 10;
             // 
             // tabPage1
@@ -179,7 +173,7 @@ namespace WindowsFormsLib
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(520, 413);
+            this.tabPage1.Size = new System.Drawing.Size(823, 500);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -221,62 +215,12 @@ namespace WindowsFormsLib
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Blue;
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 24);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(831, 63);
-            this.panel2.TabIndex = 11;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(325, 30);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.Red;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(831, 24);
-            this.panel3.TabIndex = 12;
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.Yellow;
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel4.Location = new System.Drawing.Point(0, 87);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(103, 439);
-            this.panel4.TabIndex = 13;
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Brown;
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(631, 87);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(200, 439);
-            this.panel5.TabIndex = 14;
-            // 
             // TestButtonForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 526);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.panel5);
-            this.Controls.Add(this.panel4);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel3);
             this.Name = "TestButtonForm";
             this.Text = "TestButtonForm";
             this.tabControl1.ResumeLayout(false);
@@ -286,7 +230,6 @@ namespace WindowsFormsLib
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -308,10 +251,5 @@ namespace WindowsFormsLib
         private TabPage tabPage2;
         private TabPage tabPage3;
         private TabPage tabPage4;
-        private Panel panel2;
-        private Panel panel3;
-        private Button button2;
-        private Panel panel4;
-        private Panel panel5;
     }
 }

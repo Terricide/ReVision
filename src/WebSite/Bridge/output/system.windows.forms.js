@@ -1595,7 +1595,6 @@
             //this.Element = new Bridge.Html5.DivElement();
         },
         render: function () {
-            this.getLocation().y = (this.getLocation().y - 22) | 0;
             System.Windows.Forms.Control.prototype.render.call(this);
         }
     });

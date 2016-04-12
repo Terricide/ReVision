@@ -21,7 +21,6 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            this.Location.Y -= 22;
             base.Render();
         }
     }
