@@ -453,7 +453,6 @@
     
                 switch (this.getDock()) {
                     case System.Windows.Forms.DockStyle.none: 
-                    case System.Windows.Forms.DockStyle.fill: 
                         parentElement.add(this.element,{ left: this.getLocation().x, top: this.getLocation().y });
                         li.setWidth(this.getWidth());
                         li.setHeight(this.getHeight());
@@ -512,6 +511,11 @@
     
                             this.dockPanel.add(layout3,{ edge: "south" });
                             li.setHeight(this.getHeight());
+                        }
+                        break;
+                    case System.Windows.Forms.DockStyle.fill: 
+                        {
+                            this.resizeDockFill(parentElement, li);
                         }
                         break;
                 }
@@ -699,6 +703,37 @@
             //            break;
             //    }
             //}
+        },
+        resizeDockFill: function (parentElement, li) {
+            var bounds = (Bridge.cast(this.getParent().element, qx.ui.core.LayoutItem)).getBounds();
+    
+            var ctrls = this.getParent().getControls().toArray();
+            ctrls.reverse();
+            var right = 0, bottom = 0;
+    
+    
+            for (var i = 0; i < ctrls.length; i = (i + 1) | 0) {
+                var ctrl = ctrls[i];
+                if (ctrl === this) {
+                    break;
+                }
+                switch (ctrl.getDock()) {
+                    case System.Windows.Forms.DockStyle.right: 
+                        right = (right + ctrl.getWidth()) | 0;
+                        break;
+                    case System.Windows.Forms.DockStyle.bottom: 
+                        bottom = (bottom + ctrl.getHeight()) | 0;
+                        break;
+                }
+            }
+    
+            var newWidth = (((bounds.width - this.getLeft()) | 0) - right) | 0;
+            var newHeight = (((bounds.height - this.getTop()) | 0) - bottom) | 0;
+    
+            li.setWidth(newWidth);
+            li.setHeight(newHeight);
+    
+            parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
         },
         createDockPanel: function (parentElement) {
             if (!Bridge.hasValue(this.dockPanel)) {

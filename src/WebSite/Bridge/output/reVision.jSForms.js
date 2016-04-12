@@ -17,7 +17,12 @@
     Bridge.define('ReVision.JSForms.Application', {
         statics: {
             current: null,
-            rootDocument: null
+            rootDocument: null,
+            config: {
+                events: {
+                    OnWindowResize: null
+                }
+            }
         },
         ws: null,
         root: null,
@@ -121,6 +126,9 @@
         },
         onResize: function (e) {
             if (e === void 0) { e = null; }
+            if (Bridge.hasValue(ReVision.JSForms.Application.OnWindowResize)) {
+                ReVision.JSForms.Application.OnWindowResize(this, Object.empty);
+            }
             //Controls.Clear();
             //Root.Element.InnerHTML = "";
             //xRoot.RealignControls();

@@ -19,6 +19,8 @@ namespace ReVision.JSForms
 
         public Dictionary<string, Control> Controls = new Dictionary<string, Control>();
 
+        public static event EventHandler OnWindowResize;
+
         public Application(qx.html.RootElement doc)
         {
             Application.RootDocument = doc;
@@ -131,6 +133,10 @@ namespace ReVision.JSForms
 
         private void OnResize(Event e = null)
         {
+            if(OnWindowResize != null)
+            {
+                OnWindowResize(this, EventArgs.Empty);
+            }
             //Controls.Clear();
             //Root.Element.InnerHTML = "";
             //xRoot.RealignControls();

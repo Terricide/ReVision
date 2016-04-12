@@ -16,5 +16,15 @@ namespace qx.ui.core
         public bool AllowGrowY { get; set; }
         public bool AllowStretchX { get; set; }
         public bool AllowStretchY { get; set; }
+
+        public extern Bounds GetBounds();
+    }
+
+    public struct Bounds
+    {
+        public int Left;
+        public int Top;
+        public int Width;
+        public int Height;    
     }
 }

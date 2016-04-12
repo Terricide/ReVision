@@ -132,7 +132,6 @@ namespace System.Windows.Forms
                 switch (this.Dock)
                 {
                     case DockStyle.None:
-                    case DockStyle.Fill:
                         parentElement.Add(this.Element, new qx.core.Options()
                         {
                             Left = this.Location.X,
@@ -209,62 +208,11 @@ namespace System.Windows.Forms
                             li.Height = this.Height;
                         }
                         break;
-                    //case DockStyle.Fill:
-                    //    {
-                    //        //CreateDockPanel(parentElement);
-
-                    //        var ctrls = this.Parent.GetControls().ToArray();
-                    //        int left = 0, right = 0, top = 0, bottom = 0;
-
-                    //        for (int i=0; i < ctrls.Length; i++)
-                    //        {
-                    //            var ctrl = ctrls[0];
-                    //            if( ctrl == this )
-                    //            {
-                    //                break;
-                    //            }
-                    //            switch(ctrl.Dock)
-                    //            {
-                    //                case DockStyle.Left:
-                    //                    left += ctrl.Width;
-                    //                    break;
-                    //                case DockStyle.Right:
-                    //                    right += ctrl.Width;
-                    //                    break;
-                    //                case DockStyle.Top:
-                    //                    top += ctrl.Height;
-                    //                    break;
-                    //                case DockStyle.Bottom:
-                    //                    bottom += ctrl.Height;
-                    //                    break;
-                    //            }
-                    //        }
-
-                    //        var newLeft = this.Left + left;
-                    //        var newTop = this.Top + top;
-
-                    //        var newWidth = this.Width - newLeft - right;
-                    //        var newHeight = this.Height - newTop - bottom;
-
-                    //        li.Width = newWidth;
-                    //        li.Height = newHeight;
-
-                    //        parentElement.Add(this.Element, new qx.core.Options()
-                    //        {
-                    //            Left = newLeft,
-                    //            Top = newTop
-                    //        });
-
-                    //        //var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                    //        //layout.BackgroundColor = "green";
-                    //        ////layout.Add(this.Element);
-
-                    //        //DockPanel.Add(layout, new qx.core.Options()
-                    //        //{
-                    //        //    Edge = qx.core.Edges.Center,                             
-                    //        //});
-                    //    }
-                    //    break;
+                    case DockStyle.Fill:
+                        {
+                            ResizeDockFill(parentElement, li);
+                        }
+                        break;
                 }
 
             }
@@ -454,6 +402,46 @@ namespace System.Windows.Forms
             //            break;
             //    }
             //}
+        }
+
+        private void ResizeDockFill(qx.core.Object parentElement, qx.ui.core.LayoutItem li)
+        {
+            var bounds = ((qx.ui.core.LayoutItem)this.Parent.Element).GetBounds();
+
+            var ctrls = this.Parent.GetControls().ToArray();
+            ctrls.Reverse();
+            int right = 0, bottom = 0;
+
+
+            for (int i = 0; i < ctrls.Length; i++)
+            {
+                var ctrl = ctrls[i];
+                if (ctrl == this)
+                {
+                    break;
+                }
+                switch (ctrl.Dock)
+                {
+                    case DockStyle.Right:
+                        right += ctrl.Width;
+                        break;
+                    case DockStyle.Bottom:
+                        bottom += ctrl.Height;
+                        break;
+                }
+            }
+
+            var newWidth = bounds.Width - this.Left - right;
+            var newHeight = bounds.Height - this.Top - bottom;
+
+            li.Width = newWidth;
+            li.Height = newHeight;
+
+            parentElement.Add(this.Element, new qx.core.Options()
+            {
+                Left = this.Left,
+                Top = this.Top,
+            });
         }
 
         private void CreateDockPanel(qx.core.Object parentElement)
