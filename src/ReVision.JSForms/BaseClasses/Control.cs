@@ -12,7 +12,7 @@ namespace System.Windows.Forms
 {
     public class Control : Component
     {
-        public qx.core.Object Element = new qx.html.Element();
+        public qx.core.Object Element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
         public Label Label;
         public string ForeColor;
         public string Font;
@@ -629,6 +629,10 @@ namespace System.Windows.Forms
                         case "CheckedListBox":
                             var clb = JSON.Parse<CheckedListBox>(JSON.Stringify(ctrl));
                             ctrl1 = clb;
+                            break;
+                        case "CustomControl":
+                            var cc = JSON.Parse<CustomControl>(JSON.Stringify(ctrl));
+                            ctrl1 = cc;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

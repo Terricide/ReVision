@@ -71,6 +71,7 @@
     <Compile Include="BaseClasses\ControlsCollection.cs" />
     <Compile Include="Controls\CheckedListBox.cs" />
     <Compile Include="Controls\ComboBox.cs" />
+    <Compile Include="Controls\CustomControl.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Controls\GroupBox.cs" />
     <Compile Include="Controls\ListBox.cs" />

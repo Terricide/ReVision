@@ -289,7 +289,7 @@
                 AutoSize: false
             },
             init: function () {
-                this.element = new qx.html.Element();
+                this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
                 this.mSize = new System.Drawing.Size(300, 300);
             }
         },
@@ -936,6 +936,10 @@
                             var clb = Bridge.merge(new System.Windows.Forms.CheckedListBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = clb;
                             break;
+                        case "CustomControl": 
+                            var cc = Bridge.merge(new System.Windows.Forms.CustomControl(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = cc;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -1194,6 +1198,15 @@
                     }
                 }
             }
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.CustomControl', {
+        inherits: [System.Windows.Forms.Control],
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
         }
     });
     
