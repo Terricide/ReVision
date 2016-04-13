@@ -11,5 +11,7 @@ namespace qx.ui.core
     public class Widget : LayoutItem
     {
         public string BackgroundColor { get; set; }
+
+        public extern html.Element GetContentElement();
     }
 }

@@ -13,7 +13,7 @@ namespace System.Windows.Forms
 
         public RichTextBox()
         {
-            //this.Element = new Bridge.Html5.TextAreaElement();
+            this.Element = new qx.ui.form.TextArea();
         }
 
         public override void Render()

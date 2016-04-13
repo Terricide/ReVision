@@ -110,6 +110,7 @@
     <Compile Include="qx\ui\basic\Atom.cs" />
     <Compile Include="qx\ui\basic\Label.cs" />
     <Compile Include="qx\ui\container\Composite.cs" />
+    <Compile Include="qx\ui\embed\Html.cs" />
     <Compile Include="qx\ui\form\AbstractField.cs" />
     <Compile Include="qx\ui\form\AbstractSelectBox.cs" />
     <Compile Include="qx\ui\form\Button.cs" />
@@ -117,14 +118,19 @@
     <Compile Include="qx\ui\form\DateField.cs" />
     <Compile Include="qx\ui\form\List.cs" />
     <Compile Include="qx\ui\form\ListItem.cs" />
+    <Compile Include="qx\ui\form\PasswordField.cs" />
     <Compile Include="qx\ui\form\RadioButton.cs" />
     <Compile Include="qx\ui\form\CheckBox.cs" />
+    <Compile Include="qx\ui\form\TextArea.cs" />
     <Compile Include="qx\ui\form\TextField.cs" />
     <Compile Include="qx\ui\form\ToogleButton.cs" />
+    <Compile Include="qx\ui\groupbox\GroupBox.cs" />
+    <Compile Include="qx\ui\indicator\ProgressBar.cs" />
     <Compile Include="qx\ui\layout\Abstract.cs" />
     <Compile Include="qx\ui\layout\Basic.cs" />
     <Compile Include="qx\ui\layout\Canvas.cs" />
     <Compile Include="qx\ui\layout\Dock.cs" />
+    <Compile Include="qx\ui\layout\VBox.cs" />
     <Compile Include="qx\ui\tabview\Page.cs" />
     <Compile Include="qx\ui\tabview\TabView.cs" />
     <Compile Include="Shared\ColumnHeader.cs" />

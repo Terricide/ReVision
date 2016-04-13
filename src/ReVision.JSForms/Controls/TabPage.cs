@@ -10,18 +10,23 @@ namespace System.Windows.Forms
     public class TabPage : Control
     {
         public bool IsSelected { get; set; }
+        public qx.ui.tabview.Page Page { get; set; }
         public TabPage()
         {
-            this.Element = new qx.ui.tabview.Page();
+            this.Page = new qx.ui.tabview.Page();
+            this.Element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
         }
 
         public override void Render()
         {
-            base.Render();
+            this.Page.Layout = new qx.ui.layout.VBox();
+            this.Page.Label = this.Text;
+            this.Page.Add(this.Element);
 
-            var page = (qx.ui.tabview.Page)this.Element;
-            page.Layout = new qx.ui.layout.Basic();
-            page.Label = this.Text;
+            foreach(var ctrl in this.GetControls())
+            {
+                ctrl.Render();
+            }
         }
     }
 }

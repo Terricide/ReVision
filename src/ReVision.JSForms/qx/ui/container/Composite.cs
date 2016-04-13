@@ -10,11 +10,12 @@ namespace qx.ui.container
     [Bridge.External]
     public class Composite : core.Widget
     {
+        public layout.Abstract Layout { get; set; }
         public Composite()
         {
 
         }
-        public Composite(qx.core.Object item)
+        public Composite(layout.Abstract item)
         {
             return;
         }

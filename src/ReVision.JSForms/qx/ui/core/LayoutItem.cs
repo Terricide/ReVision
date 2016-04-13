@@ -20,7 +20,7 @@ namespace qx.ui.core
         public extern Bounds GetBounds();
     }
 
-    public struct Bounds
+    public class Bounds
     {
         public int Left;
         public int Top;

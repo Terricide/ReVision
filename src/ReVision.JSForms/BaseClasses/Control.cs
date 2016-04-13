@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         public ImageLayout BackgroundImageLayout;
         public Control Parent { get; set; }
         public string ParentId { get; set; }
-        private qx.ui.container.Composite DockPanel;
+        public qx.ui.container.Composite DockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
         private Padding mPadding;
         public Padding Padding
         {
@@ -112,16 +112,60 @@ namespace System.Windows.Forms
             elm.InnerHTML = this.Text;
         }
 
-        protected void SetAttributes()
+        protected void SetAttributes(qx.core.Object parentElement = null)
         {
-            qx.core.Object parentElement = null;
             if( this.Parent == null )
             {
                 this.Element = Application.RootDocument;
+
+                //if (bounds == null)
+                //{
+                //    this.DockPanel.Width = Document.Body.ClientWidth;
+                //    this.DockPanel.Height = Document.Body.ClientHeight;
+                //}
+                //else
+                //{
+                //    this.DockPanel.Width = bounds.Width;
+                //    this.DockPanel.Height = bounds.Height;
+                //}
+
+                //if( parentElement != null )
+                //{
+                //    parentElement.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Left = 0,
+                //        Top = 0,
+                //    });
+                //}
+                //else
+                //{
+                //    this.Element.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Edge = 0
+                //    });
+                //}
             }
             else
             {
-                parentElement = this.Parent.Element;
+                if( parentElement == null )
+                {
+                    parentElement = this.Parent.Element;
+                }
+
+                //qx.ui.core.Bounds bounds = null;
+
+                //if (this.Parent != null)
+                //{
+                //    bounds = ((qx.ui.core.LayoutItem)parentElement).GetBounds();
+                //}
+
+                //else
+                //{
+                //    this.Element.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Edge = 0
+                //    });
+                //}
 
                 qx.ui.core.LayoutItem li = null;
                 if (this.Element is qx.ui.core.LayoutItem)
@@ -142,70 +186,46 @@ namespace System.Windows.Forms
                         break;
                     case DockStyle.Left:
                         {
-                            CreateDockPanel(parentElement);
-
-                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout.Width = this.Width;
-                            layout.BackgroundColor = this.BackColor;
-                            layout.Add(this.Element);
-
-                            DockPanel.Add(layout, new qx.core.Options()
+                            parentElement.Add(this.Element, new qx.core.Options()
                             {
-                                Edge = qx.core.Edges.West,
+                                Left = this.Left,
+                                Top = this.Top
                             });
+                            li.Height = this.Height;
                             li.Width = this.Width;
                         }
                         break;
                     case DockStyle.Right:
                         {
-                            CreateDockPanel(parentElement);
-
-                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout.Width = this.Width;
-                            layout.BackgroundColor = this.BackColor;
-                            layout.Add(this.Element);
-
-                            DockPanel.Add(layout, new qx.core.Options()
+                            parentElement.Add(this.Element, new qx.core.Options()
                             {
-                                Edge = qx.core.Edges.East,
+                                Left = this.Left,
+                                Top = this.Top
                             });
+                            li.Height = this.Height;
                             li.Width = this.Width;
                         }
                         break;
                     case DockStyle.Top:
                         {
-                            CreateDockPanel(parentElement);
-                            //var w1 = new qx.ui.core.Widget();
-                            //w1.BackgroundColor = this.BackColor;//.Add(this.Element);
-                            //w1.Height = this.Height;
-
-                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout.Height = this.Height;
-                            layout.BackgroundColor = this.BackColor;
-                            layout.Add(this.Element);
-
-                            DockPanel.Add(layout, new qx.core.Options()
+                            parentElement.Add(this.Element, new qx.core.Options()
                             {
-                                Edge = qx.core.Edges.North,
+                                Left = this.Left,
+                                Top = this.Top
                             });
-                            //w1.Add(layout);
                             li.Height = this.Height;
+                            li.Width = this.Width;
                         }
                         break;
                     case DockStyle.Bottom:
                         {
-                            CreateDockPanel(parentElement);
-
-                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout.Height = this.Height;
-                            layout.BackgroundColor = this.BackColor;
-                            layout.Add(this.Element);
-
-                            DockPanel.Add(layout, new qx.core.Options()
+                            parentElement.Add(this.Element, new qx.core.Options()
                             {
-                                Edge = qx.core.Edges.South,
+                                Left = this.Left,
+                                Top = this.Top
                             });
                             li.Height = this.Height;
+                            li.Width = this.Width;
                         }
                         break;
                     case DockStyle.Fill:
@@ -408,6 +428,19 @@ namespace System.Windows.Forms
         {
             var bounds = ((qx.ui.core.LayoutItem)this.Parent.Element).GetBounds();
 
+            if( bounds == null )
+            {
+                li.Width = this.Width;
+                li.Height = this.Height;
+
+                parentElement.Add(this.Element, new qx.core.Options()
+                {
+                    Left = this.Left,
+                    Top = this.Top,
+                });
+                return;
+            }
+
             var ctrls = this.Parent.GetControls().ToArray();
             ctrls.Reverse();
             int right = 0, bottom = 0;
@@ -442,26 +475,6 @@ namespace System.Windows.Forms
                 Left = this.Left,
                 Top = this.Top,
             });
-        }
-
-        private void CreateDockPanel(qx.core.Object parentElement)
-        {
-            if (DockPanel == null)
-            {
-                DockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
-                //DockPanel.AllowStretchX = true;
-                //DockPanel.AllowStretchY = true;
-                //DockPanel.AllowGrowY = true;
-                //DockPanel.AllowGrowX = true;
-                //var pl = ((qx.html.Element)parentElement);
-                //var element = pl.GetDomElement();
-                //DockPanel.Width = element.ClientWidth;
-                //DockPanel.Height = element.ClientHeight;
-                parentElement.Add(DockPanel, new qx.core.Options()
-                {
-                    Edge = 0                
-                });
-            }
         }
 
         public virtual void Render()
@@ -634,6 +647,18 @@ namespace System.Windows.Forms
                             var cc = JSON.Parse<CustomControl>(JSON.Stringify(ctrl));
                             ctrl1 = cc;
                             break;
+                        case "ProgressBar":
+                            var pb = JSON.Parse<ProgressBar>(JSON.Stringify(ctrl));
+                            ctrl1 = pb;
+                            break;
+                        case "ListBox":
+                            var lb = JSON.Parse<ListBox>(JSON.Stringify(ctrl));
+                            ctrl1 = lb;
+                            break;
+                        case "RichTextBox":
+                            var rtb = JSON.Parse<RichTextBox>(JSON.Stringify(ctrl));
+                            ctrl1 = rtb;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;
@@ -679,13 +704,16 @@ namespace System.Windows.Forms
         //    var bottom = 0;
         //    var right = 0;
 
+        //    var bounds = ((qx.ui.core.LayoutItem)current.Element).GetBounds();
+
         //    switch (current.Dock)
         //    {
         //        //Left
         //        case DockStyle.Left:
         //            {
-        //                left = jQuery.Element(current.Element).Width();
-        //                foreach(var child in childControls)
+        //                left = bounds.Left;
+                        
+        //                foreach (var child in childControls)
         //                {
         //                    if (child.ClientId == current.ClientId)
         //                    {
@@ -695,16 +723,16 @@ namespace System.Windows.Forms
         //                    {
         //                        case DockStyle.Left:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                var ctrlWidth = item.Width();
-        //                                item.Css("left", jQuery.Element(current.Element).Position().Left + ctrlWidth);
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element);
+        //                                var ctrlWidth = item.Width;
+        //                                child.Location = new Drawing.Point(left + ctrlWidth, child.Location.Y);
         //                            }
         //                            break;
         //                        case DockStyle.Top:
         //                        case DockStyle.Bottom:
         //                        case DockStyle.Fill:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element);
         //                                var ctrlWidth = item.Width();
         //                                var ctrlLeft = item.Position().Left;
         //                                item.Css("left", ctrlLeft + left);
@@ -718,7 +746,7 @@ namespace System.Windows.Forms
         //        //Right
         //        case DockStyle.Right:
         //            {
-        //                right = jQuery.Element(current.Element).Width();
+        //                right = bounds.Width;
         //                foreach (var child in childControls)
         //                {
         //                    if (child.ClientId == current.ClientId)
@@ -729,8 +757,8 @@ namespace System.Windows.Forms
         //                    {
         //                        case DockStyle.Right:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                var ctrlWidth = item.Width();
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element);
+        //                                var ctrlWidth = item.Width;
         //                                item.Css("left", jQuery.Element(current.Element).Position().Left - ctrlWidth);
         //                            }
         //                            break;
@@ -738,7 +766,7 @@ namespace System.Windows.Forms
         //                        case DockStyle.Bottom:
         //                        case DockStyle.Fill:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element);
         //                                var ctrlWidth = item.Width();
 
         //                                item.Css("width", ctrlWidth - right);
@@ -751,7 +779,7 @@ namespace System.Windows.Forms
         //        //Top
         //        case DockStyle.Top:
         //            {
-        //                top = jQuery.Element(current.Element).Height();
+        //                top = bounds.Height;
         //                foreach (var child in childControls)
         //                {
         //                    if (child.ClientId == current.ClientId)
@@ -762,8 +790,8 @@ namespace System.Windows.Forms
         //                    {
         //                        case DockStyle.Top:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                var ctrlTop = item.Position().Top;
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element).GetBounds();
+        //                                var ctrlTop = item.Top;
         //                                item.Css("top", ctrlTop + top);
         //                            }
         //                            break;
@@ -771,10 +799,10 @@ namespace System.Windows.Forms
         //                        case DockStyle.Right:
         //                        case DockStyle.Fill:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                var ctrlTop = item.Position().Top;
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element).GetBounds();
+        //                                var ctrlTop = item.Top;
 
-        //                                var ctrlHeight = item.Height();
+        //                                var ctrlHeight = item.Height;
         //                                item.Css("top", ctrlTop + top);
         //                                item.Css("height", ctrlHeight - top);
         //                            }
@@ -786,7 +814,7 @@ namespace System.Windows.Forms
         //        //Bottom
         //        case DockStyle.Bottom:
         //            {
-        //                bottom = jQuery.Element(current.Element).Height();
+        //                bottom = bounds.Height;
         //                foreach (var child in childControls)
         //                {
         //                    if (child.ClientId == current.ClientId)
@@ -799,14 +827,14 @@ namespace System.Windows.Forms
         //                        case DockStyle.Fill:
         //                        case DockStyle.Left:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                item.Css("height", item.Height() - bottom);
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element);
+        //                                item.Css("height", item.Height - bottom);
         //                            }
         //                            break;
         //                        case DockStyle.Bottom:
         //                            {
-        //                                var item = jQuery.Element(child.Element);
-        //                                var ctrlTop = child.Element.OffsetTop;
+        //                                var item = ((qx.ui.core.LayoutItem)child.Element).GetBounds();
+        //                                var ctrlTop = child.Top;
         //                                item.Css("top", ctrlTop - bottom);
         //                            }
         //                            break;

@@ -91,8 +91,6 @@
     
     Bridge.define('System.Windows.Forms.KendoSplitter');
     
-    Bridge.define('System.Windows.Forms.KendoTabStrip');
-    
     Bridge.define('System.Windows.Forms.KendoWindow', {
         title: null,
         width: 0,
@@ -290,6 +288,7 @@
             },
             init: function () {
                 this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                this.dockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
                 this.mSize = new System.Drawing.Size(300, 300);
             }
         },
@@ -438,13 +437,57 @@
     
             elm.innerHTML = this.getText();
         },
-        setAttributes: function () {
-            var parentElement = null;
+        setAttributes: function (parentElement) {
+            if (parentElement === void 0) { parentElement = null; }
             if (!Bridge.hasValue(this.getParent())) {
                 this.element = ReVision.JSForms.Application.rootDocument;
+    
+                //if (bounds == null)
+                //{
+                //    this.DockPanel.Width = Document.Body.ClientWidth;
+                //    this.DockPanel.Height = Document.Body.ClientHeight;
+                //}
+                //else
+                //{
+                //    this.DockPanel.Width = bounds.Width;
+                //    this.DockPanel.Height = bounds.Height;
+                //}
+    
+                //if( parentElement != null )
+                //{
+                //    parentElement.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Left = 0,
+                //        Top = 0,
+                //    });
+                //}
+                //else
+                //{
+                //    this.Element.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Edge = 0
+                //    });
+                //}
             }
             else  {
-                parentElement = this.getParent().element;
+                if (!Bridge.hasValue(parentElement)) {
+                    parentElement = this.getParent().element;
+                }
+    
+                //qx.ui.core.Bounds bounds = null;
+    
+                //if (this.Parent != null)
+                //{
+                //    bounds = ((qx.ui.core.LayoutItem)parentElement).GetBounds();
+                //}
+    
+                //else
+                //{
+                //    this.Element.Add(this.DockPanel, new qx.core.Options()
+                //    {
+                //        Edge = 0
+                //    });
+                //}
     
                 var li = null;
                 if (Bridge.is(this.element, qx.ui.core.LayoutItem)) {
@@ -459,58 +502,30 @@
                         break;
                     case System.Windows.Forms.DockStyle.left: 
                         {
-                            this.createDockPanel(parentElement);
-    
-                            var layout = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout.setWidth(this.getWidth());
-                            layout.setBackgroundColor(this.getBackColor());
-                            layout.add(this.element,null);
-    
-                            this.dockPanel.add(layout,{ edge: "west" });
+                            parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
+                            li.setHeight(this.getHeight());
                             li.setWidth(this.getWidth());
                         }
                         break;
                     case System.Windows.Forms.DockStyle.right: 
                         {
-                            this.createDockPanel(parentElement);
-    
-                            var layout1 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout1.setWidth(this.getWidth());
-                            layout1.setBackgroundColor(this.getBackColor());
-                            layout1.add(this.element,null);
-    
-                            this.dockPanel.add(layout1,{ edge: "east" });
+                            parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
+                            li.setHeight(this.getHeight());
                             li.setWidth(this.getWidth());
                         }
                         break;
                     case System.Windows.Forms.DockStyle.top: 
                         {
-                            this.createDockPanel(parentElement);
-                            //var w1 = new qx.ui.core.Widget();
-                            //w1.BackgroundColor = this.BackColor;//.Add(this.Element);
-                            //w1.Height = this.Height;
-    
-                            var layout2 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout2.setHeight(this.getHeight());
-                            layout2.setBackgroundColor(this.getBackColor());
-                            layout2.add(this.element,null);
-    
-                            this.dockPanel.add(layout2,{ edge: "north" });
-                            //w1.Add(layout);
+                            parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
                             li.setHeight(this.getHeight());
+                            li.setWidth(this.getWidth());
                         }
                         break;
                     case System.Windows.Forms.DockStyle.bottom: 
                         {
-                            this.createDockPanel(parentElement);
-    
-                            var layout3 = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-                            layout3.setHeight(this.getHeight());
-                            layout3.setBackgroundColor(this.getBackColor());
-                            layout3.add(this.element,null);
-    
-                            this.dockPanel.add(layout3,{ edge: "south" });
+                            parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
                             li.setHeight(this.getHeight());
+                            li.setWidth(this.getWidth());
                         }
                         break;
                     case System.Windows.Forms.DockStyle.fill: 
@@ -707,6 +722,14 @@
         resizeDockFill: function (parentElement, li) {
             var bounds = (Bridge.cast(this.getParent().element, qx.ui.core.LayoutItem)).getBounds();
     
+            if (!Bridge.hasValue(bounds)) {
+                li.setWidth(this.getWidth());
+                li.setHeight(this.getHeight());
+    
+                parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
+                return;
+            }
+    
             var ctrls = this.getParent().getControls().toArray();
             ctrls.reverse();
             var right = 0, bottom = 0;
@@ -734,20 +757,6 @@
             li.setHeight(newHeight);
     
             parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
-        },
-        createDockPanel: function (parentElement) {
-            if (!Bridge.hasValue(this.dockPanel)) {
-                this.dockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
-                //DockPanel.AllowStretchX = true;
-                //DockPanel.AllowStretchY = true;
-                //DockPanel.AllowGrowY = true;
-                //DockPanel.AllowGrowX = true;
-                //var pl = ((qx.html.Element)parentElement);
-                //var element = pl.GetDomElement();
-                //DockPanel.Width = element.ClientWidth;
-                //DockPanel.Height = element.ClientHeight;
-                parentElement.add(this.dockPanel,{ edge: 0 });
-            }
         },
         render: function () {
             var $t;
@@ -939,6 +948,18 @@
                         case "CustomControl": 
                             var cc = Bridge.merge(new System.Windows.Forms.CustomControl(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = cc;
+                            break;
+                        case "ProgressBar": 
+                            var pb = Bridge.merge(new System.Windows.Forms.ProgressBar(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = pb;
+                            break;
+                        case "ListBox": 
+                            var lb = Bridge.merge(new System.Windows.Forms.ListBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = lb;
+                            break;
+                        case "RichTextBox": 
+                            var rtb = Bridge.merge(new System.Windows.Forms.RichTextBox(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = rtb;
                             break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
@@ -1397,8 +1418,12 @@
     
     Bridge.define('System.Windows.Forms.Panel', {
         inherits: [System.Windows.Forms.Control],
-        render: function () {
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
             this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+        },
+        render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
         }
     });
@@ -1456,43 +1481,28 @@
         inherits: [System.Windows.Forms.Control],
         multiline: false,
         passwordChar: null,
-        textArea: null,
-        inputElement: null,
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
         },
         render: function () {
-            var tf = new qx.ui.form.TextField();
-            tf.setValue(this.getText());
-            this.element = tf;
-            //if (this.Multiline)
-            //{
-            //    if( this.textArea == null )
-            //    {
-            //        textArea = new TextAreaElement();
-            //        this.Element = textArea;
-            //    }
-            //    if( !string.IsNullOrEmpty(this.Text) )
-            //    {
-            //        textArea.Value = this.Text;
-            //    }
-            //}
-            //else
-            //{
-            //    if ( inputElement == null )
-            //    {
-            //        inputElement = new InputElement();
-            //        this.Element = inputElement;
-            //    }
-            //    if (this.PasswordChar != null && this.PasswordChar.Length > 0 && this.PasswordChar[0] != '\0')
-            //    {
-            //        inputElement.Type = InputType.Password;
-            //    }
-            //    inputElement.Value = this.Text;
-            //}
-            //this.Element.ClassName = "k-textbox";
+            if (this.multiline) {
+                var tf = new qx.ui.form.TextArea();
+                tf.setValue(this.getText());
+                this.element = tf;
+            }
+            else  {
+                var tf1 = new qx.ui.form.TextField();
+                tf1.setValue(this.getText());
+                this.element = tf1;
+            }
+    
+            if (Bridge.hasValue(this.passwordChar) && this.passwordChar.length > 0 && this.passwordChar.charCodeAt(0) !== 0) {
+                var tf2 = new qx.ui.form.PasswordField();
+                tf2.setValue(this.getText());
+                this.element = tf2;
+            }
     
             System.Windows.Forms.Control.prototype.render.call(this);
         }
@@ -1543,7 +1553,20 @@
     });
     
     Bridge.define('System.Windows.Forms.ProgressBar', {
-        inherits: [System.Windows.Forms.Control]
+        inherits: [System.Windows.Forms.Control],
+        value: 0,
+        maximum: 0,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.indicator.ProgressBar();
+        },
+        render: function () {
+            System.Windows.Forms.Control.prototype.render.call(this);
+            var pb = Bridge.cast(this.element, qx.ui.indicator.ProgressBar);
+            pb.setValue(this.value);
+            pb.setMaximum(this.maximum);
+        }
     });
     
     Bridge.define('System.Windows.Forms.RichTextBox', {
@@ -1552,7 +1575,7 @@
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            //this.Element = new Bridge.Html5.TextAreaElement();
+            this.element = new qx.ui.form.TextArea();
         },
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
@@ -1608,7 +1631,15 @@
             //this.Element = new Bridge.Html5.DivElement();
         },
         render: function () {
-            System.Windows.Forms.Control.prototype.render.call(this);
+            var $t;
+            this.setAttributes();
+    
+            $t = Bridge.getEnumerator(this.getControls());
+            while ($t.moveNext()) {
+                var tp = $t.getCurrent();
+                this.element.add(tp.getPage(),null);
+                tp.render();
+            }
         }
     });
     
@@ -1616,20 +1647,27 @@
         inherits: [System.Windows.Forms.Control],
         config: {
             properties: {
-                IsSelected: false
+                IsSelected: false,
+                Page: null
             }
         },
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
-            this.element = new qx.ui.tabview.Page();
+            this.setPage(new qx.ui.tabview.Page());
+            this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
         },
         render: function () {
-            System.Windows.Forms.Control.prototype.render.call(this);
+            var $t;
+            this.getPage().setLayout(new qx.ui.layout.VBox());
+            this.getPage().setLabel(this.getText());
+            this.getPage().add(this.element,null);
     
-            var page = Bridge.cast(this.element, qx.ui.tabview.Page);
-            page.setLayout(new qx.ui.layout.Basic());
-            page.setLabel(this.getText());
+            $t = Bridge.getEnumerator(this.getControls());
+            while ($t.moveNext()) {
+                var ctrl = $t.getCurrent();
+                ctrl.render();
+            }
         }
     });
     
@@ -1644,8 +1682,6 @@
     Bridge.define('System.Windows.Forms.TreeView', {
         inherits: [System.Windows.Forms.Control],
         mNodes: null,
-        treeElement: null,
-        fancyTree: null,
         getNodes: function () {
             return this.mNodes;
         },
@@ -1657,7 +1693,7 @@
             //this.TreeElement = new DivElement();
             //this.TreeElement.Id = "TR_" + this.ClientId;
     
-            this.renderNode(this.treeElement, null);
+            //RenderNode(this.TreeElement, null);
     
     
             System.Windows.Forms.Control.prototype.render.call(this);
@@ -1667,36 +1703,6 @@
             //this.Element.Style.BorderWidth = BorderWidth.Thin;
             //this.Element.Style.BorderColor = "gray";
             //this.FancyTree = Fancytree.Element(this.TreeElement);
-        },
-        renderNode: function (parent, parentNode) {
-            var ul = document.createElement('ul');
-    
-            var nodes = Bridge.Array.init(0, null);
-    
-            if (!Bridge.hasValue(parentNode)) {
-                nodes = this.getNodes();
-                ul.style.display = "none";
-            }
-            else  {
-                nodes = parentNode.nodes;
-            }
-    
-            if (nodes.length === 0) {
-                return;
-            }
-    
-            for (var i = 0; i < nodes.length; i = (i + 1) | 0) {
-                var node = nodes[i];
-                var li = document.createElement('li');
-    
-                li.innerHTML = node.text;
-                li.id = node.name;
-                ul.appendChild(li);
-    
-                this.renderNode(li, node);
-            }
-    
-            parent.appendChild(ul);
         }
     });
     
@@ -1795,7 +1801,33 @@
     });
     
     Bridge.define('System.Windows.Forms.ListBox', {
-        inherits: [System.Windows.Forms.ListControl]
+        inherits: [System.Windows.Forms.ListControl],
+        constructor: function () {
+            System.Windows.Forms.ListControl.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.form.List();
+        },
+        render: function () {
+            var $t;
+            System.Windows.Forms.ListControl.prototype.render.call(this);
+    
+            var list = Bridge.cast(this.element, qx.ui.form.List);
+            var items = (Bridge.Linq.Enumerable.from(this.items).select($_.System.Windows.Forms.ListBox.f1));
+            $t = Bridge.getEnumerator(items);
+            while ($t.moveNext()) {
+                var item = $t.getCurrent();
+                list.add(item,null);
+            }
+    
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.ListBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.ListBox, {
+        f1: function (l) {
+            return new qx.ui.form.ListItem(l.toString());
+        }
     });
     
     Bridge.define('System.Windows.Forms.GroupBox', {
@@ -1804,8 +1836,12 @@
             System.Windows.Forms.Panel.prototype.$constructor.call(this);
     
             this.renderLabel = false;
+            this.element = new qx.ui.groupbox.GroupBox();
         },
         render: function () {
+            var gb = Bridge.cast(this.element, qx.ui.groupbox.GroupBox);
+            gb.setLegend(this.getText());
+    
             System.Windows.Forms.Panel.prototype.render.call(this);
             //this.Element.Style.BorderStyle = Bridge.Html5.BorderStyle.Solid;
             //this.Element.Style.BorderWidth = Bridge.Html5.BorderWidth.Thin;
@@ -1843,7 +1879,20 @@
         mask: null,
         render: function () {
             System.Windows.Forms.TextBox.prototype.render.call(this);
+    
+            this.element.addListener("appear", Bridge.fn.bind(this, $_.System.Windows.Forms.MaskedTextBox.f1));
+    
             //KendoMaskedTextBox.Element(this.Element, this.Mask);
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.MaskedTextBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.MaskedTextBox, {
+        f1: function (e) {
+            var w = Bridge.cast(this.element, qx.ui.core.Widget);
+            var elm = w.getContentElement().getDomElement();
+            $(elm).mask(this.mask);
         }
     });
     
@@ -1931,7 +1980,7 @@
             this.element = new qx.ui.form.List();
         },
         render: function () {
-            System.Windows.Forms.ListBox.prototype.render.call(this);
+            this.setAttributes();
     
             var list = Bridge.cast(this.element, qx.ui.form.List);
     

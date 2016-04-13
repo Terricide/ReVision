@@ -12,10 +12,14 @@ namespace System.Windows.Forms
         public GroupBox()
         {
             this.RenderLabel = false;
+            this.Element = new qx.ui.groupbox.GroupBox();
         }
 
         public override void Render()
         {
+            var gb = (qx.ui.groupbox.GroupBox)this.Element;
+            gb.Legend = this.Text;
+
             base.Render();
             //this.Element.Style.BorderStyle = Bridge.Html5.BorderStyle.Solid;
             //this.Element.Style.BorderWidth = Bridge.Html5.BorderWidth.Thin;

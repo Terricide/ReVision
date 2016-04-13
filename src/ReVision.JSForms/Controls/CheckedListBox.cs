@@ -17,7 +17,7 @@ namespace System.Windows.Forms
         }
         public override void Render()
         {
-            base.Render();
+            base.SetAttributes();
 
             var list = (qx.ui.form.List)this.Element;
 

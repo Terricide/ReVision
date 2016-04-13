@@ -21,16 +21,13 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            base.Render();
-        }
-    }
+            this.SetAttributes();
 
-    public class KendoTabStrip
-    {
-        [Template("$({0}).kendoTabStrip({animation:{open:{effects: 'none'}}})")]
-        public static KendoTabStrip Element(Element elm)
-        {
-            return null;
+            foreach(TabPage tp in this.GetControls())
+            {
+                this.Element.Add(tp.Page);
+                tp.Render();
+            }
         }
     }
 }

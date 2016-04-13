@@ -467,6 +467,7 @@
     <Content Include="ReVision.Web\source\class\revision\web\__init__.js" />
     <Content Include="ReVision.Web\source\index.html" />
     <Content Include="ReVision.Web\source\resource\revision\web\test.png" />
+    <Content Include="ReVision.Web\source\script\jquery.maskedinput.min.js" />
     <Content Include="ReVision.Web\source\script\revision.web.38c4a3d0a696.js" />
     <Content Include="ReVision.Web\source\script\revision.web.54e2816fd898.js" />
     <Content Include="ReVision.Web\source\script\revision.web.5f4e488ea21a.js" />
@@ -1341,7 +1342,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
