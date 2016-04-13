@@ -89,8 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
-    <Content Include="Bridge\output\readme.txt" />
-    <Content Include="Bridge\www\demo.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Readme\Bridge.NET\LICENSE" />
