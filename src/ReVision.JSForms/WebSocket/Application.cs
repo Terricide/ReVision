@@ -15,11 +15,15 @@ namespace ReVision.JSForms
         private WebSocket ws;
 
         private Form Root;
+        public static qx.html.RootElement RootDocument;
 
         public Dictionary<string, Control> Controls = new Dictionary<string, Control>();
 
-        public Application()
+        public static event EventHandler OnWindowResize;
+
+        public Application(qx.html.RootElement doc)
         {
+            Application.RootDocument = doc;
             Application.Current = this;
             var path = string.Empty;
 
@@ -103,15 +107,19 @@ namespace ReVision.JSForms
                     Form form = JSON.Parse<Form>(JSON.Stringify(evt.Value));
                     form.ClientId = evt.ClientId;
                     var parent = form.Parent;
+                    if (Root == null)
+                    {
+                        Root = form;
+                    }
+                    else
+                    {
+                        form.Parent = Root;
+                    }
                     if (parent == null)
                     {
-                        if (Root == null)
-                        {
-                            Root = form;
-                        }
                         Window.OnResize = OnResize;
                         Document.Title = form.Text;
-                        Document.Body.AppendChild(form.Element);
+                        //Document.Body.AppendChild(form.Element);
                     }
                     AddOrUpdate(form);
                     form.ShowDialog();
@@ -125,9 +133,13 @@ namespace ReVision.JSForms
 
         private void OnResize(Event e = null)
         {
-            Controls.Clear();
-            Root.Element.InnerHTML = "";
-            Root.ShowDialog();
+            if(OnWindowResize != null)
+            {
+                OnWindowResize(this, EventArgs.Empty);
+            }
+            //Controls.Clear();
+            //Root.Element.InnerHTML = "";
+            //xRoot.RealignControls();
         }
 
         private void AddOrUpdate(Control ctrl)

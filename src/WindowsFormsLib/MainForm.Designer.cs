@@ -70,10 +70,10 @@ namespace WindowsFormsLib
             this.label4 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label14 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -104,8 +104,8 @@ namespace WindowsFormsLib
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -245,7 +245,7 @@ namespace WindowsFormsLib
             // tbMask
             // 
             this.tbMask.Location = new System.Drawing.Point(549, 349);
-            this.tbMask.Mask = "(999) 000-0000";
+            this.tbMask.Mask = "(999) 999-9999";
             this.tbMask.Name = "tbMask";
             this.tbMask.Size = new System.Drawing.Size(214, 20);
             this.tbMask.TabIndex = 19;
@@ -548,26 +548,6 @@ namespace WindowsFormsLib
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.DarkCyan;
-            this.panel4.Controls.Add(this.label14);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(203, 542);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(590, 100);
-            this.panel4.TabIndex = 5;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(247, 44);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(111, 13);
-            this.label14.TabIndex = 9;
-            this.label14.Text = "Panel Docked Bottom";
-            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.SkyBlue;
@@ -587,6 +567,26 @@ namespace WindowsFormsLib
             this.label12.Size = new System.Drawing.Size(97, 13);
             this.label12.TabIndex = 9;
             this.label12.Text = "Panel Docked Top";
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.DarkCyan;
+            this.panel4.Controls.Add(this.label14);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel4.Location = new System.Drawing.Point(203, 542);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(590, 100);
+            this.panel4.TabIndex = 5;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(247, 44);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(111, 13);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "Panel Docked Bottom";
             // 
             // panel2
             // 
@@ -843,10 +843,10 @@ namespace WindowsFormsLib
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);

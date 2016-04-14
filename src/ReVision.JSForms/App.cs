@@ -9,7 +9,7 @@ namespace ReVision.JSForms
         [Ready]
         public static void Main()
         {
-            Application app = new Application();
+            //Application app = new Application();
         }
     }
 }

@@ -13,8 +13,8 @@ namespace System.Drawing
             this.Width = width;
             this.Height = height;
         }
-        public int Height;
         public int Width;
+        public int Height;
 
         public bool Equals(Size obj)
         {

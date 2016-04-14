@@ -19,6 +19,13 @@ namespace System.Windows.Forms
             this.Bottom = pad;
             this.Top = pad;
         }
+        public Padding(int left, int right, int top, int bottom)
+        {
+            this.Left = left;
+            this.Right = right;
+            this.Bottom = bottom;
+            this.Top = top;
+        }
         public Padding()
         {
 

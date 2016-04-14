@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.25123.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSite", "WebSite\WebSite.csproj", "{ADB418DA-1C8C-4059-AAF3-55BB0CE11FA1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -15,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsLib", "WindowsFormsLib\WindowsFormsLib.csproj", "{D6BB3817-6AD0-4428-AB92-66BC90DBC02D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReVision.JSForms", "ReVision.JSForms\ReVision.JSForms.csproj", "{7EB52427-26D6-4942-95AB-76D1F4E46D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.Qooxdoo", "Bridge.Qooxdoo\Bridge.Qooxdoo.csproj", "{44F6AFDF-E086-4D53-AC01-3EF9D2746176}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,12 @@ Global
 		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EB52427-26D6-4942-95AB-76D1F4E46D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.AgentCoverageDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.AgentCoverageDebug|Any CPU.Build.0 = Debug|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

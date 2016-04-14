@@ -16,15 +16,9 @@ namespace WindowsFormsLib
         {
             InitializeComponent();
 
-            this.dateTimePicker1.Value = DateTime.Now;
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
-            int i = 0;
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             int i = 0;
         }

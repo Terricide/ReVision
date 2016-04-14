@@ -12,8 +12,6 @@ namespace System.Windows.Forms
     {
         public bool Multiline;
         public string PasswordChar;
-        private TextAreaElement textArea;
-        private InputElement inputElement;
 
         public TextBox()
         {
@@ -22,32 +20,25 @@ namespace System.Windows.Forms
 
         public override void Render()
         {
-            if (this.Multiline)
+            if( this.Multiline )
             {
-                if( this.textArea == null )
-                {
-                    textArea = new TextAreaElement();
-                    this.Element = textArea;
-                }
-                if( !string.IsNullOrEmpty(this.Text) )
-                {
-                    textArea.Value = this.Text;
-                }
+                var tf  = new qx.ui.form.TextArea();
+                tf.Value = this.Text;
+                this.Element = tf;
             }
             else
             {
-                if ( inputElement == null )
-                {
-                    inputElement = new InputElement();
-                    this.Element = inputElement;
-                }
-                if (this.PasswordChar != null && this.PasswordChar.Length > 0 && this.PasswordChar[0] != '\0')
-                {
-                    inputElement.Type = InputType.Password;
-                }
-                inputElement.Value = this.Text;
+                var tf = new qx.ui.form.TextField();
+                tf.Value = this.Text;
+                this.Element = tf;
             }
-            this.Element.ClassName = "k-textbox";
+
+            if (this.PasswordChar != null && this.PasswordChar.Length > 0 && this.PasswordChar[0] != '\0')
+            {
+                var tf = new qx.ui.form.PasswordField();
+                tf.Value = this.Text;
+                this.Element = tf;
+            }
 
             base.Render();
         }

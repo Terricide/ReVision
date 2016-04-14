@@ -9,14 +9,20 @@
                 }
             },
             main: function () {
-                var app = new ReVision.JSForms.Application();
+                //Application app = new Application();
             }
         }
     });
     
     Bridge.define('ReVision.JSForms.Application', {
         statics: {
-            current: null
+            current: null,
+            rootDocument: null,
+            config: {
+                events: {
+                    OnWindowResize: null
+                }
+            }
         },
         ws: null,
         root: null,
@@ -26,7 +32,8 @@
                 this.controls = new Bridge.Dictionary$2(String,System.Windows.Forms.Control)();
             }
         },
-        constructor: function () {
+        constructor: function (doc) {
+            ReVision.JSForms.Application.rootDocument = doc;
             ReVision.JSForms.Application.current = this;
             var path = "";
     
@@ -97,13 +104,16 @@
                     var form = Bridge.merge(new System.Windows.Forms.Form(), JSON.parse(JSON.stringify(evt.value)));
                     form.setClientId(evt.clientId);
                     var parent = form.getParent();
+                    if (!Bridge.hasValue(this.root)) {
+                        this.root = form;
+                    }
+                    else  {
+                        form.setParent(this.root);
+                    }
                     if (!Bridge.hasValue(parent)) {
-                        if (!Bridge.hasValue(this.root)) {
-                            this.root = form;
-                        }
                         window.onresize = Bridge.fn.bind(this, this.onResize);
                         document.title = form.getText();
-                        document.body.appendChild(form.element);
+                        //Document.Body.AppendChild(form.Element);
                     }
                     this.addOrUpdate(form);
                     form.showDialog();
@@ -116,9 +126,12 @@
         },
         onResize: function (e) {
             if (e === void 0) { e = null; }
-            this.controls.clear();
-            this.root.element.innerHTML = "";
-            this.root.showDialog();
+            if (Bridge.hasValue(ReVision.JSForms.Application.OnWindowResize)) {
+                ReVision.JSForms.Application.OnWindowResize(this, Object.empty);
+            }
+            //Controls.Clear();
+            //Root.Element.InnerHTML = "";
+            //xRoot.RealignControls();
         },
         addOrUpdate: function (ctrl) {
             if (!Bridge.String.isNullOrEmpty(ctrl.getParentId()) && this.controls.containsKey(ctrl.getParentId())) {

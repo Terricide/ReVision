@@ -150,12 +150,21 @@ namespace System.Windows.Forms
                 this.Size = new Size(this.Width, value);
             }
         }
-
+        private Size mClientSize = new Size(300, 300);
+        [JsonConverter(typeof(ReVision.Forms.JsonConverters.SizeConverter))]
         public Size ClientSize
         {
             get
             {
-                return this.Size;
+                return this.mClientSize;
+            }
+            set
+            {
+                if( mClientSize != value)
+                {
+                    mClientSize = value;
+                    RaisePropertyChanged();
+                }
             }
         }
         private bool mVisible = true;

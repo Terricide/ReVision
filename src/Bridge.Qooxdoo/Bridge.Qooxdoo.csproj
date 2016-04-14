@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{44F6AFDF-E086-4D53-AC01-3EF9D2746176}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bridge.Qooxdoo</RootNamespace>
+    <AssemblyName>Bridge.Qooxdoo</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bridge, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.1.12.0\lib\net40\Bridge.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bridge.Html5, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.1.12.0\lib\net40\Bridge.Html5.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bridge.jQuery2, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.jQuery.2.8.0\lib\net40\Bridge.jQuery2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="qx\core\Object.cs" />
+    <Compile Include="qx\data\Array.cs" />
+    <Compile Include="qx\data\controller\ControllerDelegate.cs" />
+    <Compile Include="qx\data\controller\List.cs" />
+    <Compile Include="qx\data\marshal\Json.cs" />
+    <Compile Include="qx\html\Element.cs" />
+    <Compile Include="qx\html\RootElement.cs" />
+    <Compile Include="qx\ui\basic\atom.cs" />
+    <Compile Include="qx\ui\basic\Label.cs" />
+    <Compile Include="qx\ui\container\Composite.cs" />
+    <Compile Include="qx\ui\container\Scroll.cs" />
+    <Compile Include="qx\ui\core\LayoutItem.cs" />
+    <Compile Include="qx\ui\core\scroll\AbstractScroll.cs" />
+    <Compile Include="qx\ui\core\scroll\AbstractScrollArea.cs" />
+    <Compile Include="qx\ui\core\Widget.cs" />
+    <Compile Include="qx\ui\embed\Html.cs" />
+    <Compile Include="qx\ui\form\AbstractField.cs" />
+    <Compile Include="qx\ui\form\AbstractSelectBox.cs" />
+    <Compile Include="qx\ui\form\Button.cs" />
+    <Compile Include="qx\ui\form\CheckBox.cs" />
+    <Compile Include="qx\ui\form\ComboBox.cs" />
+    <Compile Include="qx\ui\form\DateField.cs" />
+    <Compile Include="qx\ui\form\List.cs" />
+    <Compile Include="qx\ui\form\ListItem.cs" />
+    <Compile Include="qx\ui\form\PasswordField.cs" />
+    <Compile Include="qx\ui\form\RadioButton.cs" />
+    <Compile Include="qx\ui\form\TextArea.cs" />
+    <Compile Include="qx\ui\form\TextField.cs" />
+    <Compile Include="qx\ui\form\ToogleButton.cs" />
+    <Compile Include="qx\ui\groupbox\GroupBox.cs" />
+    <Compile Include="qx\ui\indicator\ProgressBar.cs" />
+    <Compile Include="qx\ui\layout\Abstract.cs" />
+    <Compile Include="qx\ui\layout\Basic.cs" />
+    <Compile Include="qx\ui\layout\Canvas.cs" />
+    <Compile Include="qx\ui\layout\Dock.cs" />
+    <Compile Include="qx\ui\layout\VBox.cs" />
+    <Compile Include="qx\ui\tabview\Page.cs" />
+    <Compile Include="qx\ui\tabview\TabView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Readme\Bridge.NET\LICENSE" />
+    <None Include="App_Readme\Bridge.NET\README.md" />
+    <None Include="Bridge\bridge.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Bridge.1.12.0\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.12.0\build\Bridge.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Bridge.1.12.0\build\Bridge.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.1.12.0\build\Bridge.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

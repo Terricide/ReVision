@@ -10,35 +10,51 @@ namespace System.Windows.Forms
 {
     public class DateTimePicker : Control
     {
-        public DateTime Value;
-        private Bridge.Html5.InputElement dtp;
+        private Date mValue;
+        public Date Value
+        {
+            get
+            {
+                return mValue;
+            }
+            set
+            {
+                string val = (dynamic)value;
+                mValue = new Date(val);
+            }
+        }
+
 
         public DateTimePicker()
         {
-            this.Value = DateTime.Now;
+            //this.Value = DateTime.Now;
+            this.Element = new qx.ui.form.DateField();
         }
 
         public override void Render()
         {
             base.Render();
 
-            if( dtp == null )
-            {
-                dtp = new Bridge.Html5.InputElement();
-                this.Element.AppendChild(dtp);
-            }
-            dtp.Value = (dynamic)this.Value;
+            var dtp = (qx.ui.form.DateField)this.Element;
+            dtp.Value = this.mValue;
 
-            KendoDatePicker.Element(dtp, (e) =>
-            {
-                Value = e.ToDynamic().sender.value();
-                FireEvent(new WSEventArgs()
-                {
-                    ClientId = this.ClientId,
-                    EventType = "valueChanged",
-                    Value = this.Value
-                });
-            }, this.Value);
+            //if( dtp == null )
+            //{
+            //    dtp = new Bridge.Html5.InputElement();
+            //    this.Element.AppendChild(dtp);
+            //}
+            //dtp.Value = (dynamic)this.Value;
+
+            //KendoDatePicker.Element(dtp, (e) =>
+            //{
+            //    Value = e.ToDynamic().sender.value();
+            //    FireEvent(new WSEventArgs()
+            //    {
+            //        ClientId = this.ClientId,
+            //        EventType = "valueChanged",
+            //        Value = this.Value
+            //    });
+            //}, this.Value);
         }
 
         public class KendoDatePicker
