@@ -81,16 +81,16 @@ namespace System.Windows.Forms
 //Control.prototype.Render(this.Element, obj, parent);
             base.Render();
 
-            KendoGrid grid = new KendoGrid();
-            grid.AutoBind = false;
-            grid.Sortable = true;
-            grid.Filterable = true;
+            //KendoGrid grid = new KendoGrid();
+            //grid.AutoBind = false;
+            //grid.Sortable = true;
+            //grid.Filterable = true;
 
-            KendoGrid.Element(this.Element, grid);
+            //KendoGrid.Element(this.Element, grid);
 
-            this.Element.Style.BorderStyle = BorderStyle.Solid;
-            this.Element.Style.BorderWidth = BorderWidth.Thin;
-            this.Element.Style.BorderColor = "gray";
+            //this.Element.Style.BorderStyle = BorderStyle.Solid;
+            //this.Element.Style.BorderWidth = BorderWidth.Thin;
+            //this.Element.Style.BorderColor = "gray";
         }
     }
 
