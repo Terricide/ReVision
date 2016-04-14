@@ -435,6 +435,10 @@ namespace System.Windows.Forms
                             var tv = JSON.Parse<TreeView>(JSON.Stringify(ctrl));
                             ctrl1 = tv;
                             break;
+                        case "ListView":
+                            var lv = JSON.Parse<ListView>(JSON.Stringify(ctrl));
+                            ctrl1 = lv;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;
