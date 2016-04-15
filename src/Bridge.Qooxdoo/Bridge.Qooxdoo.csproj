@@ -45,6 +45,7 @@
       <HintPath>..\packages\Bridge.jQuery.2.8.0\lib\net40\Bridge.jQuery2.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="qx\ui\layout\VBox.cs" />
     <Compile Include="qx\ui\tabview\Page.cs" />
     <Compile Include="qx\ui\tabview\TabView.cs" />
+    <Compile Include="qx\ui\window\Window.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
