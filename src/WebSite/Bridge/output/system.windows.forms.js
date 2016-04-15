@@ -1332,12 +1332,23 @@
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
-            this.element = new qx.ui.window.Window();
         },
         showDialog: function () {
+            var win = null;
+    
+            if (Bridge.hasValue(this.getParent())) {
+                this.element = new qx.ui.window.Window();
+                win = Bridge.cast(this.element, qx.ui.window.Window);
+                win.setCaption(this.getText());
+            }
+    
             this.render();
-            var win = Bridge.cast(this.element, qx.ui.window.Window);
-            win.setCaption(this.getText());
+    
+            if (Bridge.hasValue(win)) {
+                win.open();
+            }
+    
+    
             //this.Window = new DivElement();
             //this.Window.Id = "WI_" + this.ClientId;
             //this.jWindow = jQuery.Element(this.Window);

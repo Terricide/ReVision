@@ -19,7 +19,6 @@ namespace System.Windows.Forms
         public Form()
         {
             this.RenderLabel = false;
-            this.Element = new qx.ui.window.Window();
         }
 
         //private int GetWidth()
@@ -64,9 +63,23 @@ namespace System.Windows.Forms
 
         public void ShowDialog()
         {
+            qx.ui.window.Window win = null;
+
+            if ( this.Parent != null )
+            {
+                this.Element = new qx.ui.window.Window();
+                win = (qx.ui.window.Window)this.Element;
+                win.Caption = this.Text;
+            }
+
             Render();
-            var win = (qx.ui.window.Window)this.Element;
-            win.Caption = this.Text;
+
+            if( win != null )
+            {
+                win.Open();
+            }
+
+            
             //this.Window = new DivElement();
             //this.Window.Id = "WI_" + this.ClientId;
             //this.jWindow = jQuery.Element(this.Window);

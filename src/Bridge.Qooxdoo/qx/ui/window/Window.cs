@@ -22,6 +22,7 @@ namespace qx.ui.window
         public bool ShowStatusBar { get; set; }
         public string Status { get; set; }
         public Visibility Visibility { get; set; }
+        public extern void Open();
         public Window(string caption = null, string icon = null)
         {
             
