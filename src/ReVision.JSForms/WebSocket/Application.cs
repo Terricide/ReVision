@@ -90,6 +90,10 @@ namespace ReVision.JSForms
                 case "addListViewColumn":
                 case "removeListViewColumn":
                 case "clearList":
+                    if(Controls.ContainsKey(evt.ClientId))
+                    {
+                        Controls[evt.ClientId].Update(evt);
+                    }
                     //onChangeProperty(obj);
                     break;
                 case "removeControl":
@@ -167,9 +171,9 @@ namespace ReVision.JSForms
             this.Send(args);
         }
 
-        public void Send(object o)
+        public void Send(object o, Delegate replacer = null)
         {
-            var msg = JSON.Stringify(o);
+            var msg = JSON.Stringify(o, replacer);
             this.ws.Send(msg);
         }
     }

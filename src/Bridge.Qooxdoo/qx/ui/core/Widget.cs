@@ -13,5 +13,7 @@ namespace qx.ui.core
         public string BackgroundColor { get; set; }
 
         public extern html.Element GetContentElement();
+
+        public string ClientId { get; set; }
     }
 }

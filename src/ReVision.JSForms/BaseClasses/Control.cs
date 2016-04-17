@@ -477,6 +477,11 @@ namespace System.Windows.Forms
             });
         }
 
+        public virtual void Update(WSEventArgs evt)
+        {
+
+        }
+
         public virtual void Render()
         {
             SetAttributes();
@@ -559,9 +564,9 @@ namespace System.Windows.Forms
             //}
         }
 
-        public virtual async Task FireEvent(WSEventArgs evt)
+        public virtual async Task FireEvent(WSEventArgs evt, Delegate replacer = null)
         {
-            Application.Current.Send(evt);
+            Application.Current.Send(evt, replacer);
         }
 
         private List<Control> mControls;
@@ -669,6 +674,7 @@ namespace System.Windows.Forms
                     }
                     ctrl1.Parent = this;
                     mControls.Add(ctrl1);
+                    Application.Current.Controls.Add(ctrl1.ClientId, ctrl1);
                 }
             }
 

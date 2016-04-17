@@ -10,6 +10,8 @@ namespace System.Windows.Forms
 {
     public class TreeView : Control
     {
+        private qx.ui.tree.Tree tree;
+        private qx.ui.tree.TreeFolder root;
         private TreeNode[] mNodes;
         private TreeNode[] Nodes
         {
@@ -23,6 +25,13 @@ namespace System.Windows.Forms
             }
         }
 
+        public TreeView()
+        {
+            this.tree = new qx.ui.tree.Tree();
+            this.tree.HideRoot = true;
+            this.Element = tree;
+        }
+
         //private DivElement TreeElement;
 
         //public Fancytree FancyTree;
@@ -33,10 +42,24 @@ namespace System.Windows.Forms
             //this.TreeElement = new DivElement();
             //this.TreeElement.Id = "TR_" + this.ClientId;
 
-            //RenderNode(this.TreeElement, null);
+            RenderNode(null, null);
 
 
             base.Render();
+
+            this.Element.AddListener("changeSelection", (e) =>
+            {
+                qx.ui.tree.Tree tree = (dynamic)e.Target;
+                var selected = (from t in tree.Selection
+                                select (qx.ui.tree.TreeFolder)t);
+                var folders = (selected.Select(n => new { Name = n.Label })).ToArray();
+                this.FireEvent(new WSEventArgs()
+                {
+                    ClientId = this.ClientId,
+                    EventType = "AfterSelect",
+                    Value = folders
+                });
+            });
 
             //this.Element.AppendChild(this.TreeElement);
             //this.Element.Style.BorderStyle = BorderStyle.Solid;
@@ -45,41 +68,49 @@ namespace System.Windows.Forms
             //this.FancyTree = Fancytree.Element(this.TreeElement);
         }
 
-        //private void RenderNode(Element parent, TreeNode parentNode)
-        //{
-        //    var ul = new UListElement();
+        private void RenderNode(qx.ui.tree.TreeFolder parent, TreeNode parentNode)
+        {
+            TreeNode[] nodes = new TreeNode[0];
 
-        //    TreeNode[] nodes = new TreeNode[0];
+            if (parentNode == null)
+            {
+                nodes = this.Nodes;
+            }
+            else
+            {
+                nodes = parentNode.Nodes;
+            }
 
-        //    if( parentNode == null )
-        //    {
-        //        nodes = this.Nodes;
-        //        ul.Style.Display = Display.None;
-        //    }
-        //    else
-        //    {
-        //        nodes = parentNode.Nodes;
-        //    }
+            if (nodes.Length == 0)
+            {
+                return;
+            }
 
-        //    if (nodes.Length == 0)
-        //    {
-        //        return;
-        //    }
+            for (var i = 0; i < nodes.Length; i++)
+            {
+                var node = nodes[i];
+                var folder = new qx.ui.tree.TreeFolder();
+                folder.Label = node.Name;
+                node.Folder = folder;
 
-        //    for (var i = 0; i < nodes.Length; i++)
-        //    {
-        //        var node = nodes[i];
-        //        var li = new LIElement();
+                RenderNode(folder, node);
 
-        //        li.InnerHTML = node.Text;
-        //        li.Id = node.Name;
-        //        ul.AppendChild(li);
-
-        //        RenderNode(li, node);
-        //    }
-
-        //    parent.AppendChild(ul);
-        //}
+                if (parent != null)
+                {
+                    parent.Add(folder);
+                }
+                else
+                {
+                    if( root == null )
+                    {
+                        root = new qx.ui.tree.TreeFolder();
+                        root.Open = true;
+                        tree.Root = root;
+                    }
+                    root.Add(folder);
+                }
+            }
+        }
     }
 
     public class Fancytree

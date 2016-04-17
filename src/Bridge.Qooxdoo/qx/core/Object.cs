@@ -11,7 +11,7 @@ namespace qx.core
     [External]
     public class Object
     {
-        public virtual extern void AddListener(string name, Action<UIEvent> listener);
+        public virtual extern void AddListener(string name, Action<qx.qxevent.type.Event> listener);
 
         [Template("add({0},{1})")]
         public extern void Add(Object btn, Options p = null);

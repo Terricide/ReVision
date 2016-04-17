@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace System.Windows.Forms
+namespace qx.ui.tree
 {
-    public class ListViewItem
+    [Bridge.External]
+    public class TreeFile : core.AbstractTreeItem
     {
-        [Bridge.Name("SubItems")]
-        public object[] SubItems;
     }
 }

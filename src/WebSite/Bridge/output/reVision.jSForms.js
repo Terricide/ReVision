@@ -87,6 +87,9 @@
                 case "addListViewColumn": 
                 case "removeListViewColumn": 
                 case "clearList": 
+                    if (this.controls.containsKey(evt.clientId)) {
+                        this.controls.get(evt.clientId).update(evt);
+                    }
                     //onChangeProperty(obj);
                     break;
                 case "removeControl": 
@@ -151,8 +154,9 @@
     
             this.send(args);
         },
-        send: function (o) {
-            var msg = JSON.stringify(o);
+        send: function (o, replacer) {
+            if (replacer === void 0) { replacer = null; }
+            var msg = JSON.stringify(o, replacer);
             this.ws.send(msg);
         }
     });

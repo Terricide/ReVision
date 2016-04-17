@@ -34,6 +34,18 @@ namespace System.Windows.Forms
             {
                 switch(args.EventType)
                 {
+                    case "AfterSelect":
+                        {
+                            if (AfterSelect != null)
+                            {
+                                var obj = args.Value as Newtonsoft.Json.Linq.JArray;
+                                var selected = obj.FirstOrDefault();
+
+                                var node = this.Nodes.Where(n => n.Name == selected["name"].ToString()).FirstOrDefault();
+                                AfterSelect(this, new TreeViewEventArgs(node));
+                            }
+                        }
+                        break;
                     case "fancytreecreate":
                         IsHandleCreated = true;
                         break;

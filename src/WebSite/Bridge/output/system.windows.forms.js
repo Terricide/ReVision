@@ -155,7 +155,9 @@
         top: null
     });
     
-    Bridge.define('System.Windows.Forms.ListViewItem');
+    Bridge.define('System.Windows.Forms.ListViewItem', {
+        SubItems: null
+    });
     
     Bridge.define('System.Windows.Forms.ObservableItemPropertyChangedArgs', {
         property: null,
@@ -217,6 +219,7 @@
         name: null,
         text: null,
         nodes: null,
+        folder: null,
         constructor: function () {
             this.nodes = Bridge.Array.init(0, null);
         }
@@ -803,6 +806,9 @@
     
             parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
         },
+        update: function (evt) {
+    
+        },
         render: function () {
             var $t;
             this.setAttributes();
@@ -883,7 +889,7 @@
             //    };
             //}
         },
-        fireEvent: function (evt) {
+        fireEvent: function (evt, replacer) {
             var $step = 0,
                 $jumpFromFinally, 
                 $tcs = new Bridge.TaskCompletionSource(), 
@@ -895,7 +901,8 @@
                             $step = Bridge.Array.min([0], $step);
                             switch ($step) {
                                 case 0: {
-                                    ReVision.JSForms.Application.current.send(evt);
+                                    if (replacer === void 0) { replacer = null; }
+                                    ReVision.JSForms.Application.current.send(evt, replacer);
                                     $tcs.setResult(null);
                                     return;
                                 }
@@ -1016,6 +1023,7 @@
                     }
                     ctrl1.setParent(this);
                     this.mControls.add(ctrl1);
+                    ReVision.JSForms.Application.current.controls.add(ctrl1.getClientId(), ctrl1);
                 }
             }
     
@@ -1542,8 +1550,92 @@
     
     Bridge.define('System.Windows.Forms.ListView', {
         inherits: [System.Windows.Forms.Control],
-        columns: null,
+        mColumns: null,
+        mItems: null,
+        getColumns: function () {
+            return this.mColumns;
+        },
+        setColumns: function (value) {
+            var $t;
+            this.mColumns = new Bridge.List$1(System.Windows.Forms.ColumnHeader)();
+            $t = Bridge.getEnumerator(value);
+            while ($t.moveNext()) {
+                var col = $t.getCurrent();
+                this.mColumns.add(Bridge.merge(new System.Windows.Forms.ColumnHeader(), JSON.parse(JSON.stringify(col))));
+            }
+        },
+        getItems: function () {
+            return this.mItems;
+        },
+        setItems: function (value) {
+            var $t;
+            this.mItems = new Bridge.List$1(System.Windows.Forms.ListViewItem)();
+            $t = Bridge.getEnumerator(value);
+            while ($t.moveNext()) {
+                var item = $t.getCurrent();
+                this.mItems.add(Bridge.merge(new System.Windows.Forms.ListViewItem(), JSON.parse(JSON.stringify(item))));
+            }
+    
+        },
+        update: function (evt) {
+            System.Windows.Forms.Control.prototype.update.call(this, evt);
+            var table = Bridge.cast(this.element, qx.ui.table.Table);
+            switch (evt.eventType) {
+                case "clearList": 
+                    {
+                        var model = Bridge.cast(table.getTableModel(), qx.ui.table.model.Simple);
+                        model.removeRows(0, model.getRowCount());
+                    }
+                    break;
+                case "addListViewItem": 
+                    {
+                        var item = Bridge.merge(new System.Windows.Forms.ListViewItem(), JSON.parse(evt.value.toString()));
+                        this.mItems.add(item);
+                        var data = Bridge.Array.init(this.getColumns().getCount(), null);
+    
+                        for (var i = 0; i < this.getColumns().getCount(); i = (i + 1) | 0) {
+                            data[i] = Bridge.Array.init(1, null);
+                            data[i][0] = item.SubItems[i];
+                        }
+                        var model1 = Bridge.cast(table.getTableModel(), qx.ui.table.model.Simple);
+                        model1.addRows(data);
+                    }
+                    break;
+            }
+        },
+        renderItems: function () {
+            var table = Bridge.cast(this.element, qx.ui.table.Table);
+            var model = Bridge.cast(table.getTableModel(), qx.ui.table.model.Simple);
+            var data = Bridge.Array.init(this.getColumns().getCount(), null);
+    
+            for (var i = 0; i < this.getColumns().getCount(); i = (i + 1) | 0) {
+                data[i] = Bridge.Array.init(this.getItems().getCount(), null);
+                for (var x = 0; x < this.getItems().getCount(); x = (x + 1) | 0) {
+                    var item = this.getItems().getItem(x);
+                    data[i][x] = item.SubItems[i];
+                }
+            }
+    
+            model.addRows(data);
+        },
         render: function () {
+            var model = new qx.ui.table.model.Simple();
+            if (this.getColumns().getCount() > 0) {
+                var columnNames = Bridge.Array.init(this.getColumns().getCount(), null);
+                for (var i = 0; i < this.getColumns().getCount(); i = (i + 1) | 0) {
+                    var col = this.getColumns().getItem(i);
+                    columnNames[i] = col.getColumnName();
+                }
+    
+                model.setColumns(columnNames);
+            }
+    
+            var table = new qx.ui.table.Table(model);
+            this.element = table;
+            System.Windows.Forms.Control.prototype.render.call(this);
+    
+            this.renderItems();
+    
             //            this.Element = document.createElement('div');
             //            var size = obj.Size.split(',');
             //            var width = size[0] + 'px';
@@ -1848,7 +1940,16 @@
     
     Bridge.define('System.Windows.Forms.TreeView', {
         inherits: [System.Windows.Forms.Control],
+        tree: null,
+        root: null,
         mNodes: null,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+            this.tree = new qx.ui.tree.Tree();
+            this.tree.setHideRoot(true);
+            this.element = this.tree;
+        },
         getNodes: function () {
             return this.mNodes;
         },
@@ -1860,16 +1961,76 @@
             //this.TreeElement = new DivElement();
             //this.TreeElement.Id = "TR_" + this.ClientId;
     
-            //RenderNode(this.TreeElement, null);
+            this.renderNode(null, null);
     
     
             System.Windows.Forms.Control.prototype.render.call(this);
+    
+            this.element.addListener("changeSelection", Bridge.fn.bind(this, $_.System.Windows.Forms.TreeView.f3));
     
             //this.Element.AppendChild(this.TreeElement);
             //this.Element.Style.BorderStyle = BorderStyle.Solid;
             //this.Element.Style.BorderWidth = BorderWidth.Thin;
             //this.Element.Style.BorderColor = "gray";
             //this.FancyTree = Fancytree.Element(this.TreeElement);
+        },
+        renderNode: function (parent, parentNode) {
+            var nodes = Bridge.Array.init(0, null);
+    
+            if (!Bridge.hasValue(parentNode)) {
+                nodes = this.getNodes();
+            }
+            else  {
+                nodes = parentNode.nodes;
+            }
+    
+            if (nodes.length === 0) {
+                return;
+            }
+    
+            for (var i = 0; i < nodes.length; i = (i + 1) | 0) {
+                var node = nodes[i];
+                var folder = new qx.ui.tree.TreeFolder();
+                folder.setLabel(node.name);
+                node.folder = folder;
+    
+                this.renderNode(folder, node);
+    
+                if (Bridge.hasValue(parent)) {
+                    parent.add(folder);
+                }
+                else  {
+                    if (!Bridge.hasValue(this.root)) {
+                        this.root = new qx.ui.tree.TreeFolder();
+                        this.root.setOpen(true);
+                        this.tree.setRoot(this.root);
+                    }
+                    this.root.add(folder);
+                }
+            }
+        }
+    });
+    
+    var $_ = {};
+    
+    Bridge.ns("System.Windows.Forms.TreeView", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.TreeView, {
+        f1: function (t) {
+            return Bridge.cast(t, qx.ui.tree.TreeFolder);
+        },
+        f2: function (n) {
+            return { name: n.getLabel() };
+        },
+        f3: function (e) {
+            var tree = e.getTarget();
+            var selected = (Bridge.Linq.Enumerable.from(tree.getSelection()).select($_.System.Windows.Forms.TreeView.f1));
+            var folders = (selected.select($_.System.Windows.Forms.TreeView.f2)).toArray();
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "AfterSelect",
+                value: folders
+            } ));
         }
     });
     
@@ -1884,7 +2045,9 @@
             System.Windows.Forms.ButtonBase.prototype.render.call(this);
     
             (Bridge.cast(this.element, qx.ui.form.Button)).setLabel(this.getText());
-            this.element.addListener("execute", Bridge.fn.bind(this, $_.System.Windows.Forms.Button.f1));
+            if (this.hasEvent("Click")) {
+                this.element.addListener("execute", Bridge.fn.bind(this, $_.System.Windows.Forms.Button.f1));
+            }
     
             //this.Parent.Element.Add(this.Element, new qx.html.Options()
             //{
@@ -1894,8 +2057,6 @@
             //KendoButton.Element(this.Element);
         }
     });
-    
-    var $_ = {};
     
     Bridge.ns("System.Windows.Forms.Button", $_)
     
