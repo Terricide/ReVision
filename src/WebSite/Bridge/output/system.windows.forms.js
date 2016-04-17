@@ -1337,15 +1337,20 @@
             var win = null;
     
             if (Bridge.hasValue(this.getParent())) {
-                this.element = new qx.ui.window.Window();
-                win = Bridge.cast(this.element, qx.ui.window.Window);
+                win = new qx.ui.window.Window();
                 win.setCaption(this.getText());
+                this.element = win;
+                win.setLayout(new qx.ui.layout.Basic());
+                win.setPadding(0);
             }
     
             this.render();
     
             if (Bridge.hasValue(win)) {
+                win.setWidth((this.clientSize.width + 10) | 0);
+                win.setHeight((this.clientSize.height + 30) | 0);
                 win.open();
+                win.center();
             }
     
     
@@ -1738,6 +1743,11 @@
         splitterDistance: 0,
         mPanel1: null,
         mPanel2: null,
+        constructor: function () {
+            System.Windows.Forms.Control.prototype.$constructor.call(this);
+    
+    
+        },
         getPanel1: function () {
             return this.mPanel1;
         },
@@ -1753,10 +1763,25 @@
             this.mPanel2.setParent(this);
         },
         render: function () {
-            this.getPanel1().render();
-            this.getPanel2().render();
+            var $t, $t1;
+            var pane = new qx.ui.splitpane.Pane("horizontal");
+            this.element = pane;
+    
+            $t = Bridge.getEnumerator(this.getPanel1().getControls());
+            while ($t.moveNext()) {
+                var ctrl = $t.getCurrent();
+                ctrl.render();
+            }
+            $t1 = Bridge.getEnumerator(this.getPanel2().getControls());
+            while ($t1.moveNext()) {
+                var ctrl1 = $t1.getCurrent();
+                ctrl1.render();
+            }
     
             System.Windows.Forms.Control.prototype.render.call(this);
+    
+            pane.add(this.getPanel1().element, 0);
+            pane.add(this.getPanel2().element, 1);
     
             //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }

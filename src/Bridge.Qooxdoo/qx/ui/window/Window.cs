@@ -23,6 +23,8 @@ namespace qx.ui.window
         public string Status { get; set; }
         public Visibility Visibility { get; set; }
         public extern void Open();
+        public layout.Abstract Layout { get; set; }
+        public extern void Center();
         public Window(string caption = null, string icon = null)
         {
             

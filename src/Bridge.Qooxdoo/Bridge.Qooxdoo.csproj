@@ -85,8 +85,10 @@
     <Compile Include="qx\ui\layout\Canvas.cs" />
     <Compile Include="qx\ui\layout\Dock.cs" />
     <Compile Include="qx\ui\layout\VBox.cs" />
+    <Compile Include="qx\ui\splitpane\Pane.cs" />
     <Compile Include="qx\ui\tabview\Page.cs" />
     <Compile Include="qx\ui\tabview\TabView.cs" />
+    <Compile Include="qx\ui\window\Desktop.cs" />
     <Compile Include="qx\ui\window\Window.cs" />
   </ItemGroup>
   <ItemGroup>

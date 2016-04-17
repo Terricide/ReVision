@@ -10,6 +10,10 @@ namespace System.Windows.Forms
 {
     public class SplitContainer : Control
     {
+        public SplitContainer()
+        {
+            
+        }
         public int SplitterDistance;
         private Panel mPanel1;
         public Panel Panel1
@@ -39,11 +43,23 @@ namespace System.Windows.Forms
         }
 
         public override void Render()
-        { 
-            this.Panel1.Render();
-            this.Panel2.Render();
+        {
+            var pane = new qx.ui.splitpane.Pane(qx.ui.splitpane.SplitPaneType.Horizontal);
+            this.Element = pane;
+
+            foreach(var ctrl in this.Panel1.GetControls())
+            {
+                ctrl.Render();
+            }
+            foreach (var ctrl in this.Panel2.GetControls())
+            {
+                ctrl.Render();
+            }
 
             base.Render();
+
+            pane.Add(this.Panel1.Element, 0);
+            pane.Add(this.Panel2.Element, 1);
 
             //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }

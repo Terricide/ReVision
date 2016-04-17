@@ -67,16 +67,21 @@ namespace System.Windows.Forms
 
             if ( this.Parent != null )
             {
-                this.Element = new qx.ui.window.Window();
-                win = (qx.ui.window.Window)this.Element;
+                win = new qx.ui.window.Window();
                 win.Caption = this.Text;
+                this.Element = win;
+                win.Layout = new qx.ui.layout.Basic();
+                win.SetPadding(0);
             }
 
             Render();
 
             if( win != null )
             {
+                win.Width = this.ClientSize.Width + 10;
+                win.Height = this.ClientSize.Height + 30;
                 win.Open();
+                win.Center();
             }
 
             

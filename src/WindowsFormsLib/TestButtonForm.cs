@@ -20,7 +20,8 @@ namespace WindowsFormsLib
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int i = 0;
+            TestButtonForm form = new TestButtonForm();
+            form.ShowDialog();
         }
     }
 }
