@@ -21,13 +21,6 @@ namespace System.Windows.Forms
             base.Render();
 
             ((qx.ui.form.Button)this.Element).Label = this.Text;
-            if (this.HasEvent("Click"))
-            {
-                this.Element.AddListener("execute", (e) =>
-                {
-                    OnClick();
-                });
-            }
 
             //this.Parent.Element.Add(this.Element, new qx.html.Options()
             //{

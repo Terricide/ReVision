@@ -16,8 +16,6 @@ namespace System.Windows.Forms
         }
         public object[] Items;
 
-        private InputElement cb;
-
         public int SelectedIndex;
 
         public override void Render()
@@ -80,11 +78,26 @@ namespace System.Windows.Forms
 
             base.Render();
             var cb = (qx.ui.form.ComboBox)this.Element;
+            cb.ChildrenContainer.AddListener("changeSelection", (e) =>
+            {
+                var childContainer = cb.ChildrenContainer;
+                int selectedIndex = cb.IndexOf(childContainer.Selection[0]);
+                FireEvent(new WSEventArgs()
+                {
+                    ClientId = this.ClientId,
+                    EventType = "selectedIndexChanged",
+                    Value = selectedIndex
+                });
+                //this.SelectedIndex = cb.
+            });
             cb.Value = this.Text;
             //cb.TextField.Value = this.Text;
-            foreach (var obj in Items)
+            for(int i=0; i < Items.Length; i++)
             {
-                cb.Add(new qx.ui.form.ListItem(obj.ToString()));
+                cb.Add(new qx.ui.form.ListItem(Items[i].ToString())
+                {
+                    Index = i
+                });
             }
         }
 

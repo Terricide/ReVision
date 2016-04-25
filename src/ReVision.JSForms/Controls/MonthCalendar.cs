@@ -8,5 +8,9 @@ namespace System.Windows.Forms
 {
     public class MonthCalendar : Control
     {
+        public MonthCalendar()
+        {
+            this.Element = new qx.ui.control.DateChooser();
+        }
     }
 }

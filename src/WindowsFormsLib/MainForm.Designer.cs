@@ -149,7 +149,6 @@ namespace WindowsFormsLib
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.tbPassword);
             this.tabPage1.Controls.Add(this.label21);
-            this.tabPage1.Controls.Add(this.label20);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.radioButton2);
@@ -160,6 +159,7 @@ namespace WindowsFormsLib
             this.tabPage1.Controls.Add(this.linkLabel1);
             this.tabPage1.Controls.Add(this.radioButton1);
             this.tabPage1.Controls.Add(this.comboBox1);
+            this.tabPage1.Controls.Add(this.label20);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -280,9 +280,10 @@ namespace WindowsFormsLib
             // label20
             // 
             this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label20.Location = new System.Drawing.Point(28, 243);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(85, 13);
+            this.label20.Size = new System.Drawing.Size(116, 18);
             this.label20.TabIndex = 15;
             this.label20.Text = "DateTime picker";
             // 

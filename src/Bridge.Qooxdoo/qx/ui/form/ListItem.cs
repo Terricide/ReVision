@@ -9,6 +9,7 @@ namespace qx.ui.form
     [Bridge.External]
     public class ListItem : basic.Atom
     {
+        public int Index;
         public ListItem(string text)
         {
             return;

@@ -15,5 +15,7 @@ namespace qx.ui.core
         public extern html.Element GetContentElement();
 
         public string ClientId { get; set; }
+
+        public qx.bom.Font Font { get; set; }
     }
 }

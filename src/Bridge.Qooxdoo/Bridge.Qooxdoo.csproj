@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="qx\bom\Font.cs" />
     <Compile Include="qx\core\Object.cs" />
     <Compile Include="qx\data\Array.cs" />
     <Compile Include="qx\data\controller\ControllerDelegate.cs" />
@@ -58,10 +59,13 @@
     <Compile Include="qx\qxevent\type\Event.cs" />
     <Compile Include="qx\html\Element.cs" />
     <Compile Include="qx\html\RootElement.cs" />
+    <Compile Include="qx\theme\manager\Font.cs" />
     <Compile Include="qx\ui\basic\atom.cs" />
+    <Compile Include="qx\ui\basic\Image.cs" />
     <Compile Include="qx\ui\basic\Label.cs" />
     <Compile Include="qx\ui\container\Composite.cs" />
     <Compile Include="qx\ui\container\Scroll.cs" />
+    <Compile Include="qx\ui\control\DateChooser.cs" />
     <Compile Include="qx\ui\core\LayoutItem.cs" />
     <Compile Include="qx\ui\core\scroll\AbstractScroll.cs" />
     <Compile Include="qx\ui\core\scroll\AbstractScrollArea.cs" />

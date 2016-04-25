@@ -10,6 +10,7 @@ namespace qx.ui.form
     public class ComboBox : AbstractSelectBox
     {
         public TextField TextField;
+        public Button Button;
         public string Value { get; set; }
     }
 }

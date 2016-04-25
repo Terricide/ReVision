@@ -90,31 +90,74 @@ namespace System.Windows.Forms
             }
         }
 
-        protected void SetText(Element elm)
+        protected void SetText(qx.ui.core.Widget elm)
         {
+            var font = this.Font;
+            if( font == null )
+            {
+                font = "9px \"Microsoft Sans Serif\"";
+            }
+            else
+            {
+                font = font.Replace("pt", "px");
+            }
+
+            elm.Font = qx.bom.Font.FromString(font);
             if (!string.IsNullOrEmpty(this.ForeColor))
             {
-                elm.Style.Color = this.ForeColor;
+                elm.Font.Color = this.ForeColor;
             }
 
-            if (!string.IsNullOrEmpty(this.Font))
-            {
-                var split = this.Font.Split(',');
+            //if (!string.IsNullOrEmpty(this.Font))
+            //{
+            //    var split = this.Font.Split(',');
 
-                elm.Style.FontFamily = split[0];
+            //    elm.Font.Family = new string[] { split[0] };
 
-                var size = split[1].Replace("pt", "").Trim();
-                var fs = Int32.Parse(size);
-                fs = fs + 5;
-                elm.Style.FontSize = fs + "px";
-            }
+            //    var size = split[1].Replace("pt", "").Trim();
+            //    var fs = Int32.Parse(size.Split('.')[0]);
+            //    //fs -= 1;
+            //    elm.Font.Size = fs;
 
-            elm.InnerHTML = this.Text;
+            //    if( split.Length > 2 )
+            //    {
+            //        var boldStype = split[2].Split('=');
+            //        if( boldStype.Length > 1 )
+            //        {
+            //            if(boldStype[1] == "Bold")
+            //            {
+            //                elm.Font.Bold = true;
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    elm.Font.Family = new string[] { "Microsoft Sans Serif" };
+            //    elm.Font.Size = 12;
+            //}
         }
+
+        //protected void bigfont(qx.ui.core.Widget elm)
+        //{
+
+        //    var manager = qx.theme.manager.Font.Instance;
+
+        //    var defaultFont = manager.Resolve(elm.Font);
+
+        //    var size = defaultFont.Size.getSize();
+
+        //    var newFont = defaultFont.clone();
+
+        //    newFont.setSize(size + 2);
+
+        //    obj.setFont(newFont);
+
+        //}
 
         protected void SetAttributes(qx.core.Object parentElement = null)
         {
-            if( this.Parent == null )
+            if (this.Parent == null)
             {
                 this.Element = Application.RootDocument;
 
@@ -144,10 +187,10 @@ namespace System.Windows.Forms
                 //        Edge = 0
                 //    });
                 //}
-                }
+            }
             else
-                {
-                if( parentElement == null )
+            {
+                if (parentElement == null)
                 {
                     parentElement = this.Parent.Element;
                 }
@@ -173,18 +216,21 @@ namespace System.Windows.Forms
                     li = (qx.ui.core.LayoutItem)this.Element;
                 }
 
-            switch (this.Dock)
-            {
-                case DockStyle.None:
+                switch (this.Dock)
+                {
+                    case DockStyle.None:
                         parentElement.Add(this.Element, new qx.core.Options()
                         {
                             Left = this.Location.X,
                             Top = this.Location.Y
                         });
-                        li.Width = this.Width;
+                        if( !this.AutoSize )
+                        {
+                            li.Width = this.Width;
+                        }
                         li.Height = this.Height;
-                    break;
-                case DockStyle.Left:
+                        break;
+                    case DockStyle.Left:
                         {
                             parentElement.Add(this.Element, new qx.core.Options()
                             {
@@ -194,8 +240,8 @@ namespace System.Windows.Forms
                             li.Height = this.Height;
                             li.Width = this.Width;
                         }
-                    break;
-                case DockStyle.Right:
+                        break;
+                    case DockStyle.Right:
                         {
                             parentElement.Add(this.Element, new qx.core.Options()
                             {
@@ -205,8 +251,8 @@ namespace System.Windows.Forms
                             li.Height = this.Height;
                             li.Width = this.Width;
                         }
-                    break;
-                case DockStyle.Top:
+                        break;
+                    case DockStyle.Top:
                         {
                             parentElement.Add(this.Element, new qx.core.Options()
                             {
@@ -216,8 +262,8 @@ namespace System.Windows.Forms
                             li.Height = this.Height;
                             li.Width = this.Width;
                         }
-                    break;
-                case DockStyle.Bottom:
+                        break;
+                    case DockStyle.Bottom:
                         {
                             parentElement.Add(this.Element, new qx.core.Options()
                             {
@@ -227,13 +273,13 @@ namespace System.Windows.Forms
                             li.Height = this.Height;
                             li.Width = this.Width;
                         }
-                    break;
-                case DockStyle.Fill:
+                        break;
+                    case DockStyle.Fill:
                         {
                             ResizeDockFill(parentElement, li);
                         }
-                    break;
-            }
+                        break;
+                }
 
             }
 
@@ -242,14 +288,17 @@ namespace System.Windows.Forms
                 case DockStyle.Fill:
                     break;
                 default:
-                {
+                    {
                         if (this.Element is qx.ui.core.LayoutItem)
                         {
                             var li = (qx.ui.core.LayoutItem)this.Element;
-                            li.Width = this.Width;
+                            if( !this.AutoSize )
+                            {
+                                li.Width = this.Width;
+                            }
                             li.Height = this.Height;
-                }
-            }
+                        }
+                    }
                     break;
             }
 
@@ -257,12 +306,16 @@ namespace System.Windows.Forms
             {
                 var li = (qx.ui.core.Widget)this.Element;
                 var bc = this.BackColor;
-                if( !string.IsNullOrEmpty(bc) )
+                if (!string.IsNullOrEmpty(bc))
                 {
                     li.BackgroundColor = this.BackColor;
                     //li.BackgroundColor = "#0f0";
-                    }
+                }
+
+
+                SetText(li);
             }
+     
 
             //this.Element.Id = "WU_" + this.ClientId;
 
@@ -422,6 +475,22 @@ namespace System.Windows.Forms
             //            break;
             //    }
             //}
+
+            //if (this.ForeColor)
+            //{
+            //    div.style.color = obj.ForeColor;
+            //}
+
+            //if (obj.Font != undefined)
+            //{
+            //    var split = obj.Font.split(',');
+
+            //    div.style.fontFamily = split[0];
+
+            //    var fs = parseInt(split[1].replace('pt', ''));
+            //    fs = fs + 5;
+            //    div.style.fontSize = fs + 'px';
+            //}
         }
 
         private void ResizeDockFill(qx.core.Object parentElement, qx.ui.core.LayoutItem li)
@@ -479,7 +548,7 @@ namespace System.Windows.Forms
 
         public virtual void Update(WSEventArgs evt)
         {
-
+            
         }
 
         public virtual void Render()
@@ -495,21 +564,23 @@ namespace System.Windows.Forms
             //{
             //    ReAlignControls(this.Parent, this);
             //}
-            }
+
+            SetupEventHandlers();
+        }
 
         private void SetupEventHandlers()
         {
-            //if (this.HasEvent("Click"))
-            //{
-            //    this.Element.OnClick = (e) =>
-            //    {
-            //        this.FireEvent(new WSEventArgs()
-            //        {
-            //            ClientId = this.ClientId,
-            //            EventType = "click"
-            //        });
-            //    };
-            //}
+            if (this.HasEvent("Click"))
+            {
+                this.Element.AddListener("execute", (e) =>
+                {
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "click"
+                    });
+                });
+            }
 
             //if (this.HasEvent("MouseMove"))
             //{
@@ -667,6 +738,14 @@ namespace System.Windows.Forms
                         case "RichTextBox":
                             var rtb = JSON.Parse<RichTextBox>(JSON.Stringify(ctrl));
                             ctrl1 = rtb;
+                            break;
+                        case "MonthCalendar":
+                            var mc = JSON.Parse<MonthCalendar>(JSON.Stringify(ctrl));
+                            ctrl1 = mc;
+                            break;
+                        case "PictureBox":
+                            var pBox = JSON.Parse<PictureBox>(JSON.Stringify(ctrl));
+                            ctrl1 = pBox;
                             break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));

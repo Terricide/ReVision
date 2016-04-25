@@ -9,6 +9,7 @@ namespace qx.ui.form
     [Bridge.External]
     public class AbstractSelectBox : core.Widget
     {
-        public List List;
+        public List ChildrenContainer { get; }
+        public extern int IndexOf(qx.ui.core.LayoutItem item);
     }
 }

@@ -15,13 +15,25 @@ namespace System.Windows.Forms
             this.Element = new qx.ui.basic.Label();
         }
 
+        public override void Update(WSEventArgs evt)
+        {
+            base.Update(evt);
+
+            switch (evt.PropertyUpdate.Name)
+            {
+                case "Text":
+                    this.Text = evt.PropertyUpdate.Value as string;
+                    var lbl = (qx.ui.basic.Label)this.Element;
+                    lbl.Value = this.Text;
+                    break;
+            }
+        }
+
         public override void Render()
         {
             base.Render();
             var lbl = (qx.ui.basic.Label)this.Element;
             lbl.Value = this.Text;
-            lbl.Width = this.Width;
-            //SetText(this.Element);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -85,6 +86,7 @@ namespace System.Windows.Forms
                 switch (args.EventType)
                 {
                     case "selectedIndexChanged":
+                        Debug.WriteLine("selectedIndexChanged:" + args.Value);
                         this.SelectedIndex = Convert.ToInt32(args.Value);
                         break;
                 }

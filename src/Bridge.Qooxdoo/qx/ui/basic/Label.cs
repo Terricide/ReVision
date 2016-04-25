@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace qx.ui.basic
 {
     [External]
-    public class Label : html.Element
+    public class Label : core.Widget
     {
         public string Value { get; set; }
-        public int Width { get; set; }
     }
 }
