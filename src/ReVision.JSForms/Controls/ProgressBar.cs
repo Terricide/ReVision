@@ -15,6 +15,19 @@ namespace System.Windows.Forms
             this.Element = new qx.ui.indicator.ProgressBar();
         }
 
+        public override void Update(WSEventArgs evt)
+        {
+            base.Update(evt);
+
+            switch(evt.PropertyUpdate.Name)
+            {
+                case "Value":
+                    var pb = (qx.ui.indicator.ProgressBar)this.Element;
+                    pb.Value = (int)evt.PropertyUpdate.Value;
+                    break;
+            }
+        }
+
         public override void Render()
         {
             base.Render();

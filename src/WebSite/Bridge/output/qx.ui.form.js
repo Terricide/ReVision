@@ -1,9 +1,8 @@
 ﻿(function (globals) {
     "use strict";
 
-    Bridge.define('qx.ui.form.Location', {
-        left: 0,
-        top: 0
+    Bridge.define('qx.ui.form.RadioGroup', {
+        inherits: [qx.core.Object]
     });
     
     

@@ -14,5 +14,7 @@ namespace qx.ui.form
         public RadioButton(string text = null)
         {
         }
+
+        public RadioGroup Group { get; set; }
     }
 }

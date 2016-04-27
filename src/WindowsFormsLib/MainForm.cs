@@ -84,12 +84,20 @@ namespace WindowsFormsLib
             foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, e.Node.Name)))
             {
                 DirectoryInfo di = new DirectoryInfo(dir);
-                var li = this.listView1.Items.Add(di.Name);
-                li.Tag = di;
+                ListViewItem item = new ListViewItem(di.Name);
+                item.SubItems.Add(di.LastWriteTime.ToString());
+                item.SubItems.Add("File folder");
+                item.Tag = di;
+                this.listView1.Items.Add(item);
             }
             foreach (var dir in Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, e.Node.Name)))
             {
-                this.listView1.Items.Add(Path.GetFileName(dir));
+                FileInfo fi = new FileInfo(dir);
+                ListViewItem item = new ListViewItem(Path.GetFileName(dir));
+                item.SubItems.Add(fi.LastWriteTime.ToString());
+                item.SubItems.Add(fi.Attributes == FileAttributes.Directory ? "File folder" : "File");
+                item.SubItems.Add(fi.Length.ToString());
+                this.listView1.Items.Add(item);
             }
         }
 

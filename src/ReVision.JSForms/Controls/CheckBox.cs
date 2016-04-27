@@ -15,13 +15,23 @@ namespace System.Windows.Forms
             this.Element = new qx.ui.form.CheckBox();
         }
         public bool Checked { get; set; }
-        private Bridge.Html5.InputElement rb;
         public override void Render()
         {
             base.Render();
             var cb = (qx.ui.form.CheckBox)this.Element;
             cb.Label = this.Text;
             cb.Value = this.Checked;
+
+            cb.AddListener("changeValue", (e) =>
+            {
+                this.Checked = cb.Value;
+                FireEvent(new WSEventArgs()
+                {
+                    ClientId = this.ClientId,
+                    EventType = "checkChanged",
+                    Value = cb.Value
+                });
+            });
 
             //var elm = jQuery.Element(this.Element);
 

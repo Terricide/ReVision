@@ -311,6 +311,7 @@
     Bridge.define('System.Windows.Forms.Control', {
         inherits: [System.Windows.Forms.Component],
         element: null,
+        radioButtonGroup: null,
         label: null,
         foreColor: null,
         font: null,
@@ -344,6 +345,7 @@
             },
             init: function () {
                 this.element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+                this.radioButtonGroup = new qx.ui.form.RadioGroup();
                 this.dockPanel = new qx.ui.container.Composite(new qx.ui.layout.Dock());
                 this.mSize = new System.Drawing.Size(300, 300);
             }
@@ -927,18 +929,9 @@
             //    };
             //};
     
-            //if (this.HasEvent("TextChanged"))
-            //{
-            //    this.Element.OnChange = (e) =>
-            //    {
-            //        this.FireEvent(new WSEventArgs()
-            //        {
-            //            ClientId = this.ClientId,
-            //            EventType = "mouseleave",
-            //            Value = e
-            //        });
-            //    };
-            //}
+            if (this.hasEvent("TextChanged")) {
+                this.element.addListener("onchange", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2));
+            }
         },
         fireEvent: function (evt, replacer) {
             var $step = 0,
@@ -1162,6 +1155,17 @@
             this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
                 clientId: this.getClientId(),
                 eventType: "click"
+            } ));
+        },
+        f2: function (e) {
+            var val = null;
+            if (Bridge.is(this.element, qx.ui.form.AbstractField)) {
+                val = (Bridge.cast(this.element, qx.ui.form.AbstractField)).getValue();
+            }
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "TextChanged",
+                value: val
             } ));
         }
     });
@@ -1680,12 +1684,13 @@
                     {
                         var item = Bridge.merge(new System.Windows.Forms.ListViewItem(), JSON.parse(evt.value.toString()));
                         this.mItems.add(item);
-                        var data = Bridge.Array.init(this.getColumns().getCount(), null);
+                        var data = Bridge.Array.init(1, null);
     
-                        for (var i = 0; i < this.getColumns().getCount(); i = (i + 1) | 0) {
-                            data[i] = Bridge.Array.init(1, null);
-                            data[i][0] = item.SubItems[i];
+                        data[0] = Bridge.Array.init(this.getColumns().getCount(), null);
+                        for (var x = 0; x < item.SubItems.length; x = (x + 1) | 0) {
+                            data[0][x] = item.SubItems[x];
                         }
+    
                         var model1 = Bridge.cast(table.getTableModel(), qx.ui.table.model.Simple);
                         model1.addRows(data);
                     }
@@ -1695,13 +1700,13 @@
         renderItems: function () {
             var table = Bridge.cast(this.element, qx.ui.table.Table);
             var model = Bridge.cast(table.getTableModel(), qx.ui.table.model.Simple);
-            var data = Bridge.Array.init(this.getColumns().getCount(), null);
+            var data = Bridge.Array.init(this.getItems().getCount(), null);
     
-            for (var i = 0; i < this.getColumns().getCount(); i = (i + 1) | 0) {
-                data[i] = Bridge.Array.init(this.getItems().getCount(), null);
+            for (var i = 0; i < this.getItems().getCount(); i = (i + 1) | 0) {
+                data[i] = Bridge.Array.init(this.getColumns().getCount(), null);
                 for (var x = 0; x < this.getItems().getCount(); x = (x + 1) | 0) {
                     var item = this.getItems().getItem(x);
-                    data[i][x] = item.SubItems[i];
+                    data[i][x] = item.SubItems[x];
                 }
             }
     
@@ -1914,6 +1919,16 @@
     
             this.element = new qx.ui.indicator.ProgressBar();
         },
+        update: function (evt) {
+            System.Windows.Forms.Control.prototype.update.call(this, evt);
+    
+            switch (evt.getPropertyUpdate().name) {
+                case "Value": 
+                    var pb = Bridge.cast(this.element, qx.ui.indicator.ProgressBar);
+                    pb.setValue(Bridge.cast(evt.getPropertyUpdate().value, Bridge.Int32));
+                    break;
+            }
+        },
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
             var pb = Bridge.cast(this.element, qx.ui.indicator.ProgressBar);
@@ -1988,6 +2003,8 @@
     
             pane.add(this.getPanel1().element, 0);
             pane.add(this.getPanel2().element, 1);
+            (Bridge.cast(this.getPanel2().element, qx.ui.core.Widget)).setWidth(((Bridge.cast(this.getPanel2().element, qx.ui.core.Widget)).getWidth() - 50) | 0);
+            //((qx.ui.core.Widget)this.Panel2.Element).PaddingBottom = 5;
     
             //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }
@@ -2169,7 +2186,6 @@
     
     Bridge.define('System.Windows.Forms.CheckBox', {
         inherits: [System.Windows.Forms.ButtonBase],
-        rb: null,
         config: {
             properties: {
                 Checked: false
@@ -2185,6 +2201,15 @@
             var cb = Bridge.cast(this.element, qx.ui.form.CheckBox);
             cb.setLabel(this.getText());
             cb.setValue(this.getChecked());
+    
+            cb.addListener("changeValue", Bridge.fn.bind(this, function (e) {
+                this.setChecked(cb.getValue());
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "checkChanged",
+                    value: cb.getValue()
+                } ));
+            }));
     
             //var elm = jQuery.Element(this.Element);
     
@@ -2327,7 +2352,6 @@
     
     Bridge.define('System.Windows.Forms.RadioButton', {
         inherits: [System.Windows.Forms.ButtonBase],
-        rb: null,
         config: {
             properties: {
                 Checked: false
@@ -2344,6 +2368,28 @@
             var rb = Bridge.cast(this.element, qx.ui.form.RadioButton);
             rb.setLabel(this.getText());
             rb.setValue(this.getChecked());
+            rb.addListener("changeValue", Bridge.fn.bind(this, function (e) {
+                this.setChecked(rb.getValue());
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "checkChanged",
+                    value: rb.getValue()
+                } ));
+            }));
+    
+            //qx.ui.form.RadioGroup group = null;
+            //var groupId = this.Parent.ClientId + "rb_group";
+            //if( rbGroups.ContainsKey(groupId) )
+            //{
+            //    group = rbGroups[groupId];
+            //}
+            //else
+            //{
+            //    group = new qx.ui.form.RadioGroup();
+            //    rbGroups.Add(groupId, group);
+            //}
+            rb.setGroup(this.getParent().radioButtonGroup);
+    
             //var elm = jQuery.Element(this.Element);
     
             //elm.Css("cursor", "pointer");
@@ -2360,13 +2406,7 @@
     
             //rb.OnChange = (e) =>
             //{
-            //    this.Checked = rb.Checked;
-            //    FireEvent(new WSEventArgs()
-            //    {
-            //        ClientId = this.ClientId,
-            //        EventType = "checkChanged",
-            //        Value = rb.Checked
-            //    });
+    
             //};
     
             //base.Render();

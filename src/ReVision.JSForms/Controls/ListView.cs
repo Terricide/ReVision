@@ -61,13 +61,14 @@ namespace System.Windows.Forms
                     {
                         var item = JSON.Parse<ListViewItem>(evt.Value.ToString());
                         mItems.Add(item);
-                        object[][] data = new object[this.Columns.Count][];
+                        object[][] data = new object[1][];
 
-                        for (int i = 0; i < this.Columns.Count; i++)
+                        data[0] = new object[this.Columns.Count];
+                        for (int x = 0; x < item.SubItems.Length; x++)
                         {
-                            data[i] = new object[1];
-                            data[i][0] = item.SubItems[i];
+                            data[0][x] = item.SubItems[x];
                         }
+
                         var model = (qx.ui.table.model.Simple)table.TableModel;
                         model.AddRows(data);
                     }
@@ -79,15 +80,15 @@ namespace System.Windows.Forms
         {
             var table = (qx.ui.table.Table)this.Element;
             var model = (qx.ui.table.model.Simple)table.TableModel;
-            object[][] data = new object[this.Columns.Count][];
+            object[][] data = new object[this.Items.Count][];
 
-            for (int i = 0; i < this.Columns.Count; i++)
+            for (int i = 0; i < this.Items.Count; i++)
             {
-                data[i] = new object[this.Items.Count];
+                data[i] = new object[this.Columns.Count];
                 for (int x = 0; x < this.Items.Count; x++)
                 {
                     var item = this.Items[x];
-                    data[i][x] = item.SubItems[i];
+                    data[i][x] = item.SubItems[x];
                 }
             }
 

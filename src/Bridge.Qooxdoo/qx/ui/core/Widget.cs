@@ -17,5 +17,11 @@ namespace qx.ui.core
         public string ClientId { get; set; }
 
         public qx.bom.Font Font { get; set; }
+
+        public int PaddingBottom { get; set; }
+        public int PaddingLeft { get; set; }
+        public int PaddingRight { get; set; }
+        public int PaddingTop { get; set; }
     }
 }
+

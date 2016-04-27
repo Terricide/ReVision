@@ -60,17 +60,6 @@ namespace System.Windows.Forms
 
             pane.Add(this.Panel1.Element, 0);
             pane.Add(this.Panel2.Element, 1);
-
-            //KendoSplitter.Element(this.Element, this.SplitterDistance);
-        }
-    }
-
-    public class KendoSplitter
-    {
-        [Template("$({0}).kendoSplitter({panes: [{ size: {1} },]})")]
-        public static KendoSplitter Element(Element elm, int splitterDistance)
-        {
-            return null;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace System.Windows.Forms
     public class Control : Component
     {
         public qx.core.Object Element = new qx.ui.container.Composite(new qx.ui.layout.Basic());
+        public qx.ui.form.RadioGroup radioButtonGroup = new qx.ui.form.RadioGroup();
         public Label Label;
         public string ForeColor;
         public string Font;
@@ -621,18 +622,23 @@ namespace System.Windows.Forms
             //    };
             //};
 
-            //if (this.HasEvent("TextChanged"))
-            //{
-            //    this.Element.OnChange = (e) =>
-            //    {
-            //        this.FireEvent(new WSEventArgs()
-            //        {
-            //            ClientId = this.ClientId,
-            //            EventType = "mouseleave",
-            //            Value = e
-            //        });
-            //    };
-            //}
+            if (this.HasEvent("TextChanged"))
+            {
+                this.Element.AddListener("onchange", (e) =>
+                {
+                    object val = null;
+                    if( this.Element is qx.ui.form.AbstractField)
+                    {
+                        val = ((qx.ui.form.AbstractField)this.Element).Value;
+                    }
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "TextChanged",
+                        Value = val
+                    });
+                });
+            }
         }
 
         public virtual async Task FireEvent(WSEventArgs evt, Delegate replacer = null)

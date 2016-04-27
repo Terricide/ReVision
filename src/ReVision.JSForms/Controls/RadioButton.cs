@@ -10,12 +10,13 @@ namespace System.Windows.Forms
 {
     public class RadioButton : ButtonBase
     {
+        public bool Checked { get; set; }
+
         public RadioButton()
         {
             this.Element = new qx.ui.form.RadioButton();
         }
-        public bool Checked { get; set; }
-        private Bridge.Html5.InputElement rb;
+
         public override void Render()
         {
             base.Render();
@@ -23,6 +24,30 @@ namespace System.Windows.Forms
             var rb = (qx.ui.form.RadioButton)this.Element;
             rb.Label = this.Text;
             rb.Value = this.Checked;
+            rb.AddListener("changeValue", (e) =>
+            {
+                this.Checked = rb.Value;
+                FireEvent(new WSEventArgs()
+                {
+                    ClientId = this.ClientId,
+                    EventType = "checkChanged",
+                    Value = rb.Value
+                });
+            });
+
+            //qx.ui.form.RadioGroup group = null;
+            //var groupId = this.Parent.ClientId + "rb_group";
+            //if( rbGroups.ContainsKey(groupId) )
+            //{
+            //    group = rbGroups[groupId];
+            //}
+            //else
+            //{
+            //    group = new qx.ui.form.RadioGroup();
+            //    rbGroups.Add(groupId, group);
+            //}
+            rb.Group = this.Parent.radioButtonGroup;
+
             //var elm = jQuery.Element(this.Element);
 
             //elm.Css("cursor", "pointer");
@@ -39,13 +64,7 @@ namespace System.Windows.Forms
 
             //rb.OnChange = (e) =>
             //{
-            //    this.Checked = rb.Checked;
-            //    FireEvent(new WSEventArgs()
-            //    {
-            //        ClientId = this.ClientId,
-            //        EventType = "checkChanged",
-            //        Value = rb.Checked
-            //    });
+
             //};
 
             //base.Render();

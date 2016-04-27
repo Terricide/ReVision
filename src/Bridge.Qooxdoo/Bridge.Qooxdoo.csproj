@@ -81,6 +81,7 @@
     <Compile Include="qx\ui\form\ListItem.cs" />
     <Compile Include="qx\ui\form\PasswordField.cs" />
     <Compile Include="qx\ui\form\RadioButton.cs" />
+    <Compile Include="qx\ui\form\RadioGroup.cs" />
     <Compile Include="qx\ui\form\TextArea.cs" />
     <Compile Include="qx\ui\form\TextField.cs" />
     <Compile Include="qx\ui\form\ToogleButton.cs" />
