@@ -317,6 +317,7 @@
         dockPanel: null,
         mPadding: null,
         renderLabel: true,
+        canvas: null,
         mBackColor: null,
         controls: null,
         mAnchor: 3,
@@ -648,6 +649,11 @@
                     //li.BackgroundColor = "#0f0";
                 }
     
+                if (!Bridge.String.isNullOrEmpty(this.getBackgroundImage())) {
+                    var d = new qx.ui.decoration.Decorator();
+                    d.setBackgroundImage("data:image/png;base64," + this.getBackgroundImage() + "");
+                    li2.decorator = d;
+                }
     
                 this.setText$1(li2);
             }
@@ -868,10 +874,17 @@
             parentElement.add(this.element,{ left: this.getLeft(), top: this.getTop() });
         },
         update: function (evt) {
-    
+            switch (evt.getPropertyUpdate().name) {
+                case "Canvas": 
+                    break;
+            }
         },
         render: function () {
             var $t;
+            if (!Bridge.String.isNullOrEmpty(this.canvas)) {
+                this.setBackgroundImage(this.canvas);
+            }
+    
             this.setAttributes();
     
             $t = Bridge.getEnumerator(this.getControls());

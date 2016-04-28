@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using qx.ui.decoration;
 
 namespace System.Windows.Forms
 {
@@ -36,6 +37,8 @@ namespace System.Windows.Forms
         protected bool RenderLabel = true;
 
         public string BackgroundImage { get; set; }
+
+        public string Canvas;
 
         private string mBackColor;
         public virtual string BackColor
@@ -317,6 +320,12 @@ namespace System.Windows.Forms
                     //li.BackgroundColor = "#0f0";
                 }
 
+                if( !string.IsNullOrEmpty(this.BackgroundImage) )
+                {
+                    var d = new qx.ui.decoration.Decorator();
+                    d.SetBackgroundImage("data:image/png;base64," + this.BackgroundImage + "");
+                    li.Decorator = d;
+                }
 
                 SetText(li);
             }
@@ -553,11 +562,20 @@ namespace System.Windows.Forms
 
         public virtual void Update(WSEventArgs evt)
         {
-            
+            switch(evt.PropertyUpdate.Name)
+            {
+                case "Canvas":
+                    break;
+            }
         }
 
         public virtual void Render()
         {
+            if (!string.IsNullOrEmpty(this.Canvas))
+            {
+                this.BackgroundImage = this.Canvas;
+            }
+
             SetAttributes();
 
             foreach (var ctrl in this.GetControls())

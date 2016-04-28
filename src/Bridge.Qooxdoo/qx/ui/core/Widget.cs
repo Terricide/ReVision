@@ -33,6 +33,8 @@ namespace qx.ui.core
         public bool Enabled { get; set; }
 
         public extern void Destroy();
+
+        public qx.ui.decoration.Abstract Decorator;
     }
 }
 

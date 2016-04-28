@@ -74,6 +74,9 @@
     <Compile Include="qx\ui\core\scroll\AbstractScroll.cs" />
     <Compile Include="qx\ui\core\scroll\AbstractScrollArea.cs" />
     <Compile Include="qx\ui\core\Widget.cs" />
+    <Compile Include="qx\ui\decoration\Abstract.cs" />
+    <Compile Include="qx\ui\decoration\Decorator.cs" />
+    <Compile Include="qx\ui\decoration\MBackgroundImage.cs" />
     <Compile Include="qx\ui\embed\Html.cs" />
     <Compile Include="qx\ui\form\AbstractField.cs" />
     <Compile Include="qx\ui\form\AbstractSelectBox.cs" />
