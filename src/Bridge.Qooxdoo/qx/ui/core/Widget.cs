@@ -22,6 +22,17 @@ namespace qx.ui.core
         public int PaddingLeft { get; set; }
         public int PaddingRight { get; set; }
         public int PaddingTop { get; set; }
+        public bool NativeContextMenu { get; set; }
+        public int Opacity { get; set; }
+        public bool Selectable { get; set; }
+        public bool ShowToolTipWhenDisabled { get; set; }
+        public int TabIndex { get; set; }
+        public string TextColor { get; set; }
+        public string ToolTipText { get; set; }
+        public string ToolTipIcon { get; set; }
+        public bool Enabled { get; set; }
+
+        public extern void Destroy();
     }
 }
 

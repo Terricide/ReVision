@@ -96,17 +96,21 @@ namespace System.Windows.Forms
             var font = this.Font;
             if( font == null )
             {
-                font = "9px \"Microsoft Sans Serif\"";
+                font = "12px \"Microsoft Sans Serif\"";
+                elm.Font = qx.bom.Font.FromString(font);
             }
             else
             {
                 font = font.Replace("pt", "px");
+                elm.Font = qx.bom.Font.FromString(font);
+                elm.Font.Size += 4;
             }
 
-            elm.Font = qx.bom.Font.FromString(font);
+
             if (!string.IsNullOrEmpty(this.ForeColor))
             {
                 elm.Font.Color = this.ForeColor;
+                elm.TextColor = this.ForeColor;
             }
 
             //if (!string.IsNullOrEmpty(this.Font))
@@ -579,6 +583,118 @@ namespace System.Windows.Forms
                     {
                         ClientId = this.ClientId,
                         EventType = "click"
+                    });
+                });
+            }
+
+            if (this.HasEvent("KeyDown"))
+            {
+                this.Element.AddListener("keydown", (e) =>
+                {
+                    var key = (qx.qxevent.type.KeySequence)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "keydown",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("KeyUp"))
+            {
+                this.Element.AddListener("keyup", (e) =>
+                {
+                    var key = (qx.qxevent.type.KeySequence)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "keyup",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("KeyPress"))
+            {
+                this.Element.AddListener("keypress", (e) =>
+                {
+                    var key = (qx.qxevent.type.KeySequence)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "keyup",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("MouseDown"))
+            {
+                this.Element.AddListener("mousedown", (e) =>
+                {
+                    var key = (qx.qxevent.type.Mouse)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mousedown",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("MouseUp"))
+            {
+                this.Element.AddListener("mouseup", (e) =>
+                {
+                    var key = (qx.qxevent.type.Mouse)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseup",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("MouseMove"))
+            {
+                this.Element.AddListener("mousemove", (e) =>
+                {
+                    var key = (qx.qxevent.type.Mouse)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mousemove",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("MouseOut"))
+            {
+                this.Element.AddListener("mouseout", (e) =>
+                {
+                    var key = (qx.qxevent.type.Mouse)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseout",
+                        Value = key
+                    });
+                });
+            }
+
+            if (this.HasEvent("MouseOver"))
+            {
+                this.Element.AddListener("mouseover", (e) =>
+                {
+                    var key = (qx.qxevent.type.Mouse)(dynamic)e;
+                    this.FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "mouseover",
+                        Value = key
                     });
                 });
             }

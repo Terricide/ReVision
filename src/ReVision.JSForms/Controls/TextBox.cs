@@ -18,6 +18,22 @@ namespace System.Windows.Forms
             RenderLabel = false;
         }
 
+        public override void Update(WSEventArgs evt)
+        {
+            base.Update(evt);
+            switch (evt.PropertyUpdate.Name)
+            {
+                case "PasswordChar":
+                    {
+                        this.PasswordChar = evt.PropertyUpdate.Value as string;
+                        ((qx.ui.core.Widget)this.Element).Destroy();
+
+                        Render();
+                    }
+                    break;
+            }
+        }
+
         public override void Render()
         {
             if( this.Multiline )
@@ -39,6 +55,33 @@ namespace System.Windows.Forms
                 tf.Value = this.Text;
                 this.Element = tf;
             }
+
+            this.Element.AddListener("changeValue", (e) =>
+            {
+                var af = (qx.ui.form.AbstractField)this.Element;
+                this.Text = af.Value;
+                FireEvent(new WSEventArgs()
+                {
+                    ClientId = this.ClientId,
+                    EventType = "textchanged",
+                    Value = af.Value
+                });
+            });
+
+            this.Element.AddListener("input", (e) =>
+            {
+                var af = (qx.ui.form.AbstractField)this.Element;
+                this.Text = af.Value;
+                if (this.HasEvent("KeyPress"))
+                {
+                    FireEvent(new WSEventArgs()
+                    {
+                        ClientId = this.ClientId,
+                        EventType = "textchanged",
+                        Value = af.Value
+                    });
+                }
+            });
 
             base.Render();
         }

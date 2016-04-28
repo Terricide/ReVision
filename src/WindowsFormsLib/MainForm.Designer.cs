@@ -416,9 +416,10 @@ namespace WindowsFormsLib
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.NavajoWhite;
             this.groupBox1.Location = new System.Drawing.Point(495, 181);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(375, 274);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -651,7 +652,7 @@ namespace WindowsFormsLib
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(347, 105);
+            this.label18.Location = new System.Drawing.Point(344, 108);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(41, 13);
             this.label18.TabIndex = 22;
@@ -752,7 +753,7 @@ namespace WindowsFormsLib
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listView1);
-            this.splitContainer1.Size = new System.Drawing.Size(990, 611);
+            this.splitContainer1.Size = new System.Drawing.Size(990, 586);
             this.splitContainer1.SplitterDistance = 330;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -761,7 +762,7 @@ namespace WindowsFormsLib
             this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            this.treeView2.Size = new System.Drawing.Size(330, 611);
+            this.treeView2.Size = new System.Drawing.Size(330, 586);
             this.treeView2.TabIndex = 0;
             this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView2_AfterSelect);
             // 
@@ -775,7 +776,7 @@ namespace WindowsFormsLib
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(656, 611);
+            this.listView1.Size = new System.Drawing.Size(656, 586);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -797,9 +798,11 @@ namespace WindowsFormsLib
             // label19
             // 
             this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.label19.Location = new System.Drawing.Point(17, 20);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(268, 13);
+            this.label19.Size = new System.Drawing.Size(525, 24);
             this.label19.TabIndex = 0;
             this.label19.Text = "SplitContainer with a treeview/listview directory browser";
             // 

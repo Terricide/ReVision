@@ -134,8 +134,6 @@
     
     Bridge.define('System.Windows.Forms.KendoMaskedTextBox');
     
-    Bridge.define('System.Windows.Forms.KendoSplitter');
-    
     Bridge.define('System.Windows.Forms.KendoWindow', {
         title: null,
         width: 0,
@@ -480,15 +478,19 @@
         setText$1: function (elm) {
             var font = this.font;
             if (!Bridge.hasValue(font)) {
-                font = "9px \"Microsoft Sans Serif\"";
+                font = "12px \"Microsoft Sans Serif\"";
+                elm.setFont(qx.bom.Font.fromString(font));
             }
             else  {
                 font = Bridge.String.replaceAll(font, "pt", "px");
+                elm.setFont(qx.bom.Font.fromString(font));
+                elm.getFont().setSize(Bridge.Int.clip32(Bridge.Nullable.add(elm.getFont().getSize(), 4)));
             }
     
-            elm.setFont(qx.bom.Font.fromString(font));
+    
             if (!Bridge.String.isNullOrEmpty(this.foreColor)) {
                 elm.getFont().setColor(this.foreColor);
+                elm.setTextColor(this.foreColor);
             }
     
             //if (!string.IsNullOrEmpty(this.Font))
@@ -890,6 +892,38 @@
                 this.element.addListener("execute", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f1));
             }
     
+            if (this.hasEvent("KeyDown")) {
+                this.element.addListener("keydown", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2));
+            }
+    
+            if (this.hasEvent("KeyUp")) {
+                this.element.addListener("keyup", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3));
+            }
+    
+            if (this.hasEvent("KeyPress")) {
+                this.element.addListener("keypress", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f3));
+            }
+    
+            if (this.hasEvent("MouseDown")) {
+                this.element.addListener("mousedown", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f4));
+            }
+    
+            if (this.hasEvent("MouseUp")) {
+                this.element.addListener("mouseup", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f5));
+            }
+    
+            if (this.hasEvent("MouseMove")) {
+                this.element.addListener("mousemove", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f6));
+            }
+    
+            if (this.hasEvent("MouseOut")) {
+                this.element.addListener("mouseout", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f7));
+            }
+    
+            if (this.hasEvent("MouseOver")) {
+                this.element.addListener("mouseover", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f8));
+            }
+    
             //if (this.HasEvent("MouseMove"))
             //{
             //    this.Element.OnMouseMove = (e) =>
@@ -930,7 +964,7 @@
             //};
     
             if (this.hasEvent("TextChanged")) {
-                this.element.addListener("onchange", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f2));
+                this.element.addListener("onchange", Bridge.fn.bind(this, $_.System.Windows.Forms.Control.f9));
             }
         },
         fireEvent: function (evt, replacer) {
@@ -1158,6 +1192,62 @@
             } ));
         },
         f2: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.KeySequence);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "keydown",
+                value: key
+            } ));
+        },
+        f3: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.KeySequence);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "keyup",
+                value: key
+            } ));
+        },
+        f4: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.Mouse);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mousedown",
+                value: key
+            } ));
+        },
+        f5: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.Mouse);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mouseup",
+                value: key
+            } ));
+        },
+        f6: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.Mouse);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mousemove",
+                value: key
+            } ));
+        },
+        f7: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.Mouse);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mouseout",
+                value: key
+            } ));
+        },
+        f8: function (e) {
+            var key = Bridge.cast(e, qx.qxevent.type.Mouse);
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "mouseover",
+                value: key
+            } ));
+        },
+        f9: function (e) {
             var val = null;
             if (Bridge.is(this.element, qx.ui.form.AbstractField)) {
                 val = (Bridge.cast(this.element, qx.ui.form.AbstractField)).getValue();
@@ -1819,6 +1909,19 @@
     
             this.renderLabel = false;
         },
+        update: function (evt) {
+            System.Windows.Forms.Control.prototype.update.call(this, evt);
+            switch (evt.getPropertyUpdate().name) {
+                case "PasswordChar": 
+                    {
+                        this.passwordChar = Bridge.as(evt.getPropertyUpdate().value, String);
+                        (Bridge.cast(this.element, qx.ui.core.Widget)).destroy();
+    
+                        this.render();
+                    }
+                    break;
+            }
+        },
         render: function () {
             if (this.multiline) {
                 var tf = new qx.ui.form.TextArea();
@@ -1837,7 +1940,36 @@
                 this.element = tf2;
             }
     
+            this.element.addListener("changeValue", Bridge.fn.bind(this, $_.System.Windows.Forms.TextBox.f1));
+    
+            this.element.addListener("input", Bridge.fn.bind(this, $_.System.Windows.Forms.TextBox.f2));
+    
             System.Windows.Forms.Control.prototype.render.call(this);
+        }
+    });
+    
+    Bridge.ns("System.Windows.Forms.TextBox", $_)
+    
+    Bridge.apply($_.System.Windows.Forms.TextBox, {
+        f1: function (e) {
+            var af = Bridge.cast(this.element, qx.ui.form.AbstractField);
+            this.setText(af.getValue());
+            this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                clientId: this.getClientId(),
+                eventType: "textchanged",
+                value: af.getValue()
+            } ));
+        },
+        f2: function (e) {
+            var af = Bridge.cast(this.element, qx.ui.form.AbstractField);
+            this.setText(af.getValue());
+            if (this.hasEvent("KeyPress")) {
+                this.fireEvent(Bridge.merge(new System.Windows.Forms.WSEventArgs(), {
+                    clientId: this.getClientId(),
+                    eventType: "textchanged",
+                    value: af.getValue()
+                } ));
+            }
         }
     });
     
@@ -1847,6 +1979,10 @@
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.element = new qx.ui.control.DateChooser();
+        },
+        render: function () {
+            this.setSize(new System.Drawing.Size(227, 162));
+            System.Windows.Forms.Control.prototype.render.call(this);
         }
     });
     
@@ -2003,10 +2139,6 @@
     
             pane.add(this.getPanel1().element, 0);
             pane.add(this.getPanel2().element, 1);
-            (Bridge.cast(this.getPanel2().element, qx.ui.core.Widget)).setWidth(((Bridge.cast(this.getPanel2().element, qx.ui.core.Widget)).getWidth() - 50) | 0);
-            //((qx.ui.core.Widget)this.Panel2.Element).PaddingBottom = 5;
-    
-            //KendoSplitter.Element(this.Element, this.SplitterDistance);
         }
     });
     

@@ -12,5 +12,11 @@ namespace System.Windows.Forms
         {
             this.Element = new qx.ui.control.DateChooser();
         }
+
+        public override void Render()
+        {
+            this.Size = new Drawing.Size(227, 162);
+            base.Render();
+        }
     }
 }

@@ -56,9 +56,13 @@
     <Compile Include="qx\data\controller\List.cs" />
     <Compile Include="qx\data\marshal\Json.cs" />
     <Compile Include="qx\qxevent\type\Data.cs" />
+    <Compile Include="qx\qxevent\type\Dom.cs" />
     <Compile Include="qx\qxevent\type\Event.cs" />
     <Compile Include="qx\html\Element.cs" />
     <Compile Include="qx\html\RootElement.cs" />
+    <Compile Include="qx\qxevent\type\KeySequence.cs" />
+    <Compile Include="qx\qxevent\type\Mouse.cs" />
+    <Compile Include="qx\qxevent\type\Native.cs" />
     <Compile Include="qx\theme\manager\Font.cs" />
     <Compile Include="qx\ui\basic\atom.cs" />
     <Compile Include="qx\ui\basic\Image.cs" />
