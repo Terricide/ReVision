@@ -31,9 +31,12 @@ namespace System.Windows.Forms
     [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
     public class Form : ContainerControl, IDisposable, IRootDesigner, IToolboxUser
     {
+        public static Form ActiveForm { get; }
         public event EventHandler<FormClosedEventArgs> FormClosed;
         public FormWindowState WindowState = FormWindowState.Normal;
         public event EventHandler Load;
+        public MainMenu Menu { get; set; }
+        public bool KeyPreview { get; set; }
         //public bool IsHandledCreated { get; set; }
 
         public override string ControlName

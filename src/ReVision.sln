@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReVision.JSForms", "ReVisio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.Qooxdoo", "Bridge.Qooxdoo\Bridge.Qooxdoo.csproj", "{44F6AFDF-E086-4D53-AC01-3EF9D2746176}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceInvaders", "SpaceInvaders2005\SpaceInvaders.csproj", "{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AgentCoverageDebug|Any CPU = AgentCoverageDebug|Any CPU
@@ -61,6 +63,12 @@ Global
 		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44F6AFDF-E086-4D53-AC01-3EF9D2746176}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.AgentCoverageDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.AgentCoverageDebug|Any CPU.Build.0 = Debug|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B5B2A34-984A-4B32-A57A-2B6224CA21F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -56,7 +56,22 @@
     </Compile>
     <Compile Include="BaseClasses\ControlStyles.cs" />
     <Compile Include="BaseClasses\DoubleBuffer.cs" />
+    <Compile Include="Controls\HeaderedItemsControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ItemsControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MainMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\MaskedTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Menu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\AnchorStyles.cs" />
@@ -67,6 +82,7 @@
     <Compile Include="EventHandlers\KeyPressEventHandler.cs" />
     <Compile Include="EventHandlers\MouseEventHandler.cs" />
     <Compile Include="EventHandlers\PaintEventArgs.cs" />
+    <Compile Include="EventHandlers\PaintEventHandler.cs" />
     <Compile Include="JsonConverters\SizeConverter.cs" />
     <Compile Include="JsonConverters\PointConverter.cs" />
     <Compile Include="Shared\AutoScaleMode.cs" />

@@ -1213,6 +1213,43 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SpaceInvaders2005\Bomb.cs">
+      <Link>Bomb.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Bullet.cs">
+      <Link>Bullet.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Form1.cs">
+      <Link>Form1.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\GameObject.cs">
+      <Link>GameObject.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\HighScore.cs">
+      <Link>HighScore.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Invader.cs">
+      <Link>Invader.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\InvaderRow.cs">
+      <Link>InvaderRow.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\LivesIndicator.cs">
+      <Link>LivesIndicator.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Man.cs">
+      <Link>Man.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Saucer.cs">
+      <Link>Saucer.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Score.cs">
+      <Link>Score.cs</Link>
+    </Compile>
+    <Compile Include="..\SpaceInvaders2005\Shield.cs">
+      <Link>Shield.cs</Link>
+    </Compile>
     <Compile Include="..\WindowsFormsLib\ChatWindow.cs">
       <Link>ChatWindow.cs</Link>
       <SubType>Form</SubType>
@@ -1223,13 +1260,6 @@
     <Compile Include="..\WindowsFormsLib\CuteButton.cs">
       <Link>CuteButton.cs</Link>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\WindowsFormsLib\Form1.cs">
-      <Link>Form1.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\WindowsFormsLib\Form1.Designer.cs">
-      <Link>Form1.Designer.cs</Link>
     </Compile>
     <Compile Include="..\WindowsFormsLib\GlassButton.cs">
       <Link>GlassButton.cs</Link>
@@ -1288,11 +1318,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SpaceInvaders2005\Form1.resx">
+      <Link>Form1.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\WindowsFormsLib\ChatWindow.resx">
       <Link>ChatWindow.resx</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\WindowsFormsLib\Form1.resx">
-      <Link>Form1.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\WindowsFormsLib\MainForm.resx">
       <Link>MainForm.resx</Link>
@@ -1342,7 +1372,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="d6bb3817-6ad0-4428-ab92-66bc90dbc02d" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

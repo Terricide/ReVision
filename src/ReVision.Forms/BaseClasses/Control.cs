@@ -99,6 +99,7 @@ namespace System.Windows.Forms
             }
         }
 
+        public event PaintEventHandler Paint;
 
         //public void Invalidate()
         //{
@@ -136,6 +137,11 @@ namespace System.Windows.Forms
             }
 
             //Invalidate(ClientRectangle, false);
+        }
+
+        public void Invalidate(Rectangle rc)
+        {
+            Invalidate();
         }
 
         //public void Invalidate(bool invalidateChildren)
@@ -251,6 +257,7 @@ namespace System.Windows.Forms
         }
         public event KeyPressEventHandler KeyPress;
         public event KeyEventHandler KeyDown;
+        public event KeyEventHandler KeyUp;
 
         [JsonConverter(typeof(ReVision.Forms.JsonConverters.ImageConverter))]
         public Image BackgroundImage { get; set; }

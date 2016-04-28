@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,11 @@ namespace System.Windows.Forms
         public Timer()
         {
             this.Elapsed += Timer_Elapsed;
+        }
+
+        public Timer(IContainer container) : this()
+        {
+
         }
 
         void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
