@@ -887,6 +887,10 @@ namespace System.Windows.Forms
                             var pBox = JSON.Parse<PictureBox>(JSON.Stringify(ctrl));
                             ctrl1 = pBox;
                             break;
+                        case "MainMenu":
+                            var mm = JSON.Parse<MainMenu>(JSON.Stringify(ctrl));
+                            ctrl1 = mm;
+                            break;
                         default:
                             ctrl1 = JSON.Parse<Control>(JSON.Stringify(ctrl));
                             break;

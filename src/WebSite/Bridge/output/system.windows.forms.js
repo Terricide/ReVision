@@ -1116,6 +1116,10 @@
                             var pBox = Bridge.merge(new System.Windows.Forms.PictureBox(), JSON.parse(JSON.stringify(ctrl)));
                             ctrl1 = pBox;
                             break;
+                        case "MainMenu": 
+                            var mm = Bridge.merge(new System.Windows.Forms.MainMenu(), JSON.parse(JSON.stringify(ctrl)));
+                            ctrl1 = mm;
+                            break;
                         default: 
                             ctrl1 = Bridge.merge(new System.Windows.Forms.Control(), JSON.parse(JSON.stringify(ctrl)));
                             break;
@@ -1523,12 +1527,20 @@
         jWindow: null,
         window: null,
         startPosition: 0,
+        mMenu: null,
         constructor: function () {
             System.Windows.Forms.Control.prototype.$constructor.call(this);
     
             this.renderLabel = false;
         },
+        getMenu: function () {
+            return this.mMenu;
+        },
+        setMenu: function (value) {
+            this.mMenu = Bridge.merge(new System.Windows.Forms.Menu(), JSON.parse(JSON.stringify(value)));
+        },
         showDialog: function () {
+            var $t, $t1;
             var win = null;
     
             if (Bridge.hasValue(this.getParent())) {
@@ -1546,6 +1558,35 @@
                 win.setHeight((this.clientSize.height + 30) | 0);
                 win.open();
                 win.center();
+            }
+    
+            if (Bridge.hasValue(this.getMenu())) {
+                var frame = new qx.ui.container.Composite(new qx.ui.layout.Grow());
+                var mb = new qx.ui.menubar.MenuBar();
+                mb.setWidth(this.clientSize.width);
+                $t = Bridge.getEnumerator(this.getMenu().getMenuItems());
+                while ($t.moveNext()) {
+                    var mi = $t.getCurrent();
+                    var menuItem = Bridge.merge(new System.Windows.Forms.MenuItem(), JSON.parse(JSON.stringify(mi)));
+                    var name = menuItem.getText();
+                    var subMenu = new qx.ui.menu.Menu();
+                    $t1 = Bridge.getEnumerator(mi.menuItems);
+                    while ($t1.moveNext()) {
+                        var child = $t1.getCurrent();
+                        var menuItemChild = Bridge.merge(new System.Windows.Forms.MenuItem(), JSON.parse(JSON.stringify(child)));
+                        var newButton = new qx.ui.menu.Button(menuItemChild.getText(), null, null, null);
+                        subMenu.add(newButton,null);
+                    }
+                    var btn = new qx.ui.menubar.Button(name, null, subMenu);
+                    mb.add(btn,null);
+                }
+                frame.add(mb,null);
+                if (Bridge.hasValue(win)) {
+                    win.add(frame,null);
+                }
+                else  {
+                    this.element.add(frame,null);
+                }
             }
     
     
@@ -1689,6 +1730,10 @@
         render: function () {
             System.Windows.Forms.Control.prototype.render.call(this);
         }
+    });
+    
+    Bridge.define('System.Windows.Forms.ItemsControl', {
+        inherits: [System.Windows.Forms.Control]
     });
     
     Bridge.define('System.Windows.Forms.Label', {
@@ -1910,6 +1955,17 @@
             //this.Element.Style.BorderStyle = BorderStyle.Solid;
             //this.Element.Style.BorderWidth = BorderWidth.Thin;
             //this.Element.Style.BorderColor = "gray";
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.Menu', {
+        inherits: [System.Windows.Forms.Control],
+        mMenuItems: null,
+        getMenuItems: function () {
+            return this.mMenuItems;
+        },
+        setMenuItems: function (value) {
+            this.mMenuItems = Bridge.merge(new Array(), JSON.parse(JSON.stringify(value)));
         }
     });
     
@@ -2473,6 +2529,30 @@
         }
     });
     
+    Bridge.define('System.Windows.Forms.HeaderedItemsControl', {
+        inherits: [System.Windows.Forms.ItemsControl]
+    });
+    
+    Bridge.define('System.Windows.Forms.MainMenu', {
+        inherits: [System.Windows.Forms.Menu],
+        constructor: function () {
+            System.Windows.Forms.Menu.prototype.$constructor.call(this);
+    
+            this.element = new qx.ui.menubar.MenuBar();
+        },
+        render: function () {
+            var $t;
+            System.Windows.Forms.Menu.prototype.render.call(this);
+    
+            var mb = Bridge.cast(this.element, qx.ui.menubar.MenuBar);
+            $t = Bridge.getEnumerator(this.getMenuItems());
+            while ($t.moveNext()) {
+                var mi = $t.getCurrent();
+                mb.add(new qx.ui.menubar.Button(mi.getName(), null, null),null);
+            }
+        }
+    });
+    
     Bridge.define('System.Windows.Forms.MaskedTextBox', {
         inherits: [System.Windows.Forms.TextBox],
         mask: null,
@@ -2640,6 +2720,16 @@
             ctrl.bindProperty("name", "label", null, item, id);
             ctrl.bindProperty("checked", "value", null, item, id);
             ctrl.bindPropertyReverse("checked", "value", null, item, id);
+        }
+    });
+    
+    Bridge.define('System.Windows.Forms.MenuItem', {
+        inherits: [System.Windows.Forms.HeaderedItemsControl],
+        menuItems: null,
+        config: {
+            properties: {
+                Index: 0
+            }
         }
     });
     

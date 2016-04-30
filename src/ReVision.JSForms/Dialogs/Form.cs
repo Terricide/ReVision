@@ -15,6 +15,18 @@ namespace System.Windows.Forms
         private jQuery jWindow;
         private DivElement Window;
         public FormStartPosition StartPosition;
+        private Menu mMenu;
+        public Menu Menu
+        {
+            get
+            {
+                return mMenu;
+            }
+            set
+            {
+                this.mMenu = JSON.Parse<Menu>(JSON.Stringify(value));
+            }
+        }
 
         public Form()
         {
@@ -82,6 +94,36 @@ namespace System.Windows.Forms
                 win.Height = this.ClientSize.Height + 30;
                 win.Open();
                 win.Center();
+            }
+
+            if( this.Menu != null )
+            {
+                var frame = new qx.ui.container.Composite(new qx.ui.layout.Grow());
+                var mb = new qx.ui.menubar.MenuBar();
+                mb.Width = this.ClientSize.Width;
+                foreach (var mi in this.Menu.MenuItems)
+                {
+                    var menuItem = JSON.Parse<MenuItem>(JSON.Stringify(mi));
+                    var name = menuItem.Text;
+                    var subMenu = new qx.ui.menu.Menu();
+                    foreach (var child in mi.MenuItems)
+                    {
+                        var menuItemChild = JSON.Parse<MenuItem>(JSON.Stringify(child));
+                        var newButton = new qx.ui.menu.Button(menuItemChild.Text, null, null, null);
+                        subMenu.Add(newButton);
+                    }
+                    var btn = new qx.ui.menubar.Button(name, null, subMenu);
+                    mb.Add(btn);
+                }
+                frame.Add(mb);
+                if( win != null )
+                {
+                    win.Add(frame);
+                }
+                else
+                {
+                    this.Element.Add(frame);
+                }
             }
 
             

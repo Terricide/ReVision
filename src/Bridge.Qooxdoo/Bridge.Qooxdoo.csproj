@@ -67,6 +67,7 @@
     <Compile Include="qx\ui\basic\atom.cs" />
     <Compile Include="qx\ui\basic\Image.cs" />
     <Compile Include="qx\ui\basic\Label.cs" />
+    <Compile Include="qx\ui\command\Command.cs" />
     <Compile Include="qx\ui\container\Composite.cs" />
     <Compile Include="qx\ui\container\Scroll.cs" />
     <Compile Include="qx\ui\control\DateChooser.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="qx\ui\form\DateField.cs" />
     <Compile Include="qx\ui\form\List.cs" />
     <Compile Include="qx\ui\form\ListItem.cs" />
+    <Compile Include="qx\ui\form\MenuButton.cs" />
     <Compile Include="qx\ui\form\PasswordField.cs" />
     <Compile Include="qx\ui\form\RadioButton.cs" />
     <Compile Include="qx\ui\form\RadioGroup.cs" />
@@ -98,13 +100,20 @@
     <Compile Include="qx\ui\layout\Basic.cs" />
     <Compile Include="qx\ui\layout\Canvas.cs" />
     <Compile Include="qx\ui\layout\Dock.cs" />
+    <Compile Include="qx\ui\layout\Grow.cs" />
     <Compile Include="qx\ui\layout\VBox.cs" />
+    <Compile Include="qx\ui\menubar\Button.cs" />
+    <Compile Include="qx\ui\menubar\MenuBar.cs" />
+    <Compile Include="qx\ui\menu\AbstractButton.cs" />
+    <Compile Include="qx\ui\menu\Button.cs" />
+    <Compile Include="qx\ui\menu\Menu.cs" />
     <Compile Include="qx\ui\splitpane\Pane.cs" />
     <Compile Include="qx\ui\table\model\Abstract.cs" />
     <Compile Include="qx\ui\table\model\Simple.cs" />
     <Compile Include="qx\ui\table\Table.cs" />
     <Compile Include="qx\ui\tabview\Page.cs" />
     <Compile Include="qx\ui\tabview\TabView.cs" />
+    <Compile Include="qx\ui\toolbar\ToolBar.cs" />
     <Compile Include="qx\ui\tree\core\AbstractItem.cs" />
     <Compile Include="qx\ui\tree\core\AbstractTreeItem.cs" />
     <Compile Include="qx\ui\tree\Tree.cs" />

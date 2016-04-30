@@ -74,10 +74,15 @@
     <Compile Include="Controls\CustomControl.cs" />
     <Compile Include="Controls\DateTimePicker.cs" />
     <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\HeaderedItemsControl.cs" />
+    <Compile Include="Controls\ItemsControl.cs" />
     <Compile Include="Controls\ListBox.cs" />
     <Compile Include="Controls\ListView.cs" />
     <Compile Include="Controls\ListViewItem.cs" />
+    <Compile Include="Controls\MainMenu.cs" />
     <Compile Include="Controls\MaskedTextBox.cs" />
+    <Compile Include="Controls\Menu.cs" />
+    <Compile Include="Controls\MenuItem.cs" />
     <Compile Include="Controls\MonthCalendar.cs" />
     <Compile Include="Controls\Panel.cs" />
     <Compile Include="Controls\PictureBox.cs" />
